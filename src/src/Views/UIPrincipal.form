@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="Views.UIPrincipal">
+  <grid id="27dc6" binding="PPrincipal" layout-manager="BorderLayout" hgap="0" vgap="0">
+    <constraints>
+      <xy x="20" y="20" width="500" height="400"/>
+    </constraints>
+    <properties/>
+    <border type="none"/>
+    <children>
+      <component id="7256d" class="javax.swing.JLabel">
+        <constraints border-constraint="North"/>
+        <properties>
+          <font name="Candara" size="16" style="1"/>
+          <horizontalAlignment value="0"/>
+          <text value="CORRALES TERNERO"/>
+        </properties>
+      </component>
+      <tabbedpane id="51a1" binding="TPCentro">
+        <constraints border-constraint="Center"/>
+        <properties>
+          <font name="Roboto" size="14"/>
+        </properties>
+        <border type="none"/>
+        <children>
+          <grid id="d4a54" binding="PInicio" custom-create="true" layout-manager="BorderLayout" hgap="0" vgap="0">
+            <constraints>
+              <tabbedpane title="Inicio"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children/>
+          </grid>
+          <grid id="91b14" binding="PRegistro" custom-create="true" layout-manager="BorderLayout" hgap="0" vgap="0">
+            <constraints>
+              <tabbedpane title="Registrar Cría"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children/>
+          </grid>
+        </children>
+      </tabbedpane>
+    </children>
+  </grid>
+</form>
