@@ -1,47 +1,58 @@
 package Views;
 
-import Controllers.CVPrincipal;
+import Controllers.CInicio;
+import Controllers.CRegistro;
+import Resource.JNumberField;
+import com.toedter.calendar.JCalendar;
 
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
+import javax.swing.table.TableColumn;
+import java.awt.*;
+import java.util.Calendar;
 
 public class UIPrincipal extends JFrame {
 
     private JPanel PPrincipal;
-    private JTabbedPane TPCentro;
-    private JPanel PInicio;
-    private JPanel PRegistro;
-    private JButton BtnRegistrar;
+    private JButton BtnRegistrarCria,BtnRegistrarCorral;
+    private Font FontBotones;
 
     public UIPrincipal (){
         super("Corrales Ternero");
-        setSize(550,350);
+        setSize(550,405);
         setResizable(false);
         setContentPane(PPrincipal);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setVisible(true);
+
+        FontBotones=new Font("Candara",1,17);
     }
 
-    public void asignarControladorP(CVPrincipal c){
-        BtnRegistrar.addActionListener(c);
+    public void asignarControladorP(CInicio c){
+        BtnRegistrarCria.addActionListener(c);
+        BtnRegistrarCorral.addActionListener(c);
+    }
+
+    public JButton getBtnRegistrarCria() {
+        return BtnRegistrarCria;
     }
 
     private void createUIComponents() {
-       PInicio=new JPanel();
-       PInicio.setLayout(null);
-       definePRegistro();
+       PPrincipal=new JPanel();
+       PPrincipal.setLayout(null);
+       definePPrincipal();
+    }
+    private void definePPrincipal(){
+        BtnRegistrarCria=new JButton("Registrar Cría");
+        BtnRegistrarCria.setBounds(20,40,130,40);
+        BtnRegistrarCria.setFont(FontBotones);
+        PPrincipal.add(BtnRegistrarCria);
 
+        BtnRegistrarCorral=new JButton("Registrar Corral");
+        BtnRegistrarCorral.setBounds(20,90,130,40);
+        BtnRegistrarCria.setFont(FontBotones);
+        PPrincipal.add(BtnRegistrarCorral);
     }
 
-    private void definePRegistro(){
-        PRegistro=new JPanel();
-        PRegistro.setLayout(null);
-        JLabel lb = new JLabel("Id");
-        lb.setBounds(5,5,40,20);
-        PRegistro.add(lb);
-
-        BtnRegistrar=new JButton("Registrar");
-        BtnRegistrar.setBounds(5,180,100,30);
-        PRegistro.add(BtnRegistrar);
-    }
 }

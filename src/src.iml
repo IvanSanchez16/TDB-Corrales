@@ -7,5 +7,8 @@
     </content>
     <orderEntry type="jdk" jdkName="12" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="jcalendar-1.4" level="project" />
+    <orderEntry type="library" name="JTattoo-1.6.11" level="project" />
+    <orderEntry type="library" name="mssql-jdbc-7.4.1.jre12" level="project" />
   </component>
 </module>
