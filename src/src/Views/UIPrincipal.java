@@ -3,12 +3,19 @@ package Views;
 import Controllers.CInicio;
 
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
 import java.awt.*;
 
 public class UIPrincipal extends JFrame {
 
-    private JPanel PPrincipal;
-    private JButton BtnRegistrarCria,BtnRegistrarCorral;
+    private Font FontTitulos;
+    private JPanel PPrincipal,PManipulacion,PConsultas;
+    private JButton BtnRegistrarCria,BtnRegistrarCorral,BtnClasificar,BtnIdentificar,BtnDieta;
+    private JButton BtnSigProceso;
+    private JButton BtnSacrificadas;
+    private JButton BtnActivas;
+    private JButton BtnTodoCria;
+    private JButton BtnCorrales;
     private Font FontBotones;
 
     public UIPrincipal (){
@@ -19,13 +26,20 @@ public class UIPrincipal extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setVisible(true);
-
-        FontBotones=new Font("Candara",1,17);
     }
 
     public void asignarControladorP(CInicio c){
         BtnRegistrarCria.addActionListener(c);
         BtnRegistrarCorral.addActionListener(c);
+        BtnClasificar.addActionListener(c);
+        BtnIdentificar.addActionListener(c);
+        BtnDieta.addActionListener(c);
+
+        BtnSigProceso.addActionListener(c);
+        BtnSacrificadas.addActionListener(c);
+        BtnActivas.addActionListener(c);
+        BtnTodoCria.addActionListener(c);
+        BtnCorrales.addActionListener(c);
     }
 
     public JButton getBtnRegistrarCria() {
@@ -36,21 +50,107 @@ public class UIPrincipal extends JFrame {
         return BtnRegistrarCorral;
     }
 
+    public JButton getBtnIdentificar() {
+        return BtnIdentificar;
+    }
+
+    public JButton getBtnDieta() {
+        return BtnDieta;
+    }
+
+    public JButton getBtnClasificar() {
+        return BtnClasificar;
+    }
+
+    public JButton getBtnSigProceso() {
+        return BtnSigProceso;
+    }
+
+    public JButton getBtnSacrificadas() {
+        return BtnSacrificadas;
+    }
+
+    public JButton getBtnActivas() {
+        return BtnActivas;
+    }
+
+    public JButton getBtnTodoCria() {
+        return BtnTodoCria;
+    }
+
+    public JButton getBtnCorrales() {
+        return BtnCorrales;
+    }
+
     private void createUIComponents() {
        PPrincipal=new JPanel();
        PPrincipal.setLayout(null);
        definePPrincipal();
     }
     private void definePPrincipal(){
+        FontBotones=new Font("Candara",0,17);
+        FontTitulos=new Font("Candara",1,13);
+
+        PManipulacion=new JPanel();
+        PManipulacion.setLayout(new GridLayout(0,1,0,10));
+
         BtnRegistrarCria=new JButton("Registrar Cría");
-        BtnRegistrarCria.setBounds(20,40,130,40);
         BtnRegistrarCria.setFont(FontBotones);
-        PPrincipal.add(BtnRegistrarCria);
+        PManipulacion.add(BtnRegistrarCria);
 
         BtnRegistrarCorral=new JButton("Registrar Corral");
-        BtnRegistrarCorral.setBounds(20,90,130,40);
-        BtnRegistrarCria.setFont(FontBotones);
-        PPrincipal.add(BtnRegistrarCorral);
+        BtnRegistrarCorral.setFont(FontBotones);
+        PManipulacion.add(BtnRegistrarCorral);
+
+        BtnClasificar=new JButton("Clasificar crías");
+        BtnClasificar.setFont(FontBotones);
+        PManipulacion.add(BtnClasificar);
+
+        BtnIdentificar=new JButton("Mover a cuarentena");
+        BtnIdentificar.setFont(FontBotones);
+        PManipulacion.add(BtnIdentificar);
+
+        BtnDieta=new JButton("Asignar una dieta");
+        BtnDieta.setFont(FontBotones);
+        PManipulacion.add(BtnDieta);
+
+        PConsultas=new JPanel();
+        PConsultas.setLayout(new GridLayout(0,1,0,10));
+
+        BtnSigProceso=new JButton("Crías con más de 5 meses");
+        BtnSigProceso.setFont(FontBotones);
+        PConsultas.add(BtnSigProceso);
+
+        BtnSacrificadas=new JButton("Crías sacrificadas");
+        BtnSacrificadas.setFont(FontBotones);
+        PConsultas.add(BtnSacrificadas);
+
+        BtnActivas=new JButton("Crías que siguen activas");
+        BtnActivas.setFont(FontBotones);
+        PConsultas.add(BtnActivas);
+
+        BtnTodoCria=new JButton("Todo sobre una cría");
+        BtnTodoCria.setFont(FontBotones);
+        PConsultas.add(BtnTodoCria);
+
+        BtnCorrales=new JButton("Corrales");
+        BtnCorrales.setFont(FontBotones);
+        PConsultas.add(BtnCorrales);
+
+
+        PManipulacion.setBorder(BorderFactory.createTitledBorder(
+                BorderFactory.createCompoundBorder(
+                        BorderFactory.createRaisedBevelBorder(),BorderFactory.createLoweredBevelBorder()
+                ),"Manipular la información", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos));
+        PManipulacion.setBounds(15,20,250,340);
+        PPrincipal.add(PManipulacion);
+
+        PConsultas.setBorder(BorderFactory.createTitledBorder(
+                BorderFactory.createCompoundBorder(
+                        BorderFactory.createRaisedBevelBorder(),BorderFactory.createLoweredBevelBorder()
+                ),"Consultar información", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos));
+        PConsultas.setBounds(280,20,250,340);
+        PPrincipal.add(PConsultas);
     }
 
 }

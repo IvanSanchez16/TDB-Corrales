@@ -12,7 +12,7 @@
         <properties>
           <font name="Candara" size="16" style="1"/>
           <horizontalAlignment value="0"/>
-          <text value="CORRALES TERNERO"/>
+          <text value="MENÚ PRINCIPAL"/>
         </properties>
       </component>
     </children>
