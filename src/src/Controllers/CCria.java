@@ -1,19 +1,18 @@
 package Controllers;
 
-import Models.MRegistro;
+import Models.MCria;
 import Views.UIRegistroCria;
 
-import javax.swing.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 
-public class CRegistro implements ActionListener {
+public class CCria implements ActionListener {
     UIRegistroCria view;
-    MRegistro model;
+    MCria model;
 
-    public CRegistro(){
+    public CCria(){
         view=new UIRegistroCria();
-        model=new MRegistro();
+        model=new MCria();
         view.asignarControladores(this);
         ArrayList<String[]> datos=model.obtenerCorrales();
         view.llenarCorrales(datos);
@@ -24,6 +23,10 @@ public class CRegistro implements ActionListener {
         if(evt.getSource()==view.getBtnFecha()){
             view.mostrarDatePicker();
             return;
+        }
+        if(evt.getSource()==view.getBtnRegistrar()){
+            String msg=model.insertar( view.getId(),view.getFecha(),view.getEstado(),view.getPeso(),view.getCMusculo(),view.getCGrasa(),view.getCorral() );
+            view.mostrarModal(msg);
         }
     }
 

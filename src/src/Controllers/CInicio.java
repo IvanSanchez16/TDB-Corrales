@@ -19,8 +19,13 @@ public class CInicio implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource()==view.getBtnRegistrarCria()){
-            CRegistro C=new CRegistro();
+            CCria C=new CCria();
             return;
         }
+        if(e.getSource()==view.getBtnRegistrarCorral()){
+            CCorral c=new CCorral();
+            return;
+        }
+
     }
 }

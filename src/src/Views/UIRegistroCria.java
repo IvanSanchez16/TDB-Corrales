@@ -1,6 +1,6 @@
 package Views;
 
-import Controllers.CRegistro;
+import Controllers.CCria;
 import Resource.JNumberField;
 import com.toedter.calendar.JCalendar;
 
@@ -10,10 +10,10 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.spi.CalendarDataProvider;
 
 public class UIRegistroCria extends JFrame {
 
@@ -25,11 +25,12 @@ public class UIRegistroCria extends JFrame {
     private JComboBox ComboEstado;
     private JNumberField TxtPeso;
     private JTextField TxtColor;
-    private JNumberField TxtGrasa;
+    private JNumberField TxtGrasa,TxtCorral;
     private JTable TbCorrales;
     private JScrollPane SPCorrales;
     private JCalendar Fecha;
     private DefaultTableModel dm;
+    private int dia,mes,anio;
 
     public UIRegistroCria(){
         super("Registrar cría");
@@ -40,7 +41,7 @@ public class UIRegistroCria extends JFrame {
         setVisible(true);
     }
 
-    public void asignarControladores(CRegistro c){
+    public void asignarControladores(CCria c){
         BtnFecha.addActionListener(c);
         BtnRegistrar.addActionListener(c);
     }
@@ -49,11 +50,12 @@ public class UIRegistroCria extends JFrame {
         JDialog jd=new JDialog(this,"Fecha",true);
         Fecha=new JCalendar();
         Fecha.setWeekOfYearVisible(false);
+        Fecha.setMaxSelectableDate(Calendar.getInstance().getTime());
         BtnCFecha=new JButton("Confirmar");
         BtnCFecha.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 Calendar c=Fecha.getCalendar();
-                TxtFecha.setText(c.get(Calendar.DATE)+"/"+c.get(Calendar.MONTH)+"/"+c.get(Calendar.YEAR));
+                TxtFecha.setText(c.get(Calendar.DATE)+" / "+(c.get(Calendar.MONTH)+1)+" / "+c.get(Calendar.YEAR));
                 jd.dispose();
             }
         });
@@ -67,6 +69,65 @@ public class UIRegistroCria extends JFrame {
 
     public JButton getBtnFecha() {
         return BtnFecha;
+    }
+
+    public JButton getBtnRegistrar() {
+        return BtnRegistrar;
+    }
+
+    public int getId(){
+        return (int) TxtId.ObtenerCantidad();
+    }
+
+    public String getFecha(){
+        String aux="",fecha=TxtFecha.getText();
+        char c;
+        int cont=0;
+        for(int i=0 ; i<fecha.length() ; i++){
+            c=fecha.charAt(i);
+            if(c!=' ' && c!='/') {
+                aux = aux + c;
+                cont++;
+                continue;
+            }
+            if(cont<2 && cont!=0){
+                aux=aux.substring(0,i-1)+'0'+aux.charAt(i-1);
+            }
+            cont=0;
+        }
+        aux=aux.substring(4)+aux.substring(2,4)+aux.substring(0,2);
+        return aux;
+    }
+
+    public String getEstado(){
+        return (String) ComboEstado.getSelectedItem();
+    }
+
+    public int getPeso(){
+        return (int) TxtPeso.ObtenerCantidad();
+    }
+
+    public String getCMusculo(){
+        return TxtColor.getText();
+    }
+
+    public int getCGrasa(){
+        return (int) TxtGrasa.ObtenerCantidad();
+    }
+
+    public int getCorral(){
+        return (int) TxtCorral.ObtenerCantidad();
+    }
+
+    public void mostrarModal(String msg){
+        boolean band=true;
+        if(msg.equals("")){
+            msg="La cría fue registrada correctamente";
+            band=false;
+        }
+        JOptionPane.showMessageDialog(this,msg,"Registro de cría",msg.equals("La cría fue registrada correctamente")?JOptionPane.INFORMATION_MESSAGE:JOptionPane.ERROR_MESSAGE);
+        if(!band)
+            dispose();
     }
 
     private void definirInterfaz(){
@@ -87,11 +148,11 @@ public class UIRegistroCria extends JFrame {
         add(TxtId);
 
         Calendar c=Calendar.getInstance();
-        int dia=c.get(Calendar.DATE);
-        int mes=c.get(Calendar.MONTH);
-        int anio=c.get(Calendar.YEAR);
+        dia=c.get(Calendar.DATE);
+        mes=c.get(Calendar.MONTH)+1;
+        anio=c.get(Calendar.YEAR);
 
-        TxtFecha = new JLabel(dia+"/"+mes+"/"+anio);
+        TxtFecha = new JLabel(dia+" / "+mes+" / "+anio);
         TxtFecha.setFont(new Font("Dubai",1,14));
         TxtFecha.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createCompoundBorder(
@@ -145,8 +206,8 @@ public class UIRegistroCria extends JFrame {
         TxtGrasa.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createCompoundBorder(
                         BorderFactory.createRaisedBevelBorder(),BorderFactory.createLoweredBevelBorder()
-                ),"Cantidad de grasa", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos));
-        TxtGrasa.setBounds(5,270,130,45);
+                ),"Porcentaje de grasa", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos));
+        TxtGrasa.setBounds(5,270,135,45);
         TxtGrasa.setBackground(new Color(242,242,242));
         add(TxtGrasa);
 
@@ -154,16 +215,26 @@ public class UIRegistroCria extends JFrame {
         String [] columnas={"Id","Tipo","N# de crías"};
         dm=new DefaultTableModel(m,columnas);
         TbCorrales=new JTable(dm);
-        TbCorrales.setFont(new Font("Candara",1,11));
+        TbCorrales.setFont(new Font("Dubai",1,12));
         TbCorrales.setEnabled(false);
         SPCorrales=new JScrollPane(TbCorrales);
         SPCorrales.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createCompoundBorder(
                         BorderFactory.createRaisedBevelBorder(),BorderFactory.createLoweredBevelBorder()
                 ),"Corrales", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos));
-        SPCorrales.setBounds(255,5,275,310);
+        SPCorrales.setBounds(255,5,275,260);
         SPCorrales.setBackground(new Color(242,242,242));
         add(SPCorrales);
+
+        TxtCorral=new JNumberField();
+        TxtCorral.setBorder(BorderFactory.createTitledBorder(
+                BorderFactory.createCompoundBorder(
+                        BorderFactory.createRaisedBevelBorder(),BorderFactory.createLoweredBevelBorder()
+                ),"Id del corral", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos));
+        TxtCorral.setFont(FontCajas);
+        TxtCorral.setBounds(255,270,120,40);
+        TxtCorral.setBackground(new Color(242,242,242));
+        add(TxtCorral);
 
         BtnRegistrar=new JButton("Registrar");
         BtnRegistrar.setBounds(5,320,530,35);

@@ -1,15 +1,9 @@
 package Views;
 
 import Controllers.CInicio;
-import Controllers.CRegistro;
-import Resource.JNumberField;
-import com.toedter.calendar.JCalendar;
 
 import javax.swing.*;
-import javax.swing.border.TitledBorder;
-import javax.swing.table.TableColumn;
 import java.awt.*;
-import java.util.Calendar;
 
 public class UIPrincipal extends JFrame {
 
@@ -36,6 +30,10 @@ public class UIPrincipal extends JFrame {
 
     public JButton getBtnRegistrarCria() {
         return BtnRegistrarCria;
+    }
+
+    public JButton getBtnRegistrarCorral() {
+        return BtnRegistrarCorral;
     }
 
     private void createUIComponents() {

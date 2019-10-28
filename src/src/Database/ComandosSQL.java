@@ -15,8 +15,13 @@ public class ComandosSQL {
         JOptionPane.showMessageDialog(null,"Conexión realizada correctamente","Conexión exitosa",JOptionPane.INFORMATION_MESSAGE);
     }
 
-    public static void insertar(){
-
+    public static String insertar(String comando){
+        try {
+            con.execute(comando);
+        } catch (SQLException e) {
+            return e.getMessage();
+        }
+        return "";
     }
 
     public static ResultSet consulta(String comando){
