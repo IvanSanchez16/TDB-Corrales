@@ -10,7 +10,7 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class UIClasificar extends JDialog {
-    private JButton BtnClasificar;
+    private JButton BtnClasificar,BtnEditar;
     private JPanel PCajas;
     private JScrollPane SPTabla;
     private JTable TbCrias;
@@ -32,9 +32,23 @@ public class UIClasificar extends JDialog {
         return BtnClasificar;
     }
 
+    public JTable getTbCrias() {
+        return TbCrias;
+    }
+
+    public void editarCria(int row) {
+        TxtId.setText((String) TbCrias.getValueAt(row, 0));
+        TxtPeso.setText((String) TbCrias.getValueAt(row, 1));
+        TxtPeso.setEnabled(true);
+        TxtGrasa.setText((String) TbCrias.getValueAt(row, 3));
+        TxtGrasa.setEnabled(true);
+        BtnEditar.setEnabled(true);
+    }
+
     public void asignarControladores(CClasificar C){
         BtnClasificar.addActionListener(C);
         TbCrias.addMouseListener(C);
+        BtnEditar.addActionListener(C);
     }
 
     private void defineInterfaz(){
@@ -59,7 +73,7 @@ public class UIClasificar extends JDialog {
         add(SPTabla);
 
         PCajas=new JPanel();
-        PCajas.setLayout(new GridLayout(0,3,10,0));
+        PCajas.setLayout(new GridLayout(0,4,10,0));
 
         TxtId=new JNumberField();
         TxtId.setBorder(BorderFactory.createTitledBorder(
@@ -88,7 +102,12 @@ public class UIClasificar extends JDialog {
         TxtGrasa.setEnabled(false);
         PCajas.add(TxtGrasa);
 
-        PCajas.setBounds(5,210,500,65);
+        BtnEditar=new JButton("Editar");
+        BtnEditar.setFont(new Font("Candara",1,15));
+        BtnEditar.setEnabled(false);
+        PCajas.add(BtnEditar);
+
+        PCajas.setBounds(5,210,500,68);
         PCajas.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createCompoundBorder(
                         BorderFactory.createRaisedBevelBorder(),BorderFactory.createLoweredBevelBorder()
@@ -127,5 +146,44 @@ public class UIClasificar extends JDialog {
         JOptionPane.showMessageDialog(this,msg,"Registro de corral",JOptionPane.INFORMATION_MESSAGE);
         if(!band)
             dispose();
+    }
+
+    public void mostrarModal(String msg){
+        boolean band=true;
+        if(msg==null){
+            msg="La cría fue actualizada correctamente";
+            band=false;
+        }
+        JOptionPane.showMessageDialog(this,msg,"Registro de cría",msg.equals("La cría fue actualizada correctamente")?JOptionPane.INFORMATION_MESSAGE:JOptionPane.ERROR_MESSAGE);
+        if(!band)
+            dispose();
+    }
+
+    public JButton getBtnEditar() {
+        return BtnEditar;
+    }
+
+    public JNumberField getTxtPeso() {
+        return TxtPeso;
+    }
+
+    public JNumberField getTxtGrasa() {
+        return TxtGrasa;
+    }
+
+    public JNumberField getTxtId() {
+        return TxtId;
+    }
+
+    public String getId() {
+        return TxtId.getText();
+    }
+
+    public String getGrasa() {
+        return TxtGrasa.ObtenerCantidad()+"";
+    }
+
+    public String getPeso() {
+        return TxtPeso.ObtenerCantidad()+"";
     }
 }

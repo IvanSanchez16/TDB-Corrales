@@ -26,11 +26,22 @@ public class CClasificar implements ActionListener, MouseListener {
             view.llenarTabla( model.obtenerCrias() );
             return;
         }
+        if(e.getSource()==view.getBtnEditar()){
+            view.mostrarModal( model.actualizarCria( view.getId(),view.getPeso(),view.getGrasa() ));
+            view.getTxtId().setText("");
+            view.getTxtPeso().setText("");
+            view.getTxtPeso().setEnabled(false);
+            view.getTxtGrasa().setText("");
+            view.getTxtGrasa().setEnabled(false);
+            view.llenarTabla( model.obtenerCrias() );
+            return;
+        }
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
-
+       view.editarCria(view.getTbCrias().rowAtPoint(e.getPoint()));
+       return;
     }
     public void mousePressed(MouseEvent e) {}
     public void mouseReleased(MouseEvent e) {}

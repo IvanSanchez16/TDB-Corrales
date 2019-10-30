@@ -101,4 +101,8 @@ public class MClasificar {
         }
         return errores;
     }
+
+    public String actualizarCria(String id,String peso,String grasa) {
+        return ComandosSQL.actualizar("UPDATE CRIAS SET Peso="+peso+", Cant_Grasa="+grasa+" where Crias_id="+id);
+    }
 }
