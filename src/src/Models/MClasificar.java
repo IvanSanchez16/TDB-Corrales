@@ -32,7 +32,7 @@ public class MClasificar {
         return null;
     }
 
-    public ArrayList<String> actualizarClasificaciones(){
+    public ArrayList<String> actualizarClasificaciones(String fechaA){
         ArrayList<String> errores=new ArrayList<>();
         ResultSet rs=ComandosSQL.consulta("Select * from CLASIFICACIONES");
         ArrayList<Clasificacion> al= new ArrayList<>();
@@ -84,18 +84,19 @@ public class MClasificar {
                     break;
             }
             if(a==b){
-                msg=ComandosSQL.actualizar("UPDATE CRIAS SET Clasificacion_id="+(a+1)+" where Crias_id="+cria[0]);
+                msg=ComandosSQL.actualizar("exec SPActualizarClasificacion "+cria[0]+",'"+fechaA+"',"+(a+1));
                 if(msg!=null)
                     errores.add(msg);
                 continue;
             }
             if(b-a==1 || a-b==1){
-                msg=ComandosSQL.actualizar("UPDATE CRIAS SET Clasificacion_id="+(b+1)+" where Crias_id="+cria[0]);
+                msg=ComandosSQL.actualizar("exec SPActualizarClasificacion "+cria[0]+",'"+fechaA+"',"+(b+1));
                 if(msg!=null)
                     errores.add(msg);
                 continue;
             }
-            msg=ComandosSQL.actualizar("UPDATE CRIAS SET Clasificacion_id="+(((a+b)/2)+1)+" where Crias_id="+cria[0]);
+            int prom=(a+b)/2;
+            msg=ComandosSQL.actualizar("exec SPActualizarClasificacion "+cria[0]+",'"+fechaA+"',"+(prom+1));
             if(msg!=null)
                 errores.add(msg);
         }
@@ -105,4 +106,5 @@ public class MClasificar {
     public String actualizarCria(String id,String peso,String grasa) {
         return ComandosSQL.actualizar("UPDATE CRIAS SET Peso="+peso+", Cant_Grasa="+grasa+" where Crias_id="+id);
     }
+
 }

@@ -1,6 +1,7 @@
 package Controllers;
 
 import Models.MCria;
+import Views.UIPrincipal;
 import Views.UIRegistroCria;
 
 import java.awt.event.*;
@@ -25,7 +26,7 @@ public class CCria implements ActionListener {
             return;
         }
         if(evt.getSource()==view.getBtnRegistrar()){
-            String msg=model.insertar( view.getId(),view.getFecha(),view.getFechaActual(),view.getEstado(),view.getPeso(),view.getCMusculo(),view.getCGrasa(),view.getCorral() );
+            String msg=model.insertar( view.getId(),view.getFecha(), UIPrincipal.getFechaActual(),view.getEstado(),view.getPeso(),view.getCMusculo(),view.getCGrasa(),view.getCorral() );
             view.mostrarModal(msg);
         }
     }

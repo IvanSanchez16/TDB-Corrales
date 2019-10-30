@@ -15,8 +15,48 @@ begin catch
 	rollback tran
 end catch
 
+CREATE PROCEDURE SPActualizarClasificacion @Id int,@Fecha date,@Clasificacion_id int AS
+Begin try
+	begin tran
+		UPDATE CRIAS SET Clasificacion_id=@Clasificacion_id where Crias_id=@Id
+		INSERT INTO LOGCLASIFICACIONES Values(@Id,@Clasificacion_id,@Fecha)
+		if(@Clasificacion_id=3)
+			Insert into SENSORES values (@Id,'S')
+	commit tran 
+end try
+begin catch
+	rollback tran
+end catch
+
+CREATE PROCEDURE SPAgregarACuarentena @Cria int,@Corral int,@Fecha date,@Medicamento varchar(20),@Enfermedad varchar(20) AS
+Begin try
+	begin tran
+		Insert Into TRATAMIENTOS values(@Medicamento,@Enfermedad)
+		Declare @Tratamiento int
+		SET @Tratamiento=(SELECT max(Tratamiento_id) from TRATAMIENTOS)
+		INSERT INTO CUARENTENAS(Tratamiento_id,Cria_id,Fecha_Inicio) values(@Tratamiento,@Cria,@Fecha)
+		DECLARE @CorralOrg int
+		Set @CorralOrg=(SELECT Corral_id from CRIAS where Crias_id=@Cria)
+		INSERT INTO MOVIMIENTOS_CRIAS values (@CorralOrg,@Corral,@Cria,@Fecha)
+		UPDATE CRIAS SET Corral_id=@Corral where Crias_id=@Cria
+		commit tran
+end try
+begin catch
+	rollback tran
+end catch
+
 Select * from LOGDIETAS
 
 Select * from CORRALES
 
 Select * from CRIAS 
+
+Select * from SENSORES
+
+Select * from LOGCLASIFICACIONES
+
+Select * from CLASIFICACIONES
+
+truncate table SENSORES
+
+UPDATE SENSORES SET Estado_Animal='E'

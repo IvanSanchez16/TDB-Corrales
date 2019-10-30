@@ -2,6 +2,8 @@ package Controllers;
 
 import Models.MClasificar;
 import Views.UIClasificar;
+import Views.UIPrincipal;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -22,7 +24,7 @@ public class CClasificar implements ActionListener, MouseListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource()==view.getBtnClasificar()){
-            view.mostrarModal(model.actualizarClasificaciones());
+            view.mostrarModal(model.actualizarClasificaciones( UIPrincipal.getFechaActual()));
             view.llenarTabla( model.obtenerCrias() );
             return;
         }

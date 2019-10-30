@@ -5,6 +5,7 @@ import Controllers.CInicio;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
+import java.util.Calendar;
 
 public class UIPrincipal extends JFrame {
 
@@ -82,6 +83,18 @@ public class UIPrincipal extends JFrame {
         return BtnCorrales;
     }
 
+    public static String getFechaActual(){
+        Calendar c=Calendar.getInstance();
+        String dia=(c.get(Calendar.DATE))+"";
+        String mes=(c.get(Calendar.MONTH)+1)+"";
+        String anio=(c.get(Calendar.YEAR))+"";
+        if(dia.length()==1)
+            dia="0"+dia;
+        if(mes.length()==1)
+            mes="0"+mes;
+        return anio+mes+dia;
+    }
+
     private void createUIComponents() {
        PPrincipal=new JPanel();
        PPrincipal.setLayout(null);
@@ -106,7 +119,7 @@ public class UIPrincipal extends JFrame {
         BtnClasificar.setFont(FontBotones);
         PManipulacion.add(BtnClasificar);
 
-        BtnIdentificar=new JButton("Mover a cuarentena");
+        BtnIdentificar=new JButton("Cuarentenas");
         BtnIdentificar.setFont(FontBotones);
         PManipulacion.add(BtnIdentificar);
 

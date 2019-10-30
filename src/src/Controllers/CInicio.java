@@ -28,6 +28,11 @@ public class CInicio implements ActionListener {
         }
         if(e.getSource()==view.getBtnClasificar()){
             CClasificar cl=new CClasificar();
+            return;
+        }
+        if(e.getSource()==view.getBtnIdentificar()){
+            CCuarentena cc=new CCuarentena();
+            return;
         }
     }
 }

@@ -98,18 +98,6 @@ public class UIRegistroCria extends JDialog {
         return aux;
     }
 
-    public String getFechaActual(){
-        Calendar c=Calendar.getInstance();
-        String dia=(c.get(Calendar.DATE))+"";
-        String mes=(c.get(Calendar.MONTH)+1)+"";
-        String anio=(c.get(Calendar.YEAR))+"";
-        if(dia.length()==1)
-            dia="0"+dia;
-        if(mes.length()==1)
-            mes="0"+mes;
-        return anio+mes+dia;
-    }
-
     public String getEstado(){
         return (String) ComboEstado.getSelectedItem();
     }
