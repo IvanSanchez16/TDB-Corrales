@@ -29,7 +29,7 @@ public class MCria {
         return null;
     }
 
-    public String insertar(int id,String fecha,String estado,int peso,String color,int grasa,int corral){
-        return ComandosSQL.insertar("exec SPInsertarCria "+id+",'"+fecha+"','"+estado+"',"+peso+",'"+color+"',"+grasa+","+corral);
+    public String insertar(int id,String fecha,String fechaActual,String estado,int peso,String color,int grasa,int corral){
+        return ComandosSQL.insertar("exec SPInsertarCria "+id+",'"+fecha+"','"+fechaActual+"','"+estado+"',"+peso+",'"+color+"',"+grasa+","+corral);
     }
 }

@@ -3,7 +3,6 @@ package Views;
 import Controllers.CCria;
 import Resource.JNumberField;
 import com.toedter.calendar.JCalendar;
-
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
@@ -13,9 +12,9 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.spi.CalendarDataProvider;
 
-public class UIRegistroCria extends JFrame {
+
+public class UIRegistroCria extends JDialog {
 
     private Font FontCajas;
     private Font FontTitulos;
@@ -33,12 +32,12 @@ public class UIRegistroCria extends JFrame {
     private int dia,mes,anio;
 
     public UIRegistroCria(){
-        super("Registrar cría");
+        setTitle("Registrar cría");
+        setModal(true);
         setSize(550,395);
         setResizable(false);
         setLocationRelativeTo(null);
         definirInterfaz();
-        setVisible(true);
     }
 
     public void asignarControladores(CCria c){
@@ -97,6 +96,18 @@ public class UIRegistroCria extends JFrame {
         }
         aux=aux.substring(4)+aux.substring(2,4)+aux.substring(0,2);
         return aux;
+    }
+
+    public String getFechaActual(){
+        Calendar c=Calendar.getInstance();
+        String dia=(c.get(Calendar.DATE))+"";
+        String mes=(c.get(Calendar.MONTH)+1)+"";
+        String anio=(c.get(Calendar.YEAR))+"";
+        if(dia.length()==1)
+            dia="0"+dia;
+        if(mes.length()==1)
+            mes="0"+mes;
+        return anio+mes+dia;
     }
 
     public String getEstado(){
@@ -245,5 +256,6 @@ public class UIRegistroCria extends JFrame {
     public void llenarCorrales(ArrayList<String[]> datos){
         for(int i=0 ; i<datos.size() ; i++)
             dm.addRow(datos.get(i));
+        setVisible(true);
     }
 }

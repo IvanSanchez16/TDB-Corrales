@@ -25,7 +25,7 @@ public class CCria implements ActionListener {
             return;
         }
         if(evt.getSource()==view.getBtnRegistrar()){
-            String msg=model.insertar( view.getId(),view.getFecha(),view.getEstado(),view.getPeso(),view.getCMusculo(),view.getCGrasa(),view.getCorral() );
+            String msg=model.insertar( view.getId(),view.getFecha(),view.getFechaActual(),view.getEstado(),view.getPeso(),view.getCMusculo(),view.getCGrasa(),view.getCorral() );
             view.mostrarModal(msg);
         }
     }

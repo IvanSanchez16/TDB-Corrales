@@ -24,6 +24,15 @@ public class ComandosSQL {
         return "";
     }
 
+    public static String actualizar(String comando){
+        try {
+            con.execute(comando);
+        } catch (SQLException e) {
+            return e.getMessage();
+        }
+        return null;
+    }
+
     public static ResultSet consulta(String comando){
         try {
             ResultSet rs=con.executeQuery(comando);

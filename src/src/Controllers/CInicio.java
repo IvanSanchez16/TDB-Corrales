@@ -26,6 +26,8 @@ public class CInicio implements ActionListener {
             CCorral c=new CCorral();
             return;
         }
-
+        if(e.getSource()==view.getBtnClasificar()){
+            CClasificar cl=new CClasificar();
+        }
     }
 }
