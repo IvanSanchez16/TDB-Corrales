@@ -6,8 +6,8 @@ IF @Corral not in (Select Corral_Id from CORRALES where Corral_id=@Corral and Ti
 else
 BEGIN tran
 begin try
-	Insert into CRIAS (Crias_id,Fecha_Entrada,Estado_Origen,Peso,Color_Musculo,Cant_Grasa,Corral_id) 
-	values(@Id,@Fecha,@Estado,@Peso,@CMusculo,@CGrasa,@Corral)
+	Insert into CRIAS (Fecha_Entrada,Estado_Origen,Peso,Color_Musculo,Cant_Grasa,Corral_id)
+	values(@Fecha,@Estado,@Peso,@CMusculo,@CGrasa,@Corral)
 	Insert into LOGDIETAS values(1,@Id,@FechaActual)
 	commit tran
 end try
@@ -15,17 +15,24 @@ begin catch
 	rollback tran
 end catch
 
+CREATE PROCEDURE SPActualizarCria @Id int,@Peso int,@Grasa int AS 
+UPDATE CRIAS SET Peso=@Peso,Cant_Grasa=@Grasa,Clasificacion_id=null where Crias_id=@Id
+
 CREATE PROCEDURE SPActualizarClasificacion @Id int,@Fecha date,@Clasificacion_id int AS
 Begin try
 	begin tran
 		UPDATE CRIAS SET Clasificacion_id=@Clasificacion_id where Crias_id=@Id
 		INSERT INTO LOGCLASIFICACIONES Values(@Id,@Clasificacion_id,@Fecha)
 		if(@Clasificacion_id=3)
-			Insert into SENSORES values (@Id,'S')
+			Insert into SENSORES values (@Id,38)
 	commit tran 
 end try
 begin catch
 	rollback tran
+	DECLARE @Message varchar(MAX) = ERROR_MESSAGE(),
+        @Severity int = ERROR_SEVERITY(),
+        @State smallint = ERROR_STATE()
+	RAISERROR(@Message,@Severity,@State)
 end catch
 
 CREATE PROCEDURE SPAgregarACuarentena @Cria int,@Corral int,@Fecha date,@Medicamento varchar(20),@Enfermedad varchar(20) AS
@@ -43,6 +50,10 @@ Begin try
 end try
 begin catch
 	rollback tran
+	DECLARE @Message varchar(MAX) = ERROR_MESSAGE(),
+        @Severity int = ERROR_SEVERITY(),
+        @State smallint = ERROR_STATE()
+	RAISERROR(@Message,@Severity,@State)
 end catch
 
 Select * from LOGDIETAS
@@ -57,6 +68,6 @@ Select * from LOGCLASIFICACIONES
 
 Select * from CLASIFICACIONES
 
-truncate table SENSORES
+truncate table CRIAS
 
 UPDATE SENSORES SET Estado_Animal='E'

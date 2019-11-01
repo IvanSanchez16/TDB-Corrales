@@ -16,6 +16,7 @@ public class CCria implements ActionListener {
         model=new MCria();
         view.asignarControladores(this);
         ArrayList<String[]> datos=model.obtenerCorrales();
+        view.setTextId( model.sigCodigo() );
         view.llenarCorrales(datos);
     }
 
@@ -26,8 +27,12 @@ public class CCria implements ActionListener {
             return;
         }
         if(evt.getSource()==view.getBtnRegistrar()){
-            String msg=model.insertar( view.getId(),view.getFecha(), UIPrincipal.getFechaActual(),view.getEstado(),view.getPeso(),view.getCMusculo(),view.getCGrasa(),view.getCorral() );
-            view.mostrarModal(msg);
+            try {
+                String msg=model.insertar( view.getId(),view.getFecha(), UIPrincipal.getFechaActual(),view.getEstado(),view.getPeso(),view.getCMusculo(),view.getCGrasa(),view.getCorral() );
+                view.mostrarModal(msg);
+            } catch (Exception e) {
+                view.mostrarModal("Faltan campos por llenar");
+            }
         }
     }
 

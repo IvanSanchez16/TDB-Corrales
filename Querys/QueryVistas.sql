@@ -12,5 +12,7 @@ select CR.Crias_id AS Id,Peso,Color_Musculo as [Color de músculo],Cant_Grasa as 
 CLASIFICACIONES C on CR.Clasificacion_id=C.Clasificacion_id
 
 CREATE VIEW CriasEnfermasGrasaCobertura2 AS
-SELECT CR.Crias_id as Id,CR.Corral_id from CRIAS CR inner join
-SENSORES S on S.Cria_id=CR.Crias_id where S.Estado_Animal='E'
+Select T.Id,T.Corral_id,C.Fecha_Inicio from
+(SELECT CR.Crias_id as Id,CR.Corral_id from CRIAS CR inner join
+SENSORES S on S.Cria_id=CR.Crias_id where S.Temperatura>=40) T
+left join CUARENTENAS C on C.Cria_id=T.Id where C.Fecha_Inicio is null

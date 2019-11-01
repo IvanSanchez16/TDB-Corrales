@@ -1,7 +1,9 @@
 package Views;
 
 import Controllers.CClasificar;
+import Database.ComandosSQL;
 import Resource.JNumberField;
+import Resource.Rutinas;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -10,22 +12,33 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class UIClasificar extends JDialog {
-    private JButton BtnClasificar,BtnEditar;
-    private JPanel PCajas;
+    private JButton BtnClasificar,BtnEditar,BtnBuscar;
+    private JPanel PCajas,PBusqueda;
     private JScrollPane SPTabla;
     private JTable TbCrias;
     private DefaultTableModel Dm;
     private Font FontCajas;
     private Font FontTitulos;
     private JNumberField TxtId,TxtPeso,TxtGrasa;
+    private JTextField TxtBusqueda;
+    private JComboBox<String> ComboBusqueda;
+    private ArrayList<String[]> datos;
 
     public UIClasificar(){
         setTitle("Clasificar");
         setModal(true);
-        setSize(520,360);
+        setSize(520,420);
         setLocationRelativeTo(null);
         setResizable(false);
         defineInterfaz();
+    }
+
+    public JButton getBtnBuscar() {
+        return BtnBuscar;
+    }
+
+    public String getBusqueda(){
+        return TxtBusqueda.getText();
     }
 
     public JButton getBtnClasificar() {
@@ -49,6 +62,15 @@ public class UIClasificar extends JDialog {
         BtnClasificar.addActionListener(C);
         TbCrias.addMouseListener(C);
         BtnEditar.addActionListener(C);
+        BtnBuscar.addActionListener(C);
+    }
+
+    public int getCriterio(){
+        return ComboBusqueda.getSelectedIndex();
+    }
+
+    public ArrayList<String[]> getDatos() {
+        return datos;
     }
 
     private void defineInterfaz(){
@@ -56,6 +78,29 @@ public class UIClasificar extends JDialog {
 
         FontCajas=new Font("Dubai",0,13);
         FontTitulos=new Font("Candara",1,13);
+
+        PBusqueda=new JPanel();
+        PBusqueda.setLayout(new GridLayout(0,3));
+        PBusqueda.setBorder(BorderFactory.createTitledBorder(
+                BorderFactory.createCompoundBorder(
+                        BorderFactory.createRaisedBevelBorder(),BorderFactory.createLoweredBevelBorder()
+                ),"Busqueda de crías por ID", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos));
+
+        TxtBusqueda =new JTextField();
+        TxtBusqueda.setFont(FontCajas);
+        PBusqueda.add(TxtBusqueda);
+
+        String[] a={"Id","Clasificacion"};
+        ComboBusqueda=new JComboBox<>(a);
+        ComboBusqueda.setFont(FontCajas);
+        PBusqueda.add(ComboBusqueda);
+
+        BtnBuscar=new JButton();
+        BtnBuscar.setIcon(Rutinas.AjustarImagen("src/src/images/lupa.png",25,25));
+        PBusqueda.add(BtnBuscar);
+
+        PBusqueda.setBounds(5,5,500,50);
+        add(PBusqueda);
 
         String [][] m={};
         String [] columnas={"Id","Peso (kg)","Color de músculo","% de grasa","Clasificación"};
@@ -68,7 +113,7 @@ public class UIClasificar extends JDialog {
                 BorderFactory.createCompoundBorder(
                         BorderFactory.createRaisedBevelBorder(),BorderFactory.createLoweredBevelBorder()
                 ),"Crías", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos));
-        SPTabla.setBounds(5,5,500,200);
+        SPTabla.setBounds(5,65,500,200);
         SPTabla.setBackground(new Color(242,242,242));
         add(SPTabla);
 
@@ -107,7 +152,7 @@ public class UIClasificar extends JDialog {
         BtnEditar.setEnabled(false);
         PCajas.add(BtnEditar);
 
-        PCajas.setBounds(5,210,500,68);
+        PCajas.setBounds(5,270,500,68);
         PCajas.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createCompoundBorder(
                         BorderFactory.createRaisedBevelBorder(),BorderFactory.createLoweredBevelBorder()
@@ -116,8 +161,13 @@ public class UIClasificar extends JDialog {
 
         BtnClasificar=new JButton("Actualizar clasificaciones");
         BtnClasificar.setFont(new Font("Candara",1,15));
-        BtnClasificar.setBounds(5,285,500,40);
+        BtnClasificar.setBounds(5,345,500,40);
         add(BtnClasificar);
+    }
+
+    public void asignarArreglo(ArrayList<String[]> a){
+        datos=a;
+        llenarTabla();
     }
 
     public void llenarTabla(ArrayList<String[]> datos){
@@ -129,7 +179,11 @@ public class UIClasificar extends JDialog {
         TbCrias.getColumn("Clasificación").setPreferredWidth(125);
         for(int i=0 ; i<datos.size() ; i++)
             Dm.addRow(datos.get(i));
-        setVisible(true);
+        SPTabla.updateUI();
+    }
+
+    private void llenarTabla(){
+        llenarTabla(datos);
     }
 
     public void mostrarModal(ArrayList<String> al){
@@ -140,12 +194,10 @@ public class UIClasificar extends JDialog {
             band=false;
         }else {
             for (String msg2:al)
-                JOptionPane.showMessageDialog(this,msg2,"Registro de corral",JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this,msg2,"Clasificar",JOptionPane.ERROR_MESSAGE);
             return;
         }
-        JOptionPane.showMessageDialog(this,msg,"Registro de corral",JOptionPane.INFORMATION_MESSAGE);
-        if(!band)
-            dispose();
+        JOptionPane.showMessageDialog(this,msg,"Clasificar",JOptionPane.INFORMATION_MESSAGE);
     }
 
     public void mostrarModal(String msg){

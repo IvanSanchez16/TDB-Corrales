@@ -3,6 +3,8 @@ package Models;
 import Database.ComandosSQL;
 
 import javax.print.DocFlavor;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -52,7 +54,7 @@ public class MClasificar {
         }
         if(errores.size()!=0)
             return errores;
-        rs=ComandosSQL.consulta("Select Crias_id,Peso,Cant_Grasa from CRIAS");
+        rs=ComandosSQL.consulta("Select Crias_id,Peso,Cant_Grasa from CRIAS where Clasificacion_id is null");
         String msg;
         int[] aux;
         try {
@@ -103,8 +105,20 @@ public class MClasificar {
         return errores;
     }
 
+    public ArrayList<String[]> obtenerCrias(ArrayList<String[]> a, int criterio, String filtro){
+        int crit=criterio==0?0:4;
+        ArrayList<String[]> al=new ArrayList<>();
+        String [] aux;
+        for(int i=0 ; i<a.size() ; i++) {
+            aux = a.get(i);
+            if (aux[crit].contains(filtro))
+                al.add(aux);
+        }
+        return al;
+    }
+
     public String actualizarCria(String id,String peso,String grasa) {
-        return ComandosSQL.actualizar("UPDATE CRIAS SET Peso="+peso+", Cant_Grasa="+grasa+" where Crias_id="+id);
+        return ComandosSQL.actualizar("exec SPActualizarCria "+id+","+peso+","+grasa);
     }
 
 }

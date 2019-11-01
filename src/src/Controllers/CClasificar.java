@@ -4,6 +4,7 @@ import Models.MClasificar;
 import Views.UIClasificar;
 import Views.UIPrincipal;
 
+import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -18,14 +19,15 @@ public class CClasificar implements ActionListener, MouseListener {
         view = new UIClasificar();
         model = new MClasificar();
         view.asignarControladores(this);
-        view.llenarTabla(model.obtenerCrias());
+        view.asignarArreglo(model.obtenerCrias());
+        view.setVisible(true);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource()==view.getBtnClasificar()){
             view.mostrarModal(model.actualizarClasificaciones( UIPrincipal.getFechaActual()));
-            view.llenarTabla( model.obtenerCrias() );
+            view.asignarArreglo( model.obtenerCrias() );
             return;
         }
         if(e.getSource()==view.getBtnEditar()){
@@ -35,7 +37,11 @@ public class CClasificar implements ActionListener, MouseListener {
             view.getTxtPeso().setEnabled(false);
             view.getTxtGrasa().setText("");
             view.getTxtGrasa().setEnabled(false);
-            view.llenarTabla( model.obtenerCrias() );
+            view.asignarArreglo( model.obtenerCrias() );
+            return;
+        }
+        if(e.getSource()==view.getBtnBuscar()){
+            view.llenarTabla( model.obtenerCrias( view.getDatos() , view.getCriterio() ,view.getBusqueda() ) );
             return;
         }
     }

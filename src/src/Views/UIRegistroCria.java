@@ -23,7 +23,7 @@ public class UIRegistroCria extends JDialog {
     private JButton BtnFecha,BtnCFecha,BtnRegistrar;
     private JComboBox ComboEstado;
     private JNumberField TxtPeso;
-    private JTextField TxtColor;
+    private JComboBox<String> TxtColor;
     private JNumberField TxtGrasa,TxtCorral;
     private JTable TbCorrales;
     private JScrollPane SPCorrales;
@@ -43,6 +43,10 @@ public class UIRegistroCria extends JDialog {
     public void asignarControladores(CCria c){
         BtnFecha.addActionListener(c);
         BtnRegistrar.addActionListener(c);
+    }
+
+    public void setTextId(String id){
+        TxtId.setText(id);
     }
 
     public void mostrarDatePicker(){
@@ -107,7 +111,7 @@ public class UIRegistroCria extends JDialog {
     }
 
     public String getCMusculo(){
-        return TxtColor.getText();
+        return (String) TxtColor.getSelectedItem();
     }
 
     public int getCGrasa(){
@@ -133,7 +137,7 @@ public class UIRegistroCria extends JDialog {
         setLayout(null);
         setBackground(new Color(242,242,242));
 
-        FontCajas=new Font("Dubai",0,13);
+        FontCajas=new Font("Cambria",0,14);
         FontTitulos=new Font("Candara",1,13);
 
         TxtId = new JNumberField();
@@ -142,7 +146,8 @@ public class UIRegistroCria extends JDialog {
                         BorderFactory.createRaisedBevelBorder(),BorderFactory.createLoweredBevelBorder()
                 ),"ID", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos));
         TxtId.setBackground(new Color(242,242,242));
-        TxtId.setBounds(5,5,100,40);
+        TxtId.setBounds(5,5,135,40);
+        TxtId.setEnabled(false);
         TxtId.setFont(FontCajas);
         add(TxtId);
 
@@ -152,7 +157,7 @@ public class UIRegistroCria extends JDialog {
         anio=c.get(Calendar.YEAR);
 
         TxtFecha = new JLabel(dia+" / "+mes+" / "+anio);
-        TxtFecha.setFont(new Font("Dubai",1,14));
+        TxtFecha.setFont(new Font("Cambria",1,14));
         TxtFecha.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createCompoundBorder(
                         BorderFactory.createRaisedBevelBorder(),BorderFactory.createLoweredBevelBorder()
@@ -179,8 +184,9 @@ public class UIRegistroCria extends JDialog {
                 BorderFactory.createCompoundBorder(
                         BorderFactory.createRaisedBevelBorder(),BorderFactory.createLoweredBevelBorder()
                 ),"Estado de procedencia", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos));
-        ComboEstado.setBounds(5,105,150,50);
+        ComboEstado.setBounds(5,105,180,50);
         ComboEstado.setBackground(new Color(242,242,242));
+        ComboEstado.setFont(FontCajas);
         add(ComboEstado);
 
         TxtPeso=new JNumberField();
@@ -188,17 +194,21 @@ public class UIRegistroCria extends JDialog {
                 BorderFactory.createCompoundBorder(
                         BorderFactory.createRaisedBevelBorder(),BorderFactory.createLoweredBevelBorder()
                 ),"Peso en kilogramos", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos));
-        TxtPeso.setBounds(5,165,130,45);
+        TxtPeso.setBounds(5,165,135,45);
         TxtPeso.setBackground(new Color(242,242,242));
+        TxtPeso.setFont(FontCajas);
         add(TxtPeso);
 
-        TxtColor=new JTextField();
+
+        String[] aux={"Rojo vivo","Rojo púrpura","Rojo pardo"};
+        TxtColor=new JComboBox<>(aux);
         TxtColor.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createCompoundBorder(
                         BorderFactory.createRaisedBevelBorder(),BorderFactory.createLoweredBevelBorder()
                 ),"Color del musculo", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos));
-        TxtColor.setBounds(5,220,130,45);
+        TxtColor.setBounds(5,220,135,45);
         TxtColor.setBackground(new Color(242,242,242));
+        TxtColor.setFont(FontCajas);
         add(TxtColor);
 
         TxtGrasa=new JNumberField();
@@ -208,13 +218,14 @@ public class UIRegistroCria extends JDialog {
                 ),"Porcentaje de grasa", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos));
         TxtGrasa.setBounds(5,270,135,45);
         TxtGrasa.setBackground(new Color(242,242,242));
+        TxtGrasa.setFont(FontCajas);
         add(TxtGrasa);
 
         String [][] m={};
         String [] columnas={"Id","Tipo","N# de crías"};
         dm=new DefaultTableModel(m,columnas);
         TbCorrales=new JTable(dm);
-        TbCorrales.setFont(new Font("Dubai",1,12));
+        TbCorrales.setFont(new Font("Cambria",1,12));
         TbCorrales.setEnabled(false);
         SPCorrales=new JScrollPane(TbCorrales);
         SPCorrales.setBorder(BorderFactory.createTitledBorder(
