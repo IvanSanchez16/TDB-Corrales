@@ -10,13 +10,19 @@ public class MCria {
 
     public String sigCodigo(){
         try {
-            ResultSet rs=ComandosSQL.consulta("Select max(Crias_id) as Id from CRIAS");
+            ResultSet rs=ComandosSQL.consulta("SELECT IDENT_CURRENT('CRIAS') as Id");
             rs.next();
-            String num=rs.getString("Id");
-            int n = Integer.parseInt(num);
+            int n = Integer.parseInt(rs.getString("Id"));
+            if(n==1){
+                rs=ComandosSQL.consulta("SELECT count(*) Num from CRIAS");
+                rs.next();
+                n=Integer.parseInt(rs.getString("Num"));
+                return n==0?"1":"2";
+            }
             return (n+1)+"";
         } catch (Exception e) {
-            return "1";
+            e.printStackTrace();
+            return "-1";
         }
     }
 
@@ -46,6 +52,7 @@ public class MCria {
             return "El peso debe estar en el rango de 50 a 250";
         if(grasa<0 || grasa>100)
             return "El porcentaje de grasa no puede estar fuera de 0-100";
-        return ComandosSQL.insertar("exec SPInsertarCria "+id+",'"+fecha+"','"+fechaActual+"','"+estado+"',"+peso+",'"+color+"',"+grasa+","+corral);
+        return ComandosSQL.insertar("exec dbo.SPInsertarCria @Id="+id+",@Fecha='"+fecha+"',@FechaActual='"+fechaActual
+                +"',@Estado='"+estado+"',@Peso="+peso+",@CMusculo='"+color+"',@CGrasa="+grasa+",@Corral="+corral);
     }
 }

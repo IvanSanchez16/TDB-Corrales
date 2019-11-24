@@ -1,19 +1,22 @@
-CREATE PROCEDURE SPInsertarCria @Id int,@Fecha date,@FechaActual date,@Estado varchar(30),@Peso int,@CMusculo varchar(20),@CGrasa tinyint,
+ALTER PROCEDURE SPInsertarCria @Id int,@Fecha date,@FechaActual date,@Estado varchar(30),@Peso int,@CMusculo varchar(20),@CGrasa tinyint,
 @Corral int 
 AS 
-IF @Corral not in (Select Corral_Id from CORRALES where Corral_id=@Corral and Tipo='N')
-	RAISERROR(50001,12,1)
-else
-BEGIN tran
 begin try
+	BEGIN tran;
 	Insert into CRIAS (Fecha_Entrada,Estado_Origen,Peso,Color_Musculo,Cant_Grasa,Corral_id)
 	values(@Fecha,@Estado,@Peso,@CMusculo,@CGrasa,@Corral)
 	Insert into LOGDIETAS values(1,@Id,@FechaActual)
-	commit tran
+	commit tran;
 end try
 begin catch
-	rollback tran
+	rollback tran;
+	declare @errornum int=100000,@errormen varchar(max)='Ocurrio un error durante la inserción',@errorest int=Error_State();
+	throw @errornum,@errormen,@errorest;
 end catch
+
+CREATE PROCEDURE SPInsertarCorral @Tipo char
+AS
+INSERT INTO CORRALES VALUES(@Tipo)
 
 CREATE PROCEDURE SPActualizarCria @Id int,@Peso int,@Grasa int AS 
 UPDATE CRIAS SET Peso=@Peso,Cant_Grasa=@Grasa,Clasificacion_id=null where Crias_id=@Id
@@ -29,11 +32,11 @@ Begin try
 end try
 begin catch
 	rollback tran
-	DECLARE @Message varchar(MAX) = ERROR_MESSAGE(),
-        @Severity int = ERROR_SEVERITY(),
-        @State smallint = ERROR_STATE()
-	RAISERROR(@Message,@Severity,@State)
+	declare @errornum int=100000,@errormen varchar(max)='Ocurrio un error durante la clasificacion',@errorest int=Error_State();
+	throw @errornum,@errormen,@errorest;
 end catch
+
+
 
 CREATE PROCEDURE SPAgregarACuarentena @Cria int,@Corral int,@Fecha date,@Medicamento varchar(20),@Enfermedad varchar(20) AS
 Begin try
@@ -56,9 +59,11 @@ begin catch
 	RAISERROR(@Message,@Severity,@State)
 end catch
 
+
+
 Select * from LOGDIETAS
 
-Select * from CORRALES
+Select * from CORRALES	
 
 Select * from CRIAS 
 
@@ -68,6 +73,5 @@ Select * from LOGCLASIFICACIONES
 
 Select * from CLASIFICACIONES
 
-truncate table CRIAS
 
 UPDATE SENSORES SET Estado_Animal='E'

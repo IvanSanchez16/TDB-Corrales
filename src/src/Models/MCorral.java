@@ -8,18 +8,24 @@ import java.sql.SQLException;
 public class MCorral {
 
     public String registrarCorral(char tipo){
-        return ComandosSQL.insertar("Insert into CORRALES values('"+tipo+"')");
+        return ComandosSQL.insertar("exec dbo.SPInsertarCorral @Tipo="+tipo);
     }
 
     public String sigCodigo(){
         try {
-            ResultSet rs=ComandosSQL.consulta("Select max(Corral_id) as Id from CORRALES");
+            ResultSet rs=ComandosSQL.consulta("SELECT IDENT_CURRENT('CORRALES') as Id");
             rs.next();
-            String num=rs.getString("Id");
-            int n = Integer.parseInt(num);
+            int n = Integer.parseInt(rs.getString("Id"));
+            if(n==1){
+                rs=ComandosSQL.consulta("SELECT count(*) Num from CORRALES");
+                rs.next();
+                n=Integer.parseInt(rs.getString("Num"));
+                return n==0?"1":"2";
+            }
             return (n+1)+"";
         } catch (Exception e) {
-           return "1";
+            e.printStackTrace();
+            return "-1";
         }
     }
 }

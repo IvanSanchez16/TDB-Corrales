@@ -95,8 +95,9 @@ public class UIClasificar extends JDialog {
         ComboBusqueda.setFont(FontCajas);
         PBusqueda.add(ComboBusqueda);
 
-        BtnBuscar=new JButton();
-        BtnBuscar.setIcon(Rutinas.AjustarImagen("src/src/images/lupa.png",25,25));
+        BtnBuscar=new JButton("Filtrar");
+        BtnBuscar.setFont(new Font("Candara",1,15));
+        BtnBuscar.setIcon(Rutinas.AjustarImagen("src/src/images/filtrar.png",17,17));
         PBusqueda.add(BtnBuscar);
 
         PBusqueda.setBounds(5,5,500,50);

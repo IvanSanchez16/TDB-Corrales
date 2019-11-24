@@ -37,7 +37,7 @@ public class ComandosSQL {
         try {
             ResultSet rs=con.executeQuery(comando);
             return rs;
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
