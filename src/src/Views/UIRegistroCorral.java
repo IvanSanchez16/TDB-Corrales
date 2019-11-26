@@ -2,7 +2,6 @@ package Views;
 
 import Controllers.CCorral;
 import Resource.JNumberField;
-
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
@@ -23,16 +22,13 @@ public class UIRegistroCorral extends JFrame {
         definirInterfaz();
         setVisible(true);
     }
+
     public void asignarControlador(CCorral c){
         BtnRegistrar.addActionListener(c);
     }
 
     public void setTextId(String id){
         TxtId.setText(id);
-    }
-
-    public int getTxtId() {
-        return (int) TxtId.ObtenerCantidad();
     }
 
     public void mostrarModal(String msg){

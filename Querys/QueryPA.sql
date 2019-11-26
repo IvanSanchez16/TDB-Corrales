@@ -1,4 +1,4 @@
-ALTER PROCEDURE SPInsertarCria @Id int,@Fecha date,@FechaActual date,@Estado varchar(30),@Peso int,@CMusculo varchar(20),@CGrasa tinyint,
+CREATE PROCEDURE SPInsertarCria @Id int,@Fecha date,@FechaActual date,@Estado varchar(30),@Peso int,@CMusculo varchar(20),@CGrasa tinyint,
 @Corral int 
 AS 
 begin try
@@ -13,6 +13,16 @@ begin catch
 	declare @errornum int=100000,@errormen varchar(max)='Ocurrio un error durante la inserción',@errorest int=Error_State();
 	throw @errornum,@errormen,@errorest;
 end catch
+
+CREATE PROCEDURE SPComprobarCorral @Corral_id int
+as
+IF @Corral_id not in (Select Corral_id from CORRALES where Corral_id=@Corral_id and Tipo='N')
+begin
+	select 0 as Band
+	return
+end
+else
+	select 1 as band
 
 CREATE PROCEDURE SPInsertarCorral @Tipo char
 AS
@@ -53,10 +63,8 @@ Begin try
 end try
 begin catch
 	rollback tran
-	DECLARE @Message varchar(MAX) = ERROR_MESSAGE(),
-        @Severity int = ERROR_SEVERITY(),
-        @State smallint = ERROR_STATE()
-	RAISERROR(@Message,@Severity,@State)
+	declare @errornum int=100000,@errormen varchar(max)='Ocurrio un error en el proceso de cuarentena',@errorest int=Error_State();
+	throw @errornum,@errormen,@errorest;
 end catch
 
 
@@ -74,4 +82,3 @@ Select * from LOGCLASIFICACIONES
 Select * from CLASIFICACIONES
 
 
-UPDATE SENSORES SET Estado_Animal='E'

@@ -50,8 +50,16 @@ public class MCria {
     public String insertar(int id,String fecha,String fechaActual,String estado,int peso,String color,int grasa,int corral){
         if(peso<50 || peso>250)
             return "El peso debe estar en el rango de 50 a 250";
-        if(grasa<0 || grasa>100)
-            return "El porcentaje de grasa no puede estar fuera de 0-100";
+        if(grasa<1 || grasa>40)
+            return "El porcentaje de grasa no puede estar fuera de 1-40";
+        try {
+            ResultSet rs=ComandosSQL.consulta("exec dbo.SPComprobarCorral @Corral_id="+corral);
+            rs.next();
+            if(rs.getInt("Band")==0)
+                return "El corral necesita ser tipo normal";
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return ComandosSQL.insertar("exec dbo.SPInsertarCria @Id="+id+",@Fecha='"+fecha+"',@FechaActual='"+fechaActual
                 +"',@Estado='"+estado+"',@Peso="+peso+",@CMusculo='"+color+"',@CGrasa="+grasa+",@Corral="+corral);
     }

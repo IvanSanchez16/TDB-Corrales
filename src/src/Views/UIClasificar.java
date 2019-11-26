@@ -1,10 +1,8 @@
 package Views;
 
 import Controllers.CClasificar;
-import Database.ComandosSQL;
 import Resource.JNumberField;
 import Resource.Rutinas;
-
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
@@ -84,7 +82,7 @@ public class UIClasificar extends JDialog {
         PBusqueda.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createCompoundBorder(
                         BorderFactory.createRaisedBevelBorder(),BorderFactory.createLoweredBevelBorder()
-                ),"Busqueda de crías por ID", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos));
+                ),"Filtrar busqueda", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos));
 
         TxtBusqueda =new JTextField();
         TxtBusqueda.setFont(FontCajas);
@@ -202,14 +200,9 @@ public class UIClasificar extends JDialog {
     }
 
     public void mostrarModal(String msg){
-        boolean band=true;
-        if(msg==null){
+        if(msg==null)
             msg="La cría fue actualizada correctamente";
-            band=false;
-        }
         JOptionPane.showMessageDialog(this,msg,"Registro de cría",msg.equals("La cría fue actualizada correctamente")?JOptionPane.INFORMATION_MESSAGE:JOptionPane.ERROR_MESSAGE);
-        if(!band)
-            dispose();
     }
 
     public JButton getBtnEditar() {

@@ -11,26 +11,28 @@ import java.util.ArrayList;
 
 public class UICuarentena extends JDialog {
     private JTabbedPane TPane;
-    private JPanel PAgregar,PSacar;
-    private JScrollPane SPCrSa,SPCrEn,SPCoSa,SPCoEn;
-    private JTable TbCrSa,TbCrEn,TbCoSa,TbCoEn;
-    private DefaultTableModel DmCrSa,DmCrEn,DmCoSa,DmCoEn;
+    private JPanel PAgregar,PSacar,PEvaluar;
+    private JScrollPane SPCrSa,SPCrEn,SPCoSa,SPCoEn,SPCrG2;
+    private JTable TbCrSa,TbCrEn,TbCoSa,TbCoEn,TbCrG2;
+    private DefaultTableModel DmCrSa,DmCrEn,DmCoSa,DmCoEn,DmCrG2;
     private JNumberField TxtCorral1,TxtCria1,TxtCorral2,TxtCria2;
     private JTextField TxtEnfermedad,TxtMedicamento;
     private Font FontCajas;
     private Font FontTitulos;
-    private JButton BtnMoverCriaA,BtnMoverCriaR;
+    private JButton BtnMoverCriaA,BtnMoverCriaR,BtnMarcarEnRiesgo;
+    private ArrayList<String []>datosEG2;
 
     public UICuarentena(){
         setTitle("Cuarentenas");
         setModal(true);
-        setSize(800,405);
+        setSize(500,405);
         setLocationRelativeTo(null);
         setResizable(false);
         defineInterfaz();
     }
     public void asignarControlador(CCuarentena c){
-        BtnMoverCriaA.addActionListener(c);
+        //BtnMoverCriaA.addActionListener(c);
+        BtnMarcarEnRiesgo.addActionListener(c);
     }
 
     public JButton getBtnMoverCriaA() {
@@ -40,6 +42,8 @@ public class UICuarentena extends JDialog {
     public JButton getBtnMoverCriaR() {
         return BtnMoverCriaR;
     }
+
+    public JButton getBtnMarcarEnRiesgo() { return BtnMarcarEnRiesgo; }
 
     public void mostrarModal(String msg){
         boolean band=true;
@@ -52,7 +56,6 @@ public class UICuarentena extends JDialog {
             dispose();
     }
 
-
     private void defineInterfaz(){
         TPane=new JTabbedPane();
         FontCajas = new Font("Dubai", 0, 13);
@@ -60,6 +63,94 @@ public class UICuarentena extends JDialog {
         TPane.setFont(new Font("Candara",1,17));
         add(TPane);
 
+        crearPEvaluar();
+
+        //crearPAgregar();
+    }
+
+    public void llenarCriasG2(ArrayList<String[]> datos){
+        ColorJTable colorRenderer = new ColorJTable(new ArrayList<Integer>());
+        colorRenderer.band=false;
+        TbCrG2.setDefaultRenderer(Object.class, colorRenderer);
+        datosEG2=datos;
+        String [] col1={"Id","Temperatura Actual","Corral"};
+        DmCrG2=new DefaultTableModel(null,col1);
+        TbCrG2.setModel(DmCrG2);
+        for(String[] tupla:datosEG2)
+            DmCrG2.addRow(tupla);
+    }
+
+    public void marcarCriasRiesgo(ArrayList<Integer> num){
+        ColorJTable colorRenderer = new ColorJTable(num);
+        colorRenderer.band=true;
+        TbCrG2.setDefaultRenderer(Object.class, colorRenderer);
+        SPCrG2.updateUI();
+    }
+
+    public void llenarCriasEn(ArrayList<String[]> datos){
+        for(String[] tupla:datos)
+            DmCrEn.addRow(tupla);
+    }
+
+    public void llenarCriasSa(ArrayList<String[]> datos){
+        for(String[] tupla:datos)
+            DmCrSa.addRow(tupla);
+    }
+
+    public void llenarCorralesEn(ArrayList<String[]> datos){
+        for(String[] tupla:datos)
+            DmCoEn.addRow(tupla);
+    }
+
+    public void llenarCorralesSa(ArrayList<String[]> datos){
+        for(String[] tupla:datos)
+            DmCoSa.addRow(tupla);
+    }
+
+    public String getCria1(){
+        return TxtCria1.getText();
+    }
+
+    public String getCorral1(){
+        return TxtCorral1.getText();
+    }
+
+    public String getEnfermedad(){
+        return TxtEnfermedad.getText();
+    }
+
+    public String getMedicamento(){
+        return TxtMedicamento.getText();
+    }
+
+    public ArrayList<String[]> getDatosEG2() { return datosEG2; }
+
+    private void crearPEvaluar(){
+        PEvaluar=new JPanel();
+        PEvaluar.setLayout(null);
+
+        String [][] m1={};
+        String [] col1={"Id","Temperatura Actual","Corral"};
+
+        DmCrG2=new DefaultTableModel(m1,col1);
+        TbCrG2=new JTable(DmCrG2);
+        SPCrG2=new JScrollPane(TbCrG2);
+        SPCrG2.setBorder(BorderFactory.createTitledBorder(
+                BorderFactory.createCompoundBorder(
+                        BorderFactory.createRaisedBevelBorder(),BorderFactory.createLoweredBevelBorder()
+                ),"Crías con sensor", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos));
+        SPCrG2.setBounds(5,5,475,280);
+        PEvaluar.add(SPCrG2);
+
+        BtnMarcarEnRiesgo=new JButton("Marcar crías en riesgo de enfermarse");
+        BtnMarcarEnRiesgo.setFont(new Font("Candara",1,15));
+        BtnMarcarEnRiesgo.setBounds(5,290,475,35);
+        PEvaluar.add(BtnMarcarEnRiesgo);
+
+        TPane.add(PEvaluar,"Evaluar crías");
+    }
+
+    private void crearPAgregar(){
         PAgregar=new JPanel();
         PAgregar.setLayout(null);
 
@@ -134,40 +225,4 @@ public class UICuarentena extends JDialog {
 
         TPane.add(PAgregar,"Agregar");
     }
-
-    public void llenarCriasEn(ArrayList<String[]> datos){
-        for(int i=0 ; i<datos.size() ; i++)
-            DmCrEn.addRow(datos.get(i));
-    }
-
-    public void llenarCriasSa(ArrayList<String[]> datos){
-        for(int i=0 ; i<datos.size() ; i++)
-            DmCrSa.addRow(datos.get(i));
-    }
-
-    public void llenarCorralesEn(ArrayList<String[]> datos){
-        for(int i=0 ; i<datos.size() ; i++)
-            DmCoEn.addRow(datos.get(i));
-    }
-
-    public void llenarCorralesSa(ArrayList<String[]> datos){
-        for(int i=0 ; i<datos.size() ; i++)
-            DmCoSa.addRow(datos.get(i));
-    }
-
-    public String getCria1(){
-        return TxtCria1.getText();
-    }
-
-    public String getCorral1(){
-        return TxtCorral1.getText();
-    }
-
-    public String getEnfermedad(){
-        return TxtEnfermedad.getText();
-    }
-    public String getMedicamento(){
-        return TxtMedicamento.getText();
-    }
-
 }

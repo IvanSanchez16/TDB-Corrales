@@ -13,7 +13,7 @@ public class MClasificar {
     public ArrayList<String[]> obtenerCrias(){
         ArrayList<String[]> matriz;
         try {
-            ResultSet rs= ComandosSQL.consulta("Select * from CriasClasificaciones order by Id");
+            ResultSet rs= ComandosSQL.consulta("Select * from CriasClasificacionesView order by Id");
             String[] tuplas;
             matriz=new ArrayList<String[]>();
             //"Id","Peso","Color de músculo","Porcentaje de grasa","Clasificación"
