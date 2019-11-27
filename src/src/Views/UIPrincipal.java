@@ -101,6 +101,7 @@ public class UIPrincipal extends JFrame {
        PPrincipal.setLayout(null);
        definePPrincipal();
     }
+
     private void definePPrincipal(){
         FontBotones=new Font("Candara",0,17);
         FontTitulos=new Font("Candara",1,13);

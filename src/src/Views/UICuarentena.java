@@ -17,7 +17,6 @@ public class UICuarentena extends JDialog {
     private JTable TbCrSa,TbCrEn,TbCoEn,TbCrG2;
     private DefaultTableModel DmCrSa,DmCrEn,DmCoEn,DmCrG2;
     private JNumberField TxtCorral1,TxtCria1,TxtCria2;
-//    private JTextField ;
     private Font FontCajas;
     private Font FontTitulos;
     private JButton BtnMoverCriaA,BtnMarcarSanas,BtnMoverCriaR,BtnSacrificar,BtnMarcarEnRiesgo,BtnMarcarC40;

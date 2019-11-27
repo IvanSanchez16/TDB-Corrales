@@ -34,5 +34,9 @@ public class CInicio implements ActionListener {
             CCuarentena cc=new CCuarentena();
             return;
         }
+        if(e.getSource()==view.getBtnDieta()){
+            CDietas d=new CDietas();
+            return;
+        }
     }
 }

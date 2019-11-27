@@ -96,6 +96,9 @@ begin catch
 	throw @errornum,@errormen,@errorest;
 end catch
 
+CREATE PROCEDURE SPCambiarDieta @Cria int,@Dieta int,@Fecha date as
+INSERT INTO LOGDIETAS (Cria_id,Dieta_id,Fecha) VALUES (@Cria,@Dieta,@Fecha)
+
 exec SPDarDeAltaCria 2,'20191127'
 
 UPDATE CUARENTENAS set Fecha_Inicio='20191015' where Cria_id=1
