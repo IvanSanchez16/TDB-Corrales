@@ -15,7 +15,7 @@ foreign key(Clasificacion_id) references CLASIFICACIONES(Clasificacion_id))
 CREATE TABLE SALIDAS(Cria_id int primary key,Fecha_Salida date not null,Razon_Salida bit not null,
 foreign key(Cria_id) references CRIAS(Crias_id))
 
-CREATE TABLE SENSORES (Sensor_id int identity primary key,Cria_id int not null,Temperatura int not null,
+CREATE TABLE SENSORES (Sensor_id int identity primary key,Cria_id int not null,Temperatura float not null,
 foreign key (Cria_id) references CRIAS(Crias_id))
 
 CREATE TABLE CUARENTENAS (Cuarentena_id int identity(1,1) primary key not null,Cria_id int,Fecha_Inicio date not null,Fecha_Fin date,
@@ -29,13 +29,13 @@ FOREIGN KEY (CorralDes_id) references CORRALES(Corral_id))
 
 CREATE TABLE DIETAS (Dieta_id int identity(1,1) primary key,Descripcion varchar(30))
 
-CREATE TABLE LOGDIETAS (Dieta_id int, Cria_id int, Fecha date,
-primary key (Cria_id,Dieta_id,Fecha),
+CREATE TABLE LOGDIETAS (Dieta_id int, Cria_id int,Clave int identity, Fecha date,
+primary key (Cria_id,Dieta_id,Clave,Fecha),
 foreign key (Cria_id) references CRIAS(Crias_id),
 foreign key (Dieta_id) references DIETAS(Dieta_id))
 
-CREATE TABLE LOGCLASIFICACIONES (Cria_id int,Clasificacion_id int,clve int identity,Fecha date,
-PRIMARY KEY (Cria_id,Clasificacion_id,Fecha,clve),
+CREATE TABLE LOGCLASIFICACIONES (Cria_id int,Clasificacion_id int,Clave int identity,Fecha date,
+PRIMARY KEY (Cria_id,Clasificacion_id,Fecha,Clave),
 foreign key (Cria_id) references CRIAS(Crias_id),
 foreign key (Clasificacion_id) references CLASIFICACIONES(Clasificacion_id))
 

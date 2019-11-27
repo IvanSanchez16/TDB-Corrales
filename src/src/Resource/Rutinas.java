@@ -33,6 +33,10 @@ public class Rutinas {
     public static int nextInt(int Valor){
         return R.nextInt(Valor);
     }
+
+    public static double nextDouble(){
+        return R.nextDouble();
+    }
     public static int nextInt(int Ini,int Fin){
         return R.nextInt( Fin-Ini+1  )+Ini;
     }

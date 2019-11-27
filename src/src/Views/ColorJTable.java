@@ -29,8 +29,10 @@ public class ColorJTable implements TableCellRenderer {
                 value, isSelected, hasFocus, row, column);
         if(esta(row) && band)
             c.setBackground(new Color(250, 182, 76  ));
-        else
-            c.setBackground(new Color(255,255,255 ));
+        else {
+            c.setBackground(new Color(255, 255, 255));
+            c.setForeground(Color.BLACK);
+        }
         return c;
     }
 

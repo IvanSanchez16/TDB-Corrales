@@ -37,37 +37,68 @@ Begin try
 		UPDATE CRIAS SET Clasificacion_id=@Clasificacion_id where Crias_id=@Id
 		INSERT INTO LOGCLASIFICACIONES Values(@Id,@Clasificacion_id,@Fecha)
 		if(@Clasificacion_id=3)
-			Insert into SENSORES values (@Id,38)
+			Insert into SENSORES values (@Id,38.5)
 	commit tran 
 end try
 begin catch
 	rollback tran
-	declare @errornum int=100000,@errormen varchar(max)='Ocurrio un error durante la clasificacion',@errorest int=Error_State();
+	declare @errornum int=100000,@errormen varchar(max)='Ocurrió un error durante la clasificacion',@errorest int=Error_State();
 	throw @errornum,@errormen,@errorest;
 end catch
 
+CREATE PROCEDURE SPActualizarTemperatura @Cria_id int,@Temperatura float AS
+UPDATE SENSORES set Temperatura=@Temperatura where cria_id=@Cria_id
 
 
-CREATE PROCEDURE SPAgregarACuarentena @Cria int,@Corral int,@Fecha date,@Medicamento varchar(20),@Enfermedad varchar(20) AS
+CREATE PROCEDURE SPAgregarACuarentena @Cria int,@Corral int,@Fecha date AS
 Begin try
 	begin tran
-		Insert Into TRATAMIENTOS values(@Medicamento,@Enfermedad)
-		Declare @Tratamiento int
-		SET @Tratamiento=(SELECT max(Tratamiento_id) from TRATAMIENTOS)
-		INSERT INTO CUARENTENAS(Tratamiento_id,Cria_id,Fecha_Inicio) values(@Tratamiento,@Cria,@Fecha)
+		INSERT INTO CUARENTENAS(Cria_id,Fecha_Inicio) values(@Cria,@Fecha)
 		DECLARE @CorralOrg int
 		Set @CorralOrg=(SELECT Corral_id from CRIAS where Crias_id=@Cria)
 		INSERT INTO MOVIMIENTOS_CRIAS values (@CorralOrg,@Corral,@Cria,@Fecha)
 		UPDATE CRIAS SET Corral_id=@Corral where Crias_id=@Cria
-		commit tran
+		INSERT INTO LOGDIETAS VALUES (4,@Cria,@Fecha)
+	commit tran
 end try
 begin catch
 	rollback tran
-	declare @errornum int=100000,@errormen varchar(max)='Ocurrio un error en el proceso de cuarentena',@errorest int=Error_State();
+	declare @errornum int=100000,@errormen varchar(max)='Ocurrió un error en el proceso de cuarentena',@errorest int=Error_State();
 	throw @errornum,@errormen,@errorest;
 end catch
 
+CREATE PROCEDURE SPSacrificar @Cria int,@Fecha date AS
+Begin try
+	begin tran
+		INSERT INTO SALIDAS VALUES(@Cria,@Fecha,0)
+		UPDATE CUARENTENAS set Fecha_Fin=@Fecha where Cria_id=@Cria
+	commit tran
+end try
+begin catch
+	rollback tran
+	declare @errornum int=100000,@errormen varchar(max)='Ocurrió un error durante el sacrificio',@errorest int=Error_State();
+	throw @errornum,@errormen,@errorest;
+end catch
 
+CREATE PROCEDURE SPDarDeAltaCria @Cria int,@Fecha date AS
+Begin try
+	begin tran
+		UPDATE CUARENTENAS set Fecha_Fin=@Fecha where Cria_id=@Cria
+		INSERT INTO LOGDIETAS (Dieta_id,Cria_id,Fecha) values (1,@Cria,@Fecha)
+		Declare @CorralDest int = (select dbo.FCorralConMenosCrias('N')),@CorralIni int=(select corral_id from CRIAS where Crias_id=@Cria)
+		INSERT INTO MOVIMIENTOS_CRIAS values (@CorralIni,@CorralDest,@Cria,@Fecha)
+		UPDATE CRIAS set Corral_id=@CorralDest where Crias_id=@Cria
+	commit tran
+end try
+begin catch
+	rollback tran
+	declare @errornum int=100000,@errormen varchar(max)='Ocurrió un error durante el sacrificio',@errorest int=Error_State();
+	throw @errornum,@errormen,@errorest;
+end catch
+
+exec SPDarDeAltaCria 2,'20191127'
+
+UPDATE CUARENTENAS set Fecha_Inicio='20191015' where Cria_id=1
 
 Select * from LOGDIETAS
 
@@ -75,10 +106,17 @@ Select * from CORRALES
 
 Select * from CRIAS 
 
+SELECT * from MOVIMIENTOS_CRIAS
+
+SELECT * FROM DIETAS
+
+select * from CUARENTENAS
+
+Select * from SALIDAS
+
 Select * from SENSORES
 
 Select * from LOGCLASIFICACIONES
 
 Select * from CLASIFICACIONES
-
 
