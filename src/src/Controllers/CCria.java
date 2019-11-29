@@ -1,9 +1,8 @@
 package Controllers;
 
 import Models.MCria;
-import Views.UIPrincipal;
+import Views.UIMenu;
 import Views.UIRegistroCria;
-
 import java.awt.event.*;
 import java.util.ArrayList;
 
@@ -28,7 +27,7 @@ public class CCria implements ActionListener {
         }
         if(evt.getSource()==view.getBtnRegistrar()){
             try {
-                String msg=model.insertar( view.getId(),view.getFecha(), UIPrincipal.getFechaActual(),view.getEstado(),view.getPeso(),view.getCMusculo(),view.getCGrasa(),view.getCorral() );
+                String msg=model.insertar( view.getId(),view.getFecha(), UIMenu.getFechaActual(),view.getEstado(),view.getPeso(),view.getCMusculo(),view.getCGrasa(),view.getCorral() );
                 view.mostrarModal(msg);
             } catch (Exception e) {
                 view.mostrarModal("Faltan campos por llenar");

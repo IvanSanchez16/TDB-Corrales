@@ -71,6 +71,75 @@ public class UIClasificar extends JDialog {
         return datos;
     }
 
+    public void asignarArreglo(ArrayList<String[]> a){
+        datos=a;
+        llenarTabla();
+    }
+
+    public void llenarTabla(ArrayList<String[]> datos){
+        String [][] m={};
+        String [] columnas={"Id","Peso (kg)","Color de músculo","% de grasa","Clasificación"};
+        Dm=new DefaultTableModel(m,columnas);
+        TbCrias.setModel(Dm);
+        TbCrias.getColumn("Id").setPreferredWidth(10);
+        TbCrias.getColumn("Clasificación").setPreferredWidth(125);
+        for(int i=0 ; i<datos.size() ; i++)
+            Dm.addRow(datos.get(i));
+        SPTabla.updateUI();
+    }
+
+    private void llenarTabla(){
+        llenarTabla(datos);
+    }
+
+    public void mostrarModal(ArrayList<String> al){
+        boolean band=true;
+        String msg="";
+        if(al.size()==0){
+            msg="Se actualizaron correctamente las clasificaciones";
+            band=false;
+        }else {
+            for (String msg2:al)
+                JOptionPane.showMessageDialog(this,msg2,"Clasificar",JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        JOptionPane.showMessageDialog(this,msg,"Clasificar",JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    public void mostrarModal(String msg){
+        if(msg==null)
+            msg="La cría fue actualizada correctamente";
+        JOptionPane.showMessageDialog(this,msg,"Clasificar",msg.equals("La cría fue actualizada correctamente")?JOptionPane.INFORMATION_MESSAGE:JOptionPane.ERROR_MESSAGE);
+    }
+
+    public JButton getBtnEditar() {
+        return BtnEditar;
+    }
+
+    public JNumberField getTxtPeso() {
+        return TxtPeso;
+    }
+
+    public JNumberField getTxtGrasa() {
+        return TxtGrasa;
+    }
+
+    public JNumberField getTxtId() {
+        return TxtId;
+    }
+
+    public String getId() {
+        return TxtId.getText();
+    }
+
+    public String getGrasa() {
+        return TxtGrasa.ObtenerCantidad()+"";
+    }
+
+    public String getPeso() {
+        return TxtPeso.ObtenerCantidad()+"";
+    }
+
     private void defineInterfaz(){
         setLayout(null);
 
@@ -162,74 +231,5 @@ public class UIClasificar extends JDialog {
         BtnClasificar.setFont(new Font("Candara",1,15));
         BtnClasificar.setBounds(5,345,500,40);
         add(BtnClasificar);
-    }
-
-    public void asignarArreglo(ArrayList<String[]> a){
-        datos=a;
-        llenarTabla();
-    }
-
-    public void llenarTabla(ArrayList<String[]> datos){
-        String [][] m={};
-        String [] columnas={"Id","Peso (kg)","Color de músculo","% de grasa","Clasificación"};
-        Dm=new DefaultTableModel(m,columnas);
-        TbCrias.setModel(Dm);
-        TbCrias.getColumn("Id").setPreferredWidth(10);
-        TbCrias.getColumn("Clasificación").setPreferredWidth(125);
-        for(int i=0 ; i<datos.size() ; i++)
-            Dm.addRow(datos.get(i));
-        SPTabla.updateUI();
-    }
-
-    private void llenarTabla(){
-        llenarTabla(datos);
-    }
-
-    public void mostrarModal(ArrayList<String> al){
-        boolean band=true;
-        String msg="";
-        if(al.size()==0){
-            msg="Se actualizaron correctamente las clasificaciones";
-            band=false;
-        }else {
-            for (String msg2:al)
-                JOptionPane.showMessageDialog(this,msg2,"Clasificar",JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        JOptionPane.showMessageDialog(this,msg,"Clasificar",JOptionPane.INFORMATION_MESSAGE);
-    }
-
-    public void mostrarModal(String msg){
-        if(msg==null)
-            msg="La cría fue actualizada correctamente";
-        JOptionPane.showMessageDialog(this,msg,"Clasificar",msg.equals("La cría fue actualizada correctamente")?JOptionPane.INFORMATION_MESSAGE:JOptionPane.ERROR_MESSAGE);
-    }
-
-    public JButton getBtnEditar() {
-        return BtnEditar;
-    }
-
-    public JNumberField getTxtPeso() {
-        return TxtPeso;
-    }
-
-    public JNumberField getTxtGrasa() {
-        return TxtGrasa;
-    }
-
-    public JNumberField getTxtId() {
-        return TxtId;
-    }
-
-    public String getId() {
-        return TxtId.getText();
-    }
-
-    public String getGrasa() {
-        return TxtGrasa.ObtenerCantidad()+"";
-    }
-
-    public String getPeso() {
-        return TxtPeso.ObtenerCantidad()+"";
     }
 }

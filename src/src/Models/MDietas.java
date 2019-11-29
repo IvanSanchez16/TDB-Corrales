@@ -1,8 +1,6 @@
 package Models;
 
 import Database.ComandosSQL;
-import Views.UIPrincipal;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -90,7 +88,7 @@ public class MDietas {
         return al;
     }
 
-    public String actualizarDieta(String cria,String dieta){
-        return ComandosSQL.ejecutar("exec SPCambiarDieta @Cria="+cria+",@Dieta='"+dieta+"',@Fecha='"+ UIPrincipal.getFechaActual()+"'");
+    public String actualizarDieta(String cria,String dieta,String fecha){
+        return ComandosSQL.ejecutar("exec SPCambiarDieta @Cria="+cria+",@Dieta='"+dieta+"',@Fecha='"+fecha+"'");
     }
 }

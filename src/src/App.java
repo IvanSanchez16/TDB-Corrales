@@ -19,6 +19,5 @@ public class App {
         ComandosSQL c=new ComandosSQL();
         CInicio CInicio = new CInicio();
 
-        //PPrincipal.
     }
 }

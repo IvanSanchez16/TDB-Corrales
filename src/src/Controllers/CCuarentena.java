@@ -2,8 +2,7 @@ package Controllers;
 
 import Models.MCuarentena;
 import Views.UICuarentena;
-import Views.UIPrincipal;
-
+import Views.UIMenu;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -31,7 +30,7 @@ public class CCuarentena implements ActionListener, MouseListener {
                 view.mostrarModal("Faltan campos por llenar");
                 return;
             }
-            view.mostrarModal( model.moverACuarentena(view.getCria1(),view.getCorral1(), UIPrincipal.getFechaActual()) );
+            view.mostrarModal( model.moverACuarentena(view.getCria1(),view.getCorral1(), UIMenu.getFechaActual()) );
             view.llenarCriasEn( model.obtenerCriasEn() );
             view.llenarCorralesEn( model.obtenerCorralesEn() );
             view.llenarCriasG2( model.obtenerCriasG2() );
@@ -78,7 +77,7 @@ public class CCuarentena implements ActionListener, MouseListener {
                 return;
             }
             if (view.mostrarAdvertencia("¿Está seguro que quiere sacrificar la cría?","Sacrificar una cría")==0){
-                view.mostrarModalSac( model.sacrificarCria( cria ) );
+                view.mostrarModalSac( model.sacrificarCria( cria,UIMenu.getFechaActual() ) );
                 view.llenarCriasSa( model.obtenerCriasCuarentena() );
                 view.llenarCorralesEn( model.obtenerCorralesEn() );
                 return;
@@ -89,7 +88,7 @@ public class CCuarentena implements ActionListener, MouseListener {
             if( model.comprobarTemperatura( cria,view.getDatosSA() )>=40 )
                 if( view.mostrarAdvertencia("¿Está seguro que quiere dar de alta la cría? Aún no muestra señales de alivio","Dar de alta")==1)
                     return;
-            view.mostrarModalAlt( model.darDeAlta(cria) );
+            view.mostrarModalAlt( model.darDeAlta(cria,UIMenu.getFechaActual()) );
             view.llenarCriasEn( model.obtenerCriasEn() );
             view.llenarCriasSa( model.obtenerCriasCuarentena() );
             view.llenarCorralesEn( model.obtenerCorralesEn() );

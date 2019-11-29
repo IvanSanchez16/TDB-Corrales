@@ -2,6 +2,7 @@ package Controllers;
 
 import Models.MDietas;
 import Views.UIDietas;
+import Views.UIMenu;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -32,7 +33,7 @@ public class CDietas implements ActionListener, MouseListener {
             return;
         }
         if(e.getSource()==view.getBtnAceptar()){
-            view.mostrarModal( model.actualizarDieta( view.getTxtCria()+"",view.getCBDietas() ) );
+            view.mostrarModal( model.actualizarDieta( view.getTxtCria()+"",view.getCBDietas(), UIMenu.getFechaActual()) );
             return;
         }
     }

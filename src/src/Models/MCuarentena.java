@@ -2,8 +2,6 @@ package Models;
 
 import Database.ComandosSQL;
 import Resource.Rutinas;
-import Views.UIPrincipal;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -173,12 +171,12 @@ public class MCuarentena {
         return Float.parseFloat(datos.get(i)[1]);
     }
 
-    public String sacrificarCria(String cria){
-        return ComandosSQL.ejecutar("exec SPSacrificar @Cria="+cria+",@Fecha='"+ UIPrincipal.getFechaActual()+"'");
+    public String sacrificarCria(String cria,String fecha){
+        return ComandosSQL.ejecutar("exec SPSacrificar @Cria="+cria+",@Fecha='"+fecha+"'");
     }
 
-    public String darDeAlta(String cria){
-        return ComandosSQL.ejecutar("exec SPDarDeAltaCria @Cria="+cria+",@Fecha='"+UIPrincipal.getFechaActual()+"'");
+    public String darDeAlta(String cria,String fecha){
+        return ComandosSQL.ejecutar("exec SPDarDeAltaCria @Cria="+cria+",@Fecha='"+fecha+"'");
     }
 
     private double generarTempAleatoria(){
