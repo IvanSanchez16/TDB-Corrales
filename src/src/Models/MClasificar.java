@@ -86,19 +86,19 @@ public class MClasificar {
                     break;
             }
             if(a==b){
-                msg=ComandosSQL.actualizar("exec SPActualizarClasificacion "+cria[0]+",'"+fechaA+"',"+(a+1));
+                msg=ComandosSQL.actualizar("exec dbo.SPActualizarClasificacion "+cria[0]+",'"+fechaA+"',"+(a+1));
                 if(msg!=null)
                     errores.add(msg);
                 continue;
             }
             if(b-a==1 || a-b==1){
-                msg=ComandosSQL.actualizar("exec SPActualizarClasificacion "+cria[0]+",'"+fechaA+"',"+(b+1));
+                msg=ComandosSQL.actualizar("exec dbo.SPActualizarClasificacion "+cria[0]+",'"+fechaA+"',"+(b+1));
                 if(msg!=null)
                     errores.add(msg);
                 continue;
             }
             int prom=(a+b)/2;
-            msg=ComandosSQL.actualizar("exec SPActualizarClasificacion "+cria[0]+",'"+fechaA+"',"+(prom+1));
+            msg=ComandosSQL.actualizar("exec dbo.SPActualizarClasificacion "+cria[0]+",'"+fechaA+"',"+(prom+1));
             if(msg!=null)
                 errores.add(msg);
         }
@@ -118,7 +118,7 @@ public class MClasificar {
     }
 
     public String actualizarCria(String id,String peso,String grasa) {
-        return ComandosSQL.actualizar("exec SPActualizarCria "+id+","+peso+","+grasa);
+        return ComandosSQL.actualizar("exec dbo.SPActualizarCria "+id+","+peso+","+grasa);
     }
 
 }

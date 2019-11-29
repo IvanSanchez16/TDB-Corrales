@@ -1,7 +1,12 @@
 USE GRANJA
 
 CREATE VIEW NumeroCriasPorCorralView AS 
-select C1.Corral_id,Tipo,[Numero de crias] from CORRALES C1 left join
+select C1.Corral_id,
+Case 
+when Tipo='N' then 'Normal'
+else 'Cuarentena'
+end as Tipo
+,[Numero de crias] from CORRALES C1 left join
 (select C.Corral_id,count(*) [Numero de crias] from CORRALES C 
 inner join CriasEnProcesoView V on C.Corral_id=V.Corral_id
 group by C.Corral_id) T on C1.Corral_id=T.Corral_id

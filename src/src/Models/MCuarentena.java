@@ -30,7 +30,7 @@ public class MCuarentena {
     public ArrayList<String[]> obtenerCorralesEn(){
         ArrayList<String[]> matriz;
         try {
-            ResultSet rs= ComandosSQL.consulta("Select Corral_id,[Numero de crias] from NumeroCriasPorCorralView where Tipo='C'");
+            ResultSet rs= ComandosSQL.consulta("Select Corral_id,[Numero de crias] from NumeroCriasPorCorralView where Tipo='Cuarentena'");
             String[] tuplas;
             matriz=new ArrayList<>();
             while(rs.next()){
@@ -172,11 +172,11 @@ public class MCuarentena {
     }
 
     public String sacrificarCria(String cria,String fecha){
-        return ComandosSQL.ejecutar("exec SPSacrificar @Cria="+cria+",@Fecha='"+fecha+"'");
+        return ComandosSQL.ejecutar("exec dbo.SPSacrificar @Cria="+cria+",@Fecha='"+fecha+"'");
     }
 
     public String darDeAlta(String cria,String fecha){
-        return ComandosSQL.ejecutar("exec SPDarDeAltaCria @Cria="+cria+",@Fecha='"+fecha+"'");
+        return ComandosSQL.ejecutar("exec dbo.SPDarDeAltaCria @Cria="+cria+",@Fecha='"+fecha+"'");
     }
 
     private double generarTempAleatoria(){

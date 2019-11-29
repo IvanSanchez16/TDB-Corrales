@@ -85,7 +85,9 @@ Begin try
 	begin tran
 		UPDATE CUARENTENAS set Fecha_Fin=@Fecha where Cria_id=@Cria
 		INSERT INTO LOGDIETAS (Dieta_id,Cria_id,Fecha) values (1,@Cria,@Fecha)
-		Declare @CorralDest int = (select dbo.FCorralConMenosCrias('N')),@CorralIni int=(select corral_id from CRIAS where Crias_id=@Cria)
+		Declare @CorralDest int,@CorralIni int
+		Select top(1) @CorralDest=Corral_id from NumeroCriasPorCorralView where Tipo='Normal' order by [Numero de crias]
+		select @CorralIni=corral_id from CRIAS where Crias_id=@Cria
 		INSERT INTO MOVIMIENTOS_CRIAS values (@CorralIni,@CorralDest,@Cria,@Fecha)
 		UPDATE CRIAS set Corral_id=@CorralDest where Crias_id=@Cria
 	commit tran
@@ -95,6 +97,9 @@ begin catch
 	declare @errornum int=100000,@errormen varchar(max)='Ocurrió un error durante el proceso',@errorest int=Error_State();
 	throw @errornum,@errormen,@errorest;
 end catch
+
+exec SPDarDeAltaCria 5,'20191129'
+
 
 CREATE PROCEDURE SPCambiarDieta @Cria int,@Dieta varchar(30),@Fecha date as
 Begin try
@@ -109,6 +114,9 @@ begin catch
 	declare @errornum int=100000,@errormen varchar(max)='Ocurrió un error durante el cambio de dieta',@errorest int=Error_State();
 	throw @errornum,@errormen,@errorest;
 end catch
+
+CREATE PROCEDURE SPSiguienteProceso @Cria int,@Fecha date AS
+INSERT INTO SALIDAS VALUES (@Cria,@Fecha,1)
 
 UPDATE CRIAS SET Fecha_Entrada='20190620' where Crias_id=1002
 

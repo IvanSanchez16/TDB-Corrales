@@ -88,6 +88,12 @@ public class UIProceso extends JDialog {
         String[] col={"Id","Clasificación","Corral","Estado Actual","Días en el proceso"};
         Dm=new DefaultTableModel(null,col);
         Tb.setModel(Dm);
+        TableColumn col1=Tb.getColumn("Id");
+        col1.setPreferredWidth(15);
+        TableColumn col2=Tb.getColumn("Corral");
+        col2.setPreferredWidth(15);
+        TableColumn col3=Tb.getColumn("Clasificación");
+        col3.setPreferredWidth(90);
         for (String[] dato : datos)
             Dm.addRow(dato);
     }
@@ -104,12 +110,6 @@ public class UIProceso extends JDialog {
         Dm=new DefaultTableModel(null,col);
         Tb=new JTable(Dm);
         Tb.setFont(new Font("Cambria",1,13));
-        TableColumn col1=Tb.getColumn("Id");
-        col1.setPreferredWidth(15);
-        TableColumn col2=Tb.getColumn("Corral");
-        col2.setPreferredWidth(15);
-        TableColumn col3=Tb.getColumn("Clasificación");
-        col3.setPreferredWidth(90);
         Sp=new JScrollPane(Tb);
         Sp.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createCompoundBorder(

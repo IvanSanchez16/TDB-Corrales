@@ -29,7 +29,7 @@ public class MCria {
     public ArrayList<String[]> obtenerCorrales(){
         ArrayList<String[]> matriz;
         try {
-            ResultSet rs= ComandosSQL.consulta("Select * from NumeroCriasPorCorralView where Tipo='N'");
+            ResultSet rs= ComandosSQL.consulta("Select * from NumeroCriasPorCorralView where Tipo='Normal'");
             String[] tuplas;
             matriz=new ArrayList<String[]>();
             while(rs.next()){

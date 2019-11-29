@@ -89,6 +89,6 @@ public class MDietas {
     }
 
     public String actualizarDieta(String cria,String dieta,String fecha){
-        return ComandosSQL.ejecutar("exec SPCambiarDieta @Cria="+cria+",@Dieta='"+dieta+"',@Fecha='"+fecha+"'");
+        return ComandosSQL.ejecutar("exec dbo.SPCambiarDieta @Cria="+cria+",@Dieta='"+dieta+"',@Fecha='"+fecha+"'");
     }
 }

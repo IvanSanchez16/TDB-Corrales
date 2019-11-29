@@ -106,20 +106,6 @@ public class UICuarentena extends JDialog {
         return band;
     }
 
-    private void defineInterfaz(){
-        TPane=new JTabbedPane();
-        FontCajas = new Font("Dubai", 0, 13);
-        FontTitulos = new Font("Candara", 1, 13);
-        TPane.setFont(new Font("Candara",1,17));
-        add(TPane);
-
-        crearPEvaluar();
-
-        crearPAgregar();
-
-        crearPSacar();
-    }
-
     public void llenarCriasG2(ArrayList<String[]> datos){
         ColorJTable colorRenderer = new ColorJTable(new ArrayList<Integer>());
         colorRenderer.band=false;
@@ -218,6 +204,20 @@ public class UICuarentena extends JDialog {
 
     public JTable getTbCrSa() {
         return TbCrSa;
+    }
+
+    private void defineInterfaz(){
+        TPane=new JTabbedPane();
+        FontCajas = new Font("Dubai", 0, 13);
+        FontTitulos = new Font("Candara", 1, 13);
+        TPane.setFont(new Font("Candara",1,17));
+        add(TPane);
+
+        crearPEvaluar();
+
+        crearPAgregar();
+
+        crearPSacar();
     }
 
     private void crearPEvaluar(){

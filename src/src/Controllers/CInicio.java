@@ -38,5 +38,9 @@ public class CInicio implements ActionListener {
             CProceso p=new CProceso();
             return;
         }
+        if(e.getSource()==view.getBtnVerCorrales()){
+            CVCorrales vc=new CVCorrales();
+            return;
+        }
     }
 }

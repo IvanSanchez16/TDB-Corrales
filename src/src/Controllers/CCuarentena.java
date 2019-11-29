@@ -89,6 +89,7 @@ public class CCuarentena implements ActionListener, MouseListener {
                 if( view.mostrarAdvertencia("¿Está seguro que quiere dar de alta la cría? Aún no muestra señales de alivio","Dar de alta")==1)
                     return;
             view.mostrarModalAlt( model.darDeAlta(cria,UIMenu.getFechaActual()) );
+            view.llenarCriasG2( model.obtenerCriasG2() );
             view.llenarCriasEn( model.obtenerCriasEn() );
             view.llenarCriasSa( model.obtenerCriasCuarentena() );
             view.llenarCorralesEn( model.obtenerCorralesEn() );
