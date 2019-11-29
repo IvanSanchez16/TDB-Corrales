@@ -1,6 +1,4 @@
 package Controllers;
-
-import Models.MInicio;
 import Views.UIMenu;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -8,11 +6,9 @@ import java.awt.event.ActionListener;
 public class CInicio implements ActionListener {
 
     private UIMenu view;
-    private MInicio model;
 
     public CInicio(){
         view=new UIMenu();
-        model=new MInicio();
         view.asignarControladorP(this);
     }
 
@@ -36,6 +32,10 @@ public class CInicio implements ActionListener {
         }
         if(e.getSource()==view.getBtnDieta()){
             CDietas d=new CDietas();
+            return;
+        }
+        if(e.getSource()==view.getBtnProcesar()){
+            CProceso p=new CProceso();
             return;
         }
     }

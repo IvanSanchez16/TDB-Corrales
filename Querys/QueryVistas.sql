@@ -14,7 +14,7 @@ CREATE VIEW CriasEnRiesgoGrasaCobertura2View AS
 Select T.Id,T.Corral_id from
 (SELECT CR.Crias_id as Id,CR.Corral_id from CriasEnProcesoView CR inner join
 SENSORES S on S.Cria_id=CR.Crias_id where S.Temperatura>=40) T
-left join CUARENTENAS C on C.Cria_id=T.Id where C.Fecha_Inicio is null
+left join CUARENTENAS C on C.Cria_id=T.Id where C.Fecha_Inicio is null or C.Fecha_Fin is not null
 
 CREATE VIEW EstadoCriasG2View AS
 Select C.crias_id as Cria,S.Temperatura,C.corral_id as Corral from CriasEnProcesoView C 
@@ -50,3 +50,19 @@ where Ld.Clave=Cl.Clave
 
 CREATE VIEW DietasView as
 Select Descripcion from DIETAS where Descripcion != 'Bajo tratamiento'
+
+CREATE VIEW EstadoCriasView AS
+select C.Crias_id,CL.Nombre as Clasificacion,C.Corral_id as Corral,
+CASE
+	when CU.Fecha_Inicio is null or CU.Fecha_Fin is not null then 'Sana'
+	else 'Bajo cuarentena'
+end
+as [Estado actual],DATEDIFF(DAY,C.Fecha_Entrada,GETDATE()) [Dias en el proceso] from 
+(Select C2.Crias_id,MAX(L.Clave) Clave from CriasEnProcesoView C2
+inner join LOGCLASIFICACIONES L on C2.Crias_id=L.Cria_id
+group by C2.Crias_id) M
+inner join CriasEnProcesoView C on C.Crias_id=M.Crias_id
+inner join LOGCLASIFICACIONES L on C.Crias_id=L.Cria_id
+inner join CLASIFICACIONES CL on L.Clasificacion_id=CL.Clasificacion_id
+left join CUARENTENAS CU on C.Crias_id=CU.Cria_id
+where L.Clave=M.Clave

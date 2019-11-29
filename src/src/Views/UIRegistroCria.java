@@ -16,6 +16,7 @@ import java.util.Date;
 
 public class UIRegistroCria extends JDialog {
 
+    private PanelFondo PPrincipal;
     private Font FontCajas;
     private Font FontTitulos;
     private JNumberField TxtId;
@@ -43,6 +44,7 @@ public class UIRegistroCria extends JDialog {
     public void asignarControladores(CCria c){
         BtnFecha.addActionListener(c);
         BtnRegistrar.addActionListener(c);
+        TxtId.addKeyListener(c);
     }
 
     public void setTextId(String id){
@@ -80,6 +82,10 @@ public class UIRegistroCria extends JDialog {
 
     public int getId(){
         return (int) TxtId.ObtenerCantidad();
+    }
+
+    public JNumberField getTxtId() {
+        return TxtId;
     }
 
     public String getFecha(){
@@ -134,22 +140,22 @@ public class UIRegistroCria extends JDialog {
     }
 
     private void definirInterfaz(){
-        setLayout(null);
-        setBackground(new Color(242,242,242));
+        PPrincipal=new PanelFondo("fondoRegistrar.jpg",550,395);
+        PPrincipal.setLayout(null);
 
         FontCajas=new Font("Cambria",0,14);
-        FontTitulos=new Font("Candara",1,13);
+        FontTitulos=new Font("Candara",1,14);
 
         TxtId = new JNumberField();
         TxtId.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createCompoundBorder(
                         BorderFactory.createRaisedBevelBorder(),BorderFactory.createLoweredBevelBorder()
-                ),"ID", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos));
-        TxtId.setBackground(new Color(242,242,242));
+                ),"ID", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos,Color.white));
         TxtId.setBounds(5,5,135,40);
-        TxtId.setEnabled(false);
-        TxtId.setFont(FontCajas);
-        add(TxtId);
+        TxtId.setFont(new Font("Cambria",1,14));
+        TxtId.setForeground(Color.white);
+        TxtId.setOpaque(false);
+        PPrincipal.add(TxtId);
 
         Calendar c=Calendar.getInstance();
         dia=c.get(Calendar.DATE);
@@ -161,14 +167,15 @@ public class UIRegistroCria extends JDialog {
         TxtFecha.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createCompoundBorder(
                         BorderFactory.createRaisedBevelBorder(),BorderFactory.createLoweredBevelBorder()
-                ),"Fecha de ingreso", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos));
+                ),"Fecha de ingreso", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos,Color.white));
         TxtFecha.setBounds(5,50,135,50);
-        add(TxtFecha);
+        TxtFecha.setForeground(Color.white);
+        PPrincipal.add(TxtFecha);
 
         BtnFecha=new JButton("Escoger fecha");
         BtnFecha.setFont(new Font("Candara",1,12));
         BtnFecha.setBounds(142,62,110,30);
-        add(BtnFecha);
+        PPrincipal.add(BtnFecha);
 
         String[]nombreEstados= {
                 "Aguascalientes","Baja California","Baja California Sur"
@@ -183,21 +190,22 @@ public class UIRegistroCria extends JDialog {
         ComboEstado.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createCompoundBorder(
                         BorderFactory.createRaisedBevelBorder(),BorderFactory.createLoweredBevelBorder()
-                ),"Estado de procedencia", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos));
+                ),"Estado de procedencia", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos,Color.white));
         ComboEstado.setBounds(5,105,180,50);
-        ComboEstado.setBackground(new Color(242,242,242));
         ComboEstado.setFont(FontCajas);
-        add(ComboEstado);
+        ComboEstado.setOpaque(false);
+        PPrincipal.add(ComboEstado);
 
         TxtPeso=new JNumberField();
         TxtPeso.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createCompoundBorder(
                         BorderFactory.createRaisedBevelBorder(),BorderFactory.createLoweredBevelBorder()
-                ),"Peso en kilogramos", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos));
+                ),"Peso en kg", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos,Color.white));
         TxtPeso.setBounds(5,165,135,45);
-        TxtPeso.setBackground(new Color(242,242,242));
         TxtPeso.setFont(FontCajas);
-        add(TxtPeso);
+        TxtPeso.setForeground(Color.white);
+        TxtPeso.setOpaque(false);
+        PPrincipal.add(TxtPeso);
 
 
         String[] aux={"Rojo vivo","Rojo púrpura","Rojo pardo"};
@@ -205,21 +213,22 @@ public class UIRegistroCria extends JDialog {
         TxtColor.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createCompoundBorder(
                         BorderFactory.createRaisedBevelBorder(),BorderFactory.createLoweredBevelBorder()
-                ),"Color del musculo", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos));
+                ),"Color del músculo", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos,Color.white));
         TxtColor.setBounds(5,220,135,45);
-        TxtColor.setBackground(new Color(242,242,242));
         TxtColor.setFont(FontCajas);
-        add(TxtColor);
+        TxtColor.setOpaque(false);
+        PPrincipal.add(TxtColor);
 
         TxtGrasa=new JNumberField();
         TxtGrasa.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createCompoundBorder(
                         BorderFactory.createRaisedBevelBorder(),BorderFactory.createLoweredBevelBorder()
-                ),"Porcentaje de grasa", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos));
+                ),"% de grasa", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos,Color.white));
         TxtGrasa.setBounds(5,270,135,45);
-        TxtGrasa.setBackground(new Color(242,242,242));
         TxtGrasa.setFont(FontCajas);
-        add(TxtGrasa);
+        TxtGrasa.setOpaque(false);
+        TxtGrasa.setForeground(Color.white);
+        PPrincipal.add(TxtGrasa);
 
         String [][] m={};
         String [] columnas={"Id","Tipo","N# de crías"};
@@ -227,29 +236,33 @@ public class UIRegistroCria extends JDialog {
         TbCorrales=new JTable(dm);
         TbCorrales.setFont(new Font("Cambria",1,12));
         TbCorrales.setEnabled(false);
+        TbCorrales.setOpaque(false);
         SPCorrales=new JScrollPane(TbCorrales);
         SPCorrales.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createCompoundBorder(
                         BorderFactory.createRaisedBevelBorder(),BorderFactory.createLoweredBevelBorder()
-                ),"Corrales", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos));
+                ),"Corrales", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos,Color.white));
         SPCorrales.setBounds(255,5,275,260);
-        SPCorrales.setBackground(new Color(242,242,242));
-        add(SPCorrales);
+        SPCorrales.setOpaque(false);
+        PPrincipal.add(SPCorrales);
 
         TxtCorral=new JNumberField();
         TxtCorral.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createCompoundBorder(
                         BorderFactory.createRaisedBevelBorder(),BorderFactory.createLoweredBevelBorder()
-                ),"Id del corral", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos));
+                ),"Id del corral", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos,Color.white));
         TxtCorral.setFont(FontCajas);
         TxtCorral.setBounds(255,270,120,40);
-        TxtCorral.setBackground(new Color(242,242,242));
-        add(TxtCorral);
+        TxtCorral.setOpaque(false);
+        TxtCorral.setForeground(Color.white);
+        PPrincipal.add(TxtCorral);
 
         BtnRegistrar=new JButton("Registrar");
         BtnRegistrar.setBounds(5,320,530,35);
         BtnRegistrar.setFont(FontTitulos);
-        add(BtnRegistrar);
+        PPrincipal.add(BtnRegistrar);
+
+        add(PPrincipal);
     }
 
     public void llenarCorrales(ArrayList<String[]> datos){
@@ -257,4 +270,5 @@ public class UIRegistroCria extends JDialog {
             dm.addRow(datos.get(i));
         setVisible(true);
     }
+
 }

@@ -36,7 +36,7 @@ Begin try
 	begin tran
 		UPDATE CRIAS SET Clasificacion_id=@Clasificacion_id where Crias_id=@Id
 		INSERT INTO LOGCLASIFICACIONES Values(@Id,@Clasificacion_id,@Fecha)
-		if(@Clasificacion_id=3)
+		if(@Clasificacion_id=3 and @Id not in (select Cria_id from SENSORES where Cria_id=@Id))
 			Insert into SENSORES values (@Id,38.5)
 	commit tran 
 end try
@@ -92,7 +92,7 @@ Begin try
 end try
 begin catch
 	rollback tran
-	declare @errornum int=100000,@errormen varchar(max)='Ocurrió un error durante el sacrificio',@errorest int=Error_State();
+	declare @errornum int=100000,@errormen varchar(max)='Ocurrió un error durante el proceso',@errorest int=Error_State();
 	throw @errornum,@errormen,@errorest;
 end catch
 
@@ -106,10 +106,11 @@ Begin try
 end try
 begin catch
 	rollback tran
-	declare @errornum int=100000,@errormen varchar(max)='Ocurrió un error durante el sacrificio',@errorest int=Error_State();
+	declare @errornum int=100000,@errormen varchar(max)='Ocurrió un error durante el cambio de dieta',@errorest int=Error_State();
 	throw @errornum,@errormen,@errorest;
 end catch
 
+UPDATE CRIAS SET Fecha_Entrada='20190620' where Crias_id=1002
 
 
 Select * from LOGDIETAS

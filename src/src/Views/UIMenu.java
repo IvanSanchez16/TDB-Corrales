@@ -59,6 +59,18 @@ public class UIMenu extends JFrame {
         return BtnClasificar;
     }
 
+    public JButton getBtnProcesar() {
+        return BtnProcesar;
+    }
+
+    public JButton getBtnVerCorrales() {
+        return BtnVerCorrales;
+    }
+
+    public JButton getBtnGenerarInforme() {
+        return BtnGenerarInforme;
+    }
+
     public static String getFechaActual(){
         Calendar c=Calendar.getInstance();
         String dia=(c.get(Calendar.DATE))+"";

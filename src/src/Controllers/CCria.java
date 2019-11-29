@@ -6,7 +6,7 @@ import Views.UIRegistroCria;
 import java.awt.event.*;
 import java.util.ArrayList;
 
-public class CCria implements ActionListener {
+public class CCria implements ActionListener,KeyListener {
     UIRegistroCria view;
     MCria model;
 
@@ -34,5 +34,12 @@ public class CCria implements ActionListener {
             }
         }
     }
-
+    public void keyTyped(KeyEvent e) {}
+    public void keyPressed(KeyEvent e) {
+        if(e.getSource()==view.getTxtId()){
+            e.consume();
+            return;
+        }
+    }
+    public void keyReleased(KeyEvent e) {}
 }
