@@ -46,11 +46,40 @@ public class UIDietas extends JDialog {
     }
 
     public void llenarTabla(ArrayList<String[]> datos){
-
+        String[] col={"Id","Dieta actual","Peso","Grasa","Días en el proceso"};
+        Dm=new DefaultTableModel(null,col);
+        Tb.setModel(Dm);
+        TableColumn colDias=Tb.getColumn("Días en el proceso");
+        colDias.setPreferredWidth(120);
+        TableColumn colDieta=Tb.getColumn("Dieta actual");
+        colDieta.setPreferredWidth(130);
+        for(String[] dato:datos)
+            Dm.addRow(dato);
+        Sp.updateUI();
     }
 
     public void llenarTabla(){
+        String[] col={"Id","Dieta actual","Peso","Grasa","Días en el proceso"};
+        Dm=new DefaultTableModel(null,col);
+        Tb.setModel(Dm);
+        TableColumn colDias=Tb.getColumn("Días en el proceso");
+        colDias.setPreferredWidth(120);
+        TableColumn colDieta=Tb.getColumn("Dieta actual");
+        colDieta.setPreferredWidth(130);
+        for(String[] dato:datos)
+            Dm.addRow(dato);
+        Sp.updateUI();
+    }
 
+    public void mostrarModal(String msg){
+        if(msg=="")
+            msg="La dieta fue actualizada correctamente";
+        JOptionPane.showMessageDialog(this,msg,"Dietas",msg.equals("La dieta fue actualizada correctamente")?JOptionPane.INFORMATION_MESSAGE:JOptionPane.ERROR_MESSAGE);
+    }
+
+    public void llenarCBDietas(ArrayList<String> a){
+        for(String dato:a)
+            CbDietas.addItem(dato);
     }
 
     public JButton getBtnBuscar() {
@@ -65,12 +94,28 @@ public class UIDietas extends JDialog {
         return Tb;
     }
 
+    public ArrayList<String[]> getDatos() {
+        return datos;
+    }
+
+    public void seleccionarCria(int row){
+        TxtCria.setText((String) Tb.getValueAt(row,0));
+    }
+
+    public String getCbBusqueda(){
+        return (String) CbBusqueda.getSelectedItem();
+    }
+
     public int getTxtCria() {
         return (int) TxtCria.ObtenerCantidad();
     }
 
     public String getTxtBusqueda() {
         return TxtBusqueda.getText();
+    }
+
+    public String getCBDietas(){
+        return (String) CbDietas.getSelectedItem();
     }
 
     private void defineInterfaz(){
@@ -89,7 +134,7 @@ public class UIDietas extends JDialog {
         TxtBusqueda.setFont(FontCajas);
         PBusqueda.add(TxtBusqueda);
 
-        String[] a={"Id","Dieta actual","> Peso","> Grasa"};
+        String[] a={"Id","Dieta actual",">= Peso","< Peso",">= Grasa","< Grasa"};
         CbBusqueda =new JComboBox<>(a);
         CbBusqueda.setFont(FontCajas);
         PBusqueda.add(CbBusqueda);

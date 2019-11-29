@@ -202,7 +202,7 @@ public class UIClasificar extends JDialog {
     public void mostrarModal(String msg){
         if(msg==null)
             msg="La cría fue actualizada correctamente";
-        JOptionPane.showMessageDialog(this,msg,"Registro de cría",msg.equals("La cría fue actualizada correctamente")?JOptionPane.INFORMATION_MESSAGE:JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(this,msg,"Clasificar",msg.equals("La cría fue actualizada correctamente")?JOptionPane.INFORMATION_MESSAGE:JOptionPane.ERROR_MESSAGE);
     }
 
     public JButton getBtnEditar() {

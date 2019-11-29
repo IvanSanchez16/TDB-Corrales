@@ -3,12 +3,11 @@ package Models;
 import Database.ComandosSQL;
 
 import java.sql.ResultSet;
-import java.sql.SQLException;
 
 public class MCorral {
 
     public String registrarCorral(char tipo){
-        return ComandosSQL.insertar("exec dbo.SPInsertarCorral @Tipo="+tipo);
+        return ComandosSQL.ejecutar("exec dbo.SPInsertarCorral @Tipo="+tipo);
     }
 
     public String sigCodigo(){

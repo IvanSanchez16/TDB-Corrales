@@ -48,3 +48,5 @@ inner join LOGDIETAS Ld on Ld.Cria_id=C.Crias_id
 inner join DIETAS D on D.Dieta_id=Ld.Dieta_id
 where Ld.Clave=Cl.Clave
 
+CREATE VIEW DietasView as
+Select Descripcion from DIETAS where Descripcion != 'Bajo tratamiento'

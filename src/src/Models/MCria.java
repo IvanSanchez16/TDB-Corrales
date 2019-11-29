@@ -60,7 +60,7 @@ public class MCria {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return ComandosSQL.insertar("exec dbo.SPInsertarCria @Id="+id+",@Fecha='"+fecha+"',@FechaActual='"+fechaActual
+        return ComandosSQL.ejecutar("exec dbo.SPInsertarCria @Id="+id+",@Fecha='"+fecha+"',@FechaActual='"+fechaActual
                 +"',@Estado='"+estado+"',@Peso="+peso+",@CMusculo='"+color+"',@CGrasa="+grasa+",@Corral="+corral);
     }
 }

@@ -96,12 +96,21 @@ begin catch
 	throw @errornum,@errormen,@errorest;
 end catch
 
-CREATE PROCEDURE SPCambiarDieta @Cria int,@Dieta int,@Fecha date as
-INSERT INTO LOGDIETAS (Cria_id,Dieta_id,Fecha) VALUES (@Cria,@Dieta,@Fecha)
+CREATE PROCEDURE SPCambiarDieta @Cria int,@Dieta varchar(30),@Fecha date as
+Begin try
+	begin tran
+		declare @DietaId int
+		select @DietaId=Dieta_id from DIETAS where Descripcion=@Dieta
+		INSERT INTO LOGDIETAS (Cria_id,Dieta_id,Fecha) VALUES (@Cria,@DietaId,@Fecha)
+	commit tran
+end try
+begin catch
+	rollback tran
+	declare @errornum int=100000,@errormen varchar(max)='Ocurrió un error durante el sacrificio',@errorest int=Error_State();
+	throw @errornum,@errormen,@errorest;
+end catch
 
-exec SPDarDeAltaCria 2,'20191127'
 
-UPDATE CUARENTENAS set Fecha_Inicio='20191015' where Cria_id=1
 
 Select * from LOGDIETAS
 

@@ -133,7 +133,7 @@ public class MCuarentena {
                 crias.add(rs.getInt("crias_id"));
             for (Integer cria : crias) {
                 tempran=generarTempAleatoria();
-                ComandosSQL.insertar("exec dbo.SPActualizarTemperatura @Cria_id=" + cria + ",@Temperatura="+tempran);
+                ComandosSQL.ejecutar("exec dbo.SPActualizarTemperatura @Cria_id=" + cria + ",@Temperatura="+tempran);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -150,7 +150,7 @@ public class MCuarentena {
                 crias.add(rs.getInt("Cria"));
             for (Integer cria : crias) {
                 tempran=generarTempAleatoriaEn();
-                ComandosSQL.insertar("exec dbo.SPActualizarTemperatura @Cria_id=" + cria + ",@Temperatura="+tempran);
+                ComandosSQL.ejecutar("exec dbo.SPActualizarTemperatura @Cria_id=" + cria + ",@Temperatura="+tempran);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -158,7 +158,7 @@ public class MCuarentena {
     }
 
     public String moverACuarentena(String cria,String corral,String fechaact){
-        return ComandosSQL.insertar("exec dbo.SPAgregarACuarentena @Cria="+cria+",@Corral="+corral+",@Fecha='"+fechaact+"'");
+        return ComandosSQL.ejecutar("exec dbo.SPAgregarACuarentena @Cria="+cria+",@Corral="+corral+",@Fecha='"+fechaact+"'");
     }
 
     public int comprobarDias(String cria,ArrayList<String[]> datos){
@@ -174,11 +174,11 @@ public class MCuarentena {
     }
 
     public String sacrificarCria(String cria){
-        return ComandosSQL.insertar("exec SPSacrificar @Cria="+cria+",@Fecha='"+ UIPrincipal.getFechaActual()+"'");
+        return ComandosSQL.ejecutar("exec SPSacrificar @Cria="+cria+",@Fecha='"+ UIPrincipal.getFechaActual()+"'");
     }
 
     public String darDeAlta(String cria){
-        return ComandosSQL.insertar("exec SPDarDeAltaCria @Cria="+cria+",@Fecha='"+UIPrincipal.getFechaActual()+"'");
+        return ComandosSQL.ejecutar("exec SPDarDeAltaCria @Cria="+cria+",@Fecha='"+UIPrincipal.getFechaActual()+"'");
     }
 
     private double generarTempAleatoria(){
