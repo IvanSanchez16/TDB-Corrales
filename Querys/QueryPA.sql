@@ -98,9 +98,6 @@ begin catch
 	throw @errornum,@errormen,@errorest;
 end catch
 
-exec SPDarDeAltaCria 5,'20191129'
-
-
 CREATE PROCEDURE SPCambiarDieta @Cria int,@Dieta varchar(30),@Fecha date as
 Begin try
 	begin tran
@@ -118,26 +115,34 @@ end catch
 CREATE PROCEDURE SPSiguienteProceso @Cria int,@Fecha date AS
 INSERT INTO SALIDAS VALUES (@Cria,@Fecha,1)
 
-UPDATE CRIAS SET Fecha_Entrada='20190620' where Crias_id=1002
+CREATE PROCEDURE SPInformeCria @Cria int AS
+Begin try
+	begin tran
+		select Fecha_Entrada,Fecha_Salida,
+		case
+		when Razon_Salida=1 then 'Enviada al siguiente proceso'
+		else 'Sacrificada por enfermedad prolongada'
+		end [Razon de salida],
+		C.Peso,C.Cant_Grasa,C.Color_Musculo,CL.Nombre from CRIAS C
+		inner join SALIDAS S on C.Crias_id=S.Cria_id
+		inner join CLASIFICACIONES CL on CL.Clasificacion_id=C.Clasificacion_id
+		where C.Crias_id=@Cria
 
+		select D.Descripcion,LD.Fecha as [Fecha de cambio] from LOGDIETAS LD
+		inner join DIETAS D on LD.Dieta_id=D.Dieta_id
+		where Cria_id=@Cria
 
-Select * from LOGDIETAS
+		select C.Fecha_Inicio,C.Fecha_Fin,M.CorralDes_id as [Corral durante cuarentena] from CUARENTENAS C
+		inner join MOVIMIENTOS_CRIAS M on C.Cria_id=M.Cria_id
+		where C.Cria_id=@Cria and C.Fecha_Inicio=M.Fecha
 
-Select * from CORRALES	
+		select CorralOrg_id as [Corral origen],CorralDes_id as [Corral destino],Fecha from MOVIMIENTOS_CRIAS where Cria_id=@Cria
 
-Select * from CRIAS 
-
-SELECT * from MOVIMIENTOS_CRIAS
-
-SELECT * FROM DIETAS
-
-select * from CUARENTENAS
-
-Select * from SALIDAS
-
-Select * from SENSORES
-
-Select * from LOGCLASIFICACIONES
-
-Select * from CLASIFICACIONES
+	commit tran
+end try
+begin catch
+	rollback tran
+	declare @errornum int=100000,@errormen varchar(max)='Ocurrió un error al generar el informe',@errorest int=Error_State();
+	throw @errornum,@errormen,@errorest;
+end catch
 

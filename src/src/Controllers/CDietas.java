@@ -33,7 +33,12 @@ public class CDietas implements ActionListener, MouseListener {
             return;
         }
         if(e.getSource()==view.getBtnAceptar()){
-            view.mostrarModal( model.actualizarDieta( view.getTxtCria()+"",view.getCBDietas(), UIMenu.getFechaActual()) );
+            try {
+                view.mostrarModal( model.actualizarDieta( view.getTxtCria()+"",view.getCBDietas(), UIMenu.getFechaActual()) );
+                view.setDatos( model.obtenerDatos() );
+            } catch (Exception ex) {
+                view.mostrarModal("Seleccione una cría");
+            }
             return;
         }
     }

@@ -100,7 +100,7 @@ public class UIRegistroCria extends JDialog {
                 continue;
             }
             if(cont<2 && cont!=0){
-                aux=aux.substring(0,i-1)+'0'+aux.charAt(i-1);
+                aux=aux.substring(0,aux.length()-1)+'0'+aux.charAt(aux.length()-1);
             }
             cont=0;
         }

@@ -42,5 +42,9 @@ public class CInicio implements ActionListener {
             CVCorrales vc=new CVCorrales();
             return;
         }
+        if(e.getSource()==view.getBtnGenerarInforme()){
+
+            return;
+        }
     }
 }

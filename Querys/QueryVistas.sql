@@ -62,12 +62,6 @@ CASE
 	when CU.Fecha_Inicio is null or CU.Fecha_Fin is not null then 'Sana'
 	else 'Bajo cuarentena'
 end
-as [Estado actual],DATEDIFF(DAY,C.Fecha_Entrada,GETDATE()) [Dias en el proceso] from 
-(Select C2.Crias_id,MAX(L.Clave) Clave from CriasEnProcesoView C2
-inner join LOGCLASIFICACIONES L on C2.Crias_id=L.Cria_id
-group by C2.Crias_id) M
-inner join CriasEnProcesoView C on C.Crias_id=M.Crias_id
-inner join LOGCLASIFICACIONES L on C.Crias_id=L.Cria_id
-inner join CLASIFICACIONES CL on L.Clasificacion_id=CL.Clasificacion_id
+as [Estado actual],DATEDIFF(DAY,C.Fecha_Entrada,GETDATE()) [Dias en el proceso] from CriasEnProcesoView C
+inner join CLASIFICACIONES CL on C.Clasificacion_id=CL.Clasificacion_id
 left join CUARENTENAS CU on C.Crias_id=CU.Cria_id
-where L.Clave=M.Clave
