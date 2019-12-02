@@ -5,7 +5,6 @@ import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import java.awt.*;
-import java.rmi.activation.ActivationGroupID;
 import java.util.ArrayList;
 
 public class UIReporte extends JDialog {
@@ -27,6 +26,7 @@ public class UIReporte extends JDialog {
         this.cria=cria;
         setTitle("Informe");
         setSize(1050,350);
+        setModal(true);
         setResizable(false);
         setLocationRelativeTo(null);
         defineInterfaz();

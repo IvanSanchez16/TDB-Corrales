@@ -11,8 +11,9 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class UICuarentena extends JDialog {
+
     private JTabbedPane TPane;
-    private JPanel PAgregar,PSacar,PEvaluar;
+    private PanelFondo PAgregar,PSacar,PEvaluar;
     private JScrollPane SPCrSa,SPCrEn,SPCoEn,SPCrG2;
     private JTable TbCrSa,TbCrEn,TbCoEn,TbCrG2;
     private DefaultTableModel DmCrSa,DmCrEn,DmCoEn,DmCrG2;
@@ -43,6 +44,9 @@ public class UICuarentena extends JDialog {
         BtnSacrificar.addActionListener(c);
         BtnMarcarSanas.addActionListener(c);
         BtnMoverCriaR.addActionListener(c);
+        TxtCria1.addKeyListener(c);
+        TxtCria2.addKeyListener(c);
+        TxtCorral1.addKeyListener(c);
         t=new Timer(30000,c);
         te=new Timer(30000,c);
         t.start();
@@ -208,8 +212,8 @@ public class UICuarentena extends JDialog {
 
     private void defineInterfaz(){
         TPane=new JTabbedPane();
-        FontCajas = new Font("Dubai", 0, 13);
-        FontTitulos = new Font("Candara", 1, 13);
+        FontCajas = new Font("Cambria", 0, 14);
+        FontTitulos = new Font("Candara", 1, 14);
         TPane.setFont(new Font("Candara",1,17));
         add(TPane);
 
@@ -221,7 +225,7 @@ public class UICuarentena extends JDialog {
     }
 
     private void crearPEvaluar(){
-        PEvaluar=new JPanel();
+        PEvaluar=new PanelFondo("fondoEvaluar.jpg",500,405);
         PEvaluar.setLayout(null);
 
         String [][] m1={};
@@ -229,12 +233,14 @@ public class UICuarentena extends JDialog {
 
         DmCrG2=new DefaultTableModel(m1,col1);
         TbCrG2=new JTable(DmCrG2);
+        TbCrG2.setFont(new Font("Cambria",1,13));
         SPCrG2=new JScrollPane(TbCrG2);
         SPCrG2.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createCompoundBorder(
                         BorderFactory.createRaisedBevelBorder(),BorderFactory.createLoweredBevelBorder()
-                ),"Crías con sensor sanas", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos));
+                ),"Crías con sensor sanas", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos,Color.WHITE));
         SPCrG2.setBounds(5,5,475,280);
+        SPCrG2.setOpaque(false);
         PEvaluar.add(SPCrG2);
 
         BtnMarcarEnRiesgo=new JButton("Marcar crías en riesgo de enfermarse");
@@ -246,30 +252,34 @@ public class UICuarentena extends JDialog {
     }
 
     private void crearPAgregar(){
-        PAgregar=new JPanel();
+        PAgregar=new PanelFondo("fondoEvaluar.jpg",500,405);
         PAgregar.setLayout(null);
 
         String [][] m={};
         String [] columnas={"Id","Corral"};
         DmCrEn=new DefaultTableModel(m,columnas);
         TbCrEn=new JTable(DmCrEn);
+        TbCrEn.setFont(new Font("Cambria",1,13));
         SPCrEn=new JScrollPane(TbCrEn);
         SPCrEn.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createCompoundBorder(
                         BorderFactory.createRaisedBevelBorder(),BorderFactory.createLoweredBevelBorder()
-                ),"Seleccione cría a mover", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos));
+                ),"Seleccione cría a mover", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos,Color.WHITE));
         SPCrEn.setBounds(40,5,200,275);
+        SPCrEn.setOpaque(false);
         PAgregar.add(SPCrEn);
 
         String[] columnas2={"Id","# de crías"};
         DmCoEn=new DefaultTableModel(m,columnas2);
         TbCoEn=new JTable(DmCoEn);
+        TbCoEn.setFont(new Font("Cambria",1,13));
         SPCoEn=new JScrollPane(TbCoEn);
         SPCoEn.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createCompoundBorder(
                         BorderFactory.createRaisedBevelBorder(),BorderFactory.createLoweredBevelBorder()
-                ),"Seleccione el corral de destino", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos));
+                ),"Seleccione el corral de destino", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos,Color.WHITE));
         SPCoEn.setBounds(250,5,200,275);
+        SPCoEn.setOpaque(false);
         PAgregar.add(SPCoEn);
 
         JPanel P1=new JPanel();
@@ -279,25 +289,28 @@ public class UICuarentena extends JDialog {
         TxtCria1.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createCompoundBorder(
                         BorderFactory.createRaisedBevelBorder(),BorderFactory.createLoweredBevelBorder()
-                ),"Cria_id", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos));
+                ),"Cria_id", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos,Color.white));
         TxtCria1.setFont(FontCajas);
         TxtCria1.setBackground(new Color(242,242,242));
-        TxtCria1.setEnabled(false);
+        TxtCria1.setForeground(Color.WHITE);
+        TxtCria1.setOpaque(false);
         P1.add(TxtCria1);
 
         TxtCorral1=new JNumberField();
         TxtCorral1.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createCompoundBorder(
                         BorderFactory.createRaisedBevelBorder(),BorderFactory.createLoweredBevelBorder()
-                ),"Corral_id", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos));
+                ),"Corral_id", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos,Color.white));
         TxtCorral1.setFont(FontCajas);
         TxtCorral1.setBackground(new Color(242,242,242));
-        TxtCorral1.setEnabled(false);
+        TxtCorral1.setForeground(Color.WHITE);
+        TxtCorral1.setOpaque(false);
         P1.add(TxtCorral1);
 
         BtnMoverCriaA=new JButton("Mover");
         BtnMoverCriaA.setFont(new Font("Candara",1,15));
         P1.add(BtnMoverCriaA);
+        P1.setOpaque(false);
 
         P1.setBounds(5,285,770,42);
         PAgregar.add(P1);
@@ -306,18 +319,20 @@ public class UICuarentena extends JDialog {
     }
 
     private void crearPSacar(){
-        PSacar=new JPanel();
+        PSacar=new PanelFondo("fondoEvaluar.jpg",500,405);
         PSacar.setLayout(null);
 
         String[] col={"Id","Temperatura","Corral","Días"};
         DmCrSa=new DefaultTableModel(null,col);
         TbCrSa=new JTable(DmCrSa);
+        TbCrSa.setFont(new Font("Cambria",1,13));
         SPCrSa=new JScrollPane(TbCrSa);
         SPCrSa.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createCompoundBorder(
                         BorderFactory.createRaisedBevelBorder(),BorderFactory.createLoweredBevelBorder()
-                ),"Crías en cuarentena", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos));
+                ),"Crías en cuarentena", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos,Color.WHITE));
         SPCrSa.setBounds(5,5,475,230);
+        SPCrSa.setOpaque(false);
         PSacar.add(SPCrSa);
 
         BtnMarcarSanas=new JButton("Marcar crías recuperadas");
@@ -334,10 +349,11 @@ public class UICuarentena extends JDialog {
         TxtCria2.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createCompoundBorder(
                         BorderFactory.createRaisedBevelBorder(),BorderFactory.createLoweredBevelBorder()
-                ),"Cria id", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos));
+                ),"Cria id", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos,Color.WHITE));
         TxtCria2.setBounds(5,285,120,40);
         TxtCria2.setFont(FontCajas);
-        TxtCria2.setEnabled(false);
+        TxtCria2.setForeground(Color.white);
+        TxtCria2.setOpaque(false);
         PSacar.add(TxtCria2);
 
         BtnMoverCriaR=new JButton("Terminar cuarentena");

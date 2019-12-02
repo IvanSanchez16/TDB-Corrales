@@ -18,6 +18,7 @@ public class UIVCorrales extends JDialog {
     public UIVCorrales(){
         setTitle("Corrales");
         setSize(250,200);
+        setModal(true);
         setLocationRelativeTo(null);
         setResizable(false);
         defineInterfaz();

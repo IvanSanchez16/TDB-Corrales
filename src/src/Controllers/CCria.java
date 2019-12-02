@@ -34,7 +34,9 @@ public class CCria implements ActionListener,KeyListener {
             }
         }
     }
-    public void keyTyped(KeyEvent e) {}
+    public void keyTyped(KeyEvent e) {
+        e.consume();
+    }
     public void keyPressed(KeyEvent e) {
         if(e.getSource()==view.getTxtId()){
             e.consume();

@@ -13,6 +13,7 @@ import java.util.ArrayList;
 
 public class UIDietas extends JDialog {
 
+    private PanelFondo PPrincipal;
     private JPanel PBusqueda;
     private DefaultTableModel Dm;
     private JTable Tb;
@@ -119,16 +120,18 @@ public class UIDietas extends JDialog {
     }
 
     private void defineInterfaz(){
-        setLayout(null);
-        FontCajas = new Font("Dubai", 0, 13);
-        FontTitulos = new Font("Candara", 1, 13);
+        PPrincipal=new PanelFondo("fondoDietas.jpg",550,425);
+        PPrincipal.setLayout(null);
+        FontCajas = new Font("Cambria", 0, 14);
+        FontTitulos = new Font("Candara", 1, 14);
 
         PBusqueda=new JPanel();
         PBusqueda.setLayout(new GridLayout(0,3));
         PBusqueda.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createCompoundBorder(
                         BorderFactory.createRaisedBevelBorder(),BorderFactory.createLoweredBevelBorder()
-                ),"Filtrar busqueda", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos));
+                ),"Filtrar busqueda", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos,Color.WHITE));
+        PBusqueda.setOpaque(false);
 
         TxtBusqueda =new JTextField();
         TxtBusqueda.setFont(FontCajas);
@@ -145,7 +148,7 @@ public class UIDietas extends JDialog {
         PBusqueda.add(BtnBuscar);
 
         PBusqueda.setBounds(5,5,530,50);
-        add(PBusqueda);
+        PPrincipal.add(PBusqueda);
 
         String[] col={"Id","Dieta actual","Peso","Grasa","Días en el proceso"};
         Dm=new DefaultTableModel(null,col);
@@ -154,13 +157,15 @@ public class UIDietas extends JDialog {
         colDias.setPreferredWidth(120);
         TableColumn colDieta=Tb.getColumn("Dieta actual");
         colDieta.setPreferredWidth(130);
+        Tb.setFont(new Font("Cambria",1,13));
         Sp=new JScrollPane(Tb);
         Sp.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createCompoundBorder(
                         BorderFactory.createRaisedBevelBorder(),BorderFactory.createLoweredBevelBorder()
-                ),"Dieta por cría", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos));
+                ),"Dieta por cría", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos,Color.WHITE));
         Sp.setBounds(5,60,530,275);
-        add(Sp);
+        Sp.setOpaque(false);
+        PPrincipal.add(Sp);
 
         TxtCria=new JNumberField();
         TxtCria.setFont(FontCajas);
@@ -168,8 +173,11 @@ public class UIDietas extends JDialog {
         TxtCria.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createCompoundBorder(
                         BorderFactory.createRaisedBevelBorder(),BorderFactory.createLoweredBevelBorder()
-                ),"Cria id", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos));
-        add(TxtCria);
+                ),"Cria id", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos,Color.WHITE));
+        TxtCria.setOpaque(false);
+        TxtCria.setFont(FontCajas);
+        TxtCria.setForeground(Color.WHITE);
+        PPrincipal.add(TxtCria);
 
         CbDietas=new JComboBox<>();
         CbDietas.setFont(FontCajas);
@@ -177,12 +185,16 @@ public class UIDietas extends JDialog {
         CbDietas.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createCompoundBorder(
                         BorderFactory.createRaisedBevelBorder(),BorderFactory.createLoweredBevelBorder()
-                ),"Nueva dieta", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos));
-        add(CbDietas);
+                ),"Nueva dieta", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos,Color.WHITE));
+        CbDietas.setOpaque(false);
+        CbDietas.setFont(FontCajas);
+        PPrincipal.add(CbDietas);
 
         BtnAceptar=new JButton("Cambiar dieta");
         BtnAceptar.setFont(new Font("Candara",1,15));
         BtnAceptar.setBounds(280,340,255,45);
-        add(BtnAceptar);
+        PPrincipal.add(BtnAceptar);
+
+        add(PPrincipal);
     }
 }

@@ -5,7 +5,7 @@ begin try
 	BEGIN tran;
 	Insert into CRIAS (Fecha_Entrada,Estado_Origen,Peso,Color_Musculo,Cant_Grasa,Corral_id)
 	values(@Fecha,@Estado,@Peso,@CMusculo,@CGrasa,@Corral)
-	Insert into LOGDIETAS values(1,@Id,@FechaActual)
+	Insert into LOGDIETAS values(1,@@IDENTITY,@FechaActual)
 	commit tran;
 end try
 begin catch
@@ -174,3 +174,9 @@ begin catch
 	declare @errornum int=100000,@errormen varchar(max)='Ocurrió un error al generar el informe',@errorest int=Error_State();
 	throw @errornum,@errormen,@errorest;
 end catch
+
+UPDATE CUARENTENAS SET Fecha_Fin='20191107' where Cria_id=8 and Cuarentena_id=1
+
+select * from CUARENTENAS
+
+select * FROM LOGDIETAS

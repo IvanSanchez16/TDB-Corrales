@@ -6,8 +6,9 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 
-public class UIRegistroCorral extends JFrame {
+public class UIRegistroCorral extends JDialog {
 
+    private PanelFondo PPrincipal;
     private JNumberField TxtId;
     private JComboBox<String> ComboTipo;
     private Font FontCajas;
@@ -15,16 +16,17 @@ public class UIRegistroCorral extends JFrame {
     private JButton BtnRegistrar;
 
     public UIRegistroCorral(){
-        super("Registrar corral");
+        setTitle("Registrar corral");
+        setModal(true);
         setSize(200,175);
         setResizable(false);
         setLocationRelativeTo(null);
         definirInterfaz();
-        setVisible(true);
     }
 
     public void asignarControlador(CCorral c){
         BtnRegistrar.addActionListener(c);
+        TxtId.addKeyListener(c);
     }
 
     public void setTextId(String id){
@@ -52,35 +54,41 @@ public class UIRegistroCorral extends JFrame {
     }
 
     private void definirInterfaz(){
-        setLayout(null);
+
+        PPrincipal=new PanelFondo("fondoCorrales.jpg",200,175);
+        PPrincipal.setLayout(null);
 
         FontCajas=new Font("Dubai",0,13);
-        FontTitulos=new Font("Candara",1,13);
+        FontTitulos=new Font("Candara",1,14);
 
         TxtId = new JNumberField();
         TxtId.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createCompoundBorder(
                         BorderFactory.createRaisedBevelBorder(),BorderFactory.createLoweredBevelBorder()
-                ),"ID", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos));
+                ),"ID", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos,Color.white));
         TxtId.setBackground(new Color(242,242,242));
         TxtId.setBounds(5,5,100,40);
-        TxtId.setEnabled(false);
+        TxtId.setForeground(Color.WHITE);
+        TxtId.setOpaque(false);
         TxtId.setFont(FontCajas);
-        add(TxtId);
+        PPrincipal.add(TxtId);
 
         String[] a={"Normal","Cuarentena"};
         ComboTipo = new JComboBox<String>(a);
         ComboTipo.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createCompoundBorder(
                         BorderFactory.createRaisedBevelBorder(),BorderFactory.createLoweredBevelBorder()
-                ),"Tipo", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos));
+                ),"Tipo", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos,Color.WHITE));
         ComboTipo.setBackground(new Color(242,242,242));
         ComboTipo.setBounds(5,50,120,45);
-        add(ComboTipo);
+        ComboTipo.setOpaque(false);
+        PPrincipal.add(ComboTipo);
 
         BtnRegistrar=new JButton("Registrar");
         BtnRegistrar.setFont(FontTitulos);
         BtnRegistrar.setBounds(5,100,180,35);
-        add(BtnRegistrar);
+        PPrincipal.add(BtnRegistrar);
+
+        add(PPrincipal);
     }
 }

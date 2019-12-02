@@ -27,6 +27,7 @@ public class UIProceso extends JDialog {
     public UIProceso(){
         setTitle("Procesar");
         setResizable(false);
+        setModal(true);
         setSize(500,350);
         setLocationRelativeTo(null);
         defineInterfaz();

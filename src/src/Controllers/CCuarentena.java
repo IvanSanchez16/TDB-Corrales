@@ -3,12 +3,10 @@ package Controllers;
 import Models.MCuarentena;
 import Views.UICuarentena;
 import Views.UIMenu;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 
-public class CCuarentena implements ActionListener, MouseListener {
+import java.awt.event.*;
+
+public class CCuarentena implements ActionListener, MouseListener, KeyListener {
     UICuarentena view;
     MCuarentena model;
 
@@ -117,4 +115,12 @@ public class CCuarentena implements ActionListener, MouseListener {
     public void mouseReleased(MouseEvent e) {}
     public void mouseEntered(MouseEvent e) {}
     public void mouseExited(MouseEvent e) {}
+
+    public void keyTyped(KeyEvent e) {
+        e.consume();
+    }
+    public void keyPressed(KeyEvent e) {
+        e.consume();
+    }
+    public void keyReleased(KeyEvent e) {}
 }

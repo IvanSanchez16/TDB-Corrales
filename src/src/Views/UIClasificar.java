@@ -10,6 +10,7 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class UIClasificar extends JDialog {
+    private PanelFondo PPrincipal;
     private JButton BtnClasificar,BtnEditar,BtnBuscar;
     private JPanel PCajas,PBusqueda;
     private JScrollPane SPTabla;
@@ -141,17 +142,18 @@ public class UIClasificar extends JDialog {
     }
 
     private void defineInterfaz(){
-        setLayout(null);
+        PPrincipal=new PanelFondo("fondoClasificar.jpg",520,420);
+        PPrincipal.setLayout(null);
 
-        FontCajas=new Font("Dubai",0,13);
-        FontTitulos=new Font("Candara",1,13);
+        FontCajas=new Font("Cambria",0,13);
+        FontTitulos=new Font("Candara",1,14);
 
         PBusqueda=new JPanel();
         PBusqueda.setLayout(new GridLayout(0,3));
         PBusqueda.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createCompoundBorder(
                         BorderFactory.createRaisedBevelBorder(),BorderFactory.createLoweredBevelBorder()
-                ),"Filtrar busqueda", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos));
+                ),"Filtrar busqueda", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos,Color.WHITE));
 
         TxtBusqueda =new JTextField();
         TxtBusqueda.setFont(FontCajas);
@@ -168,22 +170,24 @@ public class UIClasificar extends JDialog {
         PBusqueda.add(BtnBuscar);
 
         PBusqueda.setBounds(5,5,500,50);
-        add(PBusqueda);
+        PBusqueda.setOpaque(false);
+        PPrincipal.add(PBusqueda);
 
         String [][] m={};
         String [] columnas={"Id","Peso (kg)","Color de músculo","% de grasa","Clasificación"};
         Dm=new DefaultTableModel(m,columnas);
         TbCrias =new JTable(Dm);
-        TbCrias.setFont(new Font("Dubai",1,12));
+        TbCrias.setFont(new Font("Cambria",1,12));
         TbCrias.setEnabled(false);
         SPTabla=new JScrollPane(TbCrias);
         SPTabla.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createCompoundBorder(
                         BorderFactory.createRaisedBevelBorder(),BorderFactory.createLoweredBevelBorder()
-                ),"Crías", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos));
+                ),"Crías", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos,Color.WHITE));
         SPTabla.setBounds(5,65,500,200);
         SPTabla.setBackground(new Color(242,242,242));
-        add(SPTabla);
+        SPTabla.setOpaque(false);
+        PPrincipal.add(SPTabla);
 
         PCajas=new JPanel();
         PCajas.setLayout(new GridLayout(0,4,10,0));
@@ -224,12 +228,15 @@ public class UIClasificar extends JDialog {
         PCajas.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createCompoundBorder(
                         BorderFactory.createRaisedBevelBorder(),BorderFactory.createLoweredBevelBorder()
-                ),"Editar datos", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos));
-        add(PCajas);
+                ),"Editar datos", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos,Color.WHITE));
+        PCajas.setOpaque(false);
+        PPrincipal.add(PCajas);
 
         BtnClasificar=new JButton("Actualizar clasificaciones");
         BtnClasificar.setFont(new Font("Candara",1,15));
         BtnClasificar.setBounds(5,345,500,40);
-        add(BtnClasificar);
+        PPrincipal.add(BtnClasificar);
+
+        add(PPrincipal);
     }
 }

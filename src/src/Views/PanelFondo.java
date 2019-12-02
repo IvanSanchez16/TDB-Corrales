@@ -8,16 +8,17 @@ import java.awt.*;
 public class PanelFondo extends JPanel {
 
     private String imgFondo;
-    private int alto,ancho;
+    private int ancho, alto;
 
     public PanelFondo(String fondo,int al,int an){
         imgFondo=fondo;
-        alto=al;
-        ancho=an;
+        ancho=al;
+        alto=an;
     }
 
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.drawImage(Rutinas.AjustarImagen("src/src/images/"+imgFondo,alto,ancho).getImage(),0,0, null);
+        g.drawImage(Rutinas.AjustarImagen("src/src/images/"+imgFondo, ancho, alto).getImage(),0,0, null);
     }
+
 }
