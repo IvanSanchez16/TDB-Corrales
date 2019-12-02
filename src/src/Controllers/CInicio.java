@@ -43,7 +43,7 @@ public class CInicio implements ActionListener {
             return;
         }
         if(e.getSource()==view.getBtnGenerarInforme()){
-
+            CReporte r=new CReporte();
             return;
         }
     }

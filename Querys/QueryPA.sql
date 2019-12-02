@@ -115,7 +115,7 @@ end catch
 CREATE PROCEDURE SPSiguienteProceso @Cria int,@Fecha date AS
 INSERT INTO SALIDAS VALUES (@Cria,@Fecha,1)
 
-CREATE PROCEDURE SPInformeCria @Cria int AS
+CREATE PROCEDURE SPInformeCriaDatos @Cria int AS
 Begin try
 	begin tran
 		select Fecha_Entrada,Fecha_Salida,
@@ -127,17 +127,6 @@ Begin try
 		inner join SALIDAS S on C.Crias_id=S.Cria_id
 		inner join CLASIFICACIONES CL on CL.Clasificacion_id=C.Clasificacion_id
 		where C.Crias_id=@Cria
-
-		select D.Descripcion,LD.Fecha as [Fecha de cambio] from LOGDIETAS LD
-		inner join DIETAS D on LD.Dieta_id=D.Dieta_id
-		where Cria_id=@Cria
-
-		select C.Fecha_Inicio,C.Fecha_Fin,M.CorralDes_id as [Corral durante cuarentena] from CUARENTENAS C
-		inner join MOVIMIENTOS_CRIAS M on C.Cria_id=M.Cria_id
-		where C.Cria_id=@Cria and C.Fecha_Inicio=M.Fecha
-
-		select CorralOrg_id as [Corral origen],CorralDes_id as [Corral destino],Fecha from MOVIMIENTOS_CRIAS where Cria_id=@Cria
-
 	commit tran
 end try
 begin catch
@@ -146,3 +135,42 @@ begin catch
 	throw @errornum,@errormen,@errorest;
 end catch
 
+CREATE PROCEDURE SPInformeCriaDietas @Cria int AS
+Begin try
+	begin tran
+		select D.Descripcion,LD.Fecha as [Fecha de cambio] from LOGDIETAS LD
+		inner join DIETAS D on LD.Dieta_id=D.Dieta_id
+		where Cria_id=@Cria
+	commit tran
+end try
+begin catch
+	rollback tran
+	declare @errornum int=100000,@errormen varchar(max)='Ocurrió un error al generar el informe',@errorest int=Error_State();
+	throw @errornum,@errormen,@errorest;
+end catch
+
+CREATE PROCEDURE SPInformeCriaCuarentenas @Cria int AS
+Begin try
+	begin tran
+		select C.Fecha_Inicio,C.Fecha_Fin,M.CorralDes_id as [Corral durante cuarentena] from CUARENTENAS C
+		inner join MOVIMIENTOS_CRIAS M on C.Cria_id=M.Cria_id
+		where C.Cria_id=@Cria and C.Fecha_Inicio=M.Fecha
+	commit tran
+end try
+begin catch
+	rollback tran
+	declare @errornum int=100000,@errormen varchar(max)='Ocurrió un error al generar el informe',@errorest int=Error_State();
+	throw @errornum,@errormen,@errorest;
+end catch
+
+CREATE PROCEDURE SPInformeCriaMovimientos @Cria int AS
+Begin try
+	begin tran
+		select CorralOrg_id as [Corral origen],CorralDes_id as [Corral destino],Fecha from MOVIMIENTOS_CRIAS where Cria_id=@Cria
+	commit tran
+end try
+begin catch
+	rollback tran
+	declare @errornum int=100000,@errormen varchar(max)='Ocurrió un error al generar el informe',@errorest int=Error_State();
+	throw @errornum,@errormen,@errorest;
+end catch

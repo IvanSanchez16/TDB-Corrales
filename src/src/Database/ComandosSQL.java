@@ -2,6 +2,7 @@ package Database;
 
 import javax.swing.*;
 import java.sql.*;
+import java.util.ArrayList;
 
 public class ComandosSQL {
     private static Statement con;
@@ -41,9 +42,5 @@ public class ComandosSQL {
             e.printStackTrace();
         }
         return null;
-    }
-
-    public boolean estadoConexion(){
-        return con!=null;
     }
 }

@@ -65,3 +65,6 @@ end
 as [Estado actual],DATEDIFF(DAY,C.Fecha_Entrada,GETDATE()) [Dias en el proceso] from CriasEnProcesoView C
 inner join CLASIFICACIONES CL on C.Clasificacion_id=CL.Clasificacion_id
 left join CUARENTENAS CU on C.Crias_id=CU.Cria_id
+
+CREATE VIEW CriasFueraView AS	
+Select * from SALIDAS
