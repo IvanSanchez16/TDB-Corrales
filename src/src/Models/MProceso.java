@@ -54,7 +54,7 @@ public class MProceso {
     }
 
     public String darSalidaCria(String cria,String fecha){
-        String[] p={cria+fecha};
-        return ComandosSQL.ejecutar("exec dbo.SPSiguienteProceso @Cria=?,@Fecha='?'",p);
+        String[] p={cria,fecha};
+        return ComandosSQL.ejecutar("call dbo.SPSiguienteProceso(?,?)",p);
     }
 }

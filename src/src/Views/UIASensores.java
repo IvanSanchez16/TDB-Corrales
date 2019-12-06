@@ -36,20 +36,62 @@ public class UIASensores extends JDialog {
         TxtSensor.addKeyListener(c);
     }
 
+    public void seleccionarCria(String cria){
+        TxtCria.setText(cria);
+    }
+
+    public void seleccionarSensor(String sensor){
+        TxtSensor.setText(sensor);
+    }
+
+    public JTable getTbC() {
+        return TbC;
+    }
+
+    public JTable getTbS() {
+        return TbS;
+    }
+
+    public void mostrarModal(String msg){
+        if (msg.equals("Error")){
+            JOptionPane.showMessageDialog(this,"Ocurrió un error al asignar el sensor","Sensores",JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        JOptionPane.showMessageDialog(this,"El sensor fue asignado correctamente","Sensores",JOptionPane.INFORMATION_MESSAGE);
+        dispose();
+        return;
+    }
+
     public void llenarCrias(ArrayList<String[]> datos){
         String[] col={"Id","Corral"};
         DmC=new DefaultTableModel(null,col);
+        TbC.setModel(DmC);
         for (String[] dato : datos) {
             DmC.addRow(dato);
         }
+        SpC.updateUI();
     }
 
     public void llenarSensores(ArrayList<String[]> datos){
         String[] col={"Id"};
         DmS=new DefaultTableModel(null,col);
+        TbS.setModel(DmS);
         for (String[] dato : datos) {
             DmS.addRow(dato);
         }
+        SpS.updateUI();
+    }
+
+    public String getCria(){
+        return TxtCria.ObtenerCantidad()+"";
+    }
+
+    public String getSensor(){
+        return TxtSensor.ObtenerCantidad()+"";
+    }
+
+    public JButton getBtnAsignar() {
+        return BtnAsignar;
     }
 
     private void defineInterfaz(){

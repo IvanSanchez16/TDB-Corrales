@@ -28,8 +28,7 @@ public class MReporte {
 
     public ArrayList<ArrayList<String[]>> obtenerDatos(int cria){
         ArrayList<ArrayList<String[]>> al=new ArrayList<>();
-        String [] p={cria+""};
-        ResultSet rs=ComandosSQL.consulta("exec SPInformeCriaDatos @Cria=?",p);
+        ResultSet rs=ComandosSQL.consultaSP("exec dbo.SPInformeCriaDatos @Cria="+cria);
         ArrayList<String[]> dato=new ArrayList<>();
         String [] tupla;
         try {
@@ -49,8 +48,7 @@ public class MReporte {
             e.printStackTrace();
         }
         al.add(dato);
-
-        rs=ComandosSQL.consulta("exec SPInformeCriaDietas @Cria=?",p);
+        rs=ComandosSQL.consultaSP("exec dbo.SPInformeCriaDietas @Cria="+cria);
         try {
             dato=new ArrayList<>();
             while (rs.next()){
@@ -64,7 +62,7 @@ public class MReporte {
         }
         al.add(dato);
 
-        rs=ComandosSQL.consulta("exec SPInformeCriaCuarentenas @Cria=?",p);
+        rs=ComandosSQL.consultaSP("exec dbo.SPInformeCriaCuarentenas @Cria="+cria);
         try {
             dato=new ArrayList<>();
             while (rs.next()){
@@ -79,7 +77,7 @@ public class MReporte {
         }
         al.add(dato);
 
-        rs=ComandosSQL.consulta("exec SPInformeCriaMovimientos @Cria=?",p);
+        rs=ComandosSQL.consultaSP("exec dbo.SPInformeCriaMovimientos @Cria="+cria);
         try {
             dato=new ArrayList<>();
             while (rs.next()){

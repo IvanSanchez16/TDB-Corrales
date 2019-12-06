@@ -83,6 +83,10 @@ public class UICuarentena extends JDialog {
     }
 
     public void mostrarModalSac(String msg){
+        if(msg.equals("1")){
+            JOptionPane.showMessageDialog(this,"La cría ya no es parte del proceso","Sacrificar",JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         if(!msg.equals("Error"))
             msg="La cría fue sacrificada correctamente";
         else
@@ -92,7 +96,7 @@ public class UICuarentena extends JDialog {
 
     public void mostrarModalAlt(String msg){
         if(msg.equals("1")){
-            JOptionPane.showMessageDialog(this,"Ésta cría ya está en cuarentena","Cuidado de crías",JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this,"Ésta cría no está en cuarentena","Cuidado de crías",JOptionPane.ERROR_MESSAGE);
             return;
         }
         if(!msg.equals("Error"))

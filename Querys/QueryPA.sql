@@ -38,10 +38,10 @@ begin
 	return 1
 end
 
-ALTER PROCEDURE SPActualizarDatos @Cria_id int,@Sensor int,@Temperatura float,@Presion int,@Ritmo int AS
+CREATE PROCEDURE SPActualizarDatos @Cria_id int,@Sensor int,@Temperatura float,@Presion int,@Ritmo int AS
 Insert into DATOS_SENSOR values(@Sensor,@Temperatura,@Presion,@Ritmo)
 
-ALTER PROCEDURE SPAgregarACuarentena @Cria int,@Corral int,@Fecha date,@Dieta varchar(30) AS
+CREATE PROCEDURE SPAgregarACuarentena @Cria int,@Corral int,@Fecha date,@Dieta varchar(30) AS
 Begin try
 	begin tran
 		if(@Cria in (select Cria from CriasEnCuarentenaView with(updlock) where Cria=@Cria))
@@ -51,7 +51,7 @@ Begin try
 		end
 		INSERT INTO CUARENTENAS(Cria_id,Fecha_Inicio) values(@Cria,@Fecha)
 		DECLARE @CorralOrg int
-		Set @CorralOrg=(SELECT Corral_id from CRIAS where Crias_id=@Cria)
+		Set @CorralOrg=(SELECT Corral_id from CRIAS with(updlock) where Crias_id=@Cria)
 		INSERT INTO MOVIMIENTOS_CRIAS values (@CorralOrg,@Corral,@Cria,@Fecha)
 		UPDATE CRIAS SET Corral_id=@Corral where Crias_id=@Cria
 		declare @Dietaid int =(Select Dieta_id from DIETAS where Descripcion=@Dieta)
@@ -65,11 +65,14 @@ end catch
 declare @errornum int=100000,@errormen varchar(max)='Ocurrió un error en el proceso de cuarentena',@errorest int=Error_State();
 throw @errornum,@errormen,@errorest;
 
-exec SPAgregarACuarentena 2,2,'20191206','Bajo tratamiento 1'
-
-CREATE PROCEDURE SPSacrificar @Cria int,@Fecha date AS
+ALTER PROCEDURE SPSacrificar @Cria int,@Fecha date AS
 Begin try
 	begin tran
+		if(@Cria in (select Cria_id from SALIDAS with(updlock) where Cria_id=@Cria))
+		begin
+			rollback tran
+			return 1;
+		end
 		INSERT INTO SALIDAS VALUES(@Cria,@Fecha,0)
 		UPDATE CUARENTENAS set Fecha_Fin=@Fecha where Cria_id=@Cria
 	commit tran
@@ -81,9 +84,14 @@ end catch
 declare @errornum int=100000,@errormen varchar(max)='Ocurrió un error durante el sacrificio',@errorest int=Error_State();
 throw @errornum,@errormen,@errorest;
 
-CREATE PROCEDURE SPDarDeAltaCria @Cria int,@Fecha date AS
+ALTER PROCEDURE SPDarDeAltaCria @Cria int,@Fecha date AS
 Begin try
 	begin tran
+		if(@Cria not in (select Cria from CriasEnCuarentenaView with(updlock) where Cria=@Cria))
+		begin
+			rollback
+			return 1;
+		end
 		UPDATE CUARENTENAS set Fecha_Fin=@Fecha where Cria_id=@Cria
 		INSERT INTO LOGDIETAS (Dieta_id,Cria_id,Fecha) values (1,@Cria,@Fecha)
 		Declare @CorralDest int,@CorralIni int
@@ -116,69 +124,32 @@ declare @errornum int=100000,@errormen varchar(max)='Ocurrió un error durante el
 throw @errornum,@errormen,@errorest;
 
 
-
 CREATE PROCEDURE SPSiguienteProceso @Cria int,@Fecha date AS
 INSERT INTO SALIDAS VALUES (@Cria,@Fecha,1)
 
-CREATE PROCEDURE SPInformeCriaDatos @Cria int AS
-Begin try
-	begin tran
-		select Fecha_Entrada,Fecha_Salida,
-		case
-		when Razon_Salida=1 then 'Enviada al siguiente proceso'
-		else 'Sacrificada por enfermedad prolongada'
-		end [Razon de salida],
-		C.Peso,C.Cant_Grasa,C.Color_Musculo,CL.Nombre from CRIAS C
-		inner join SALIDAS S on C.Crias_id=S.Cria_id
-		inner join CLASIFICACIONES CL on CL.Clasificacion_id=C.Clasificacion_id
-		where C.Crias_id=@Cria
-	commit tran
-end try
-begin catch
-	rollback tran
-end catch
-declare @errornum int=100000,@errormen varchar(max)='Ocurrió un error al generar el informe',@errorest int=Error_State();
-throw @errornum,@errormen,@errorest;
+ALTER PROCEDURE SPInformeCriaDatos @Cria int AS
+select Fecha_Entrada,Fecha_Salida,
+case
+when Razon_Salida=1 then 'Enviada al siguiente proceso'
+else 'Sacrificada por enfermedad prolongada'
+end [Razon de salida],
+C.Peso,C.Cant_Grasa,C.Color_Musculo,CL.Nombre from CRIAS C
+inner join SALIDAS S on C.Crias_id=S.Cria_id
+inner join CLASIFICACIONES CL on CL.Clasificacion_id=C.Clasificacion_id
+where C.Crias_id=@Cria
 
-CREATE PROCEDURE SPInformeCriaDietas @Cria int AS
-Begin try
-	begin tran
-		select D.Descripcion,LD.Fecha as [Fecha de cambio] from LOGDIETAS LD
-		inner join DIETAS D on LD.Dieta_id=D.Dieta_id
-		where Cria_id=@Cria
-	commit tran
-end try
-begin catch
-	rollback tran
-end catch
-declare @errornum int=100000,@errormen varchar(max)='Ocurrió un error al generar el informe',@errorest int=Error_State();
-throw @errornum,@errormen,@errorest;
+ALTER PROCEDURE SPInformeCriaDietas @Cria int AS
+select D.Descripcion,LD.Fecha as [Fecha de cambio] from LOGDIETAS LD
+inner join DIETAS D on LD.Dieta_id=D.Dieta_id
+where Cria_id=@Cria
 
-CREATE PROCEDURE SPInformeCriaCuarentenas @Cria int AS
-Begin try
-	begin tran
-		select C.Fecha_Inicio,C.Fecha_Fin,M.CorralDes_id as [Corral durante cuarentena] from CUARENTENAS C
-		inner join MOVIMIENTOS_CRIAS M on C.Cria_id=M.Cria_id
-		where C.Cria_id=@Cria and C.Fecha_Inicio=M.Fecha
-	commit tran
-end try
-begin catch
-	rollback tran
-end catch
-declare @errornum int=100000,@errormen varchar(max)='Ocurrió un error al generar el informe',@errorest int=Error_State();
-throw @errornum,@errormen,@errorest;
+ALTER PROCEDURE SPInformeCriaCuarentenas @Cria int AS
+select C.Fecha_Inicio,C.Fecha_Fin,M.CorralDes_id as [Corral durante cuarentena] from CUARENTENAS C
+inner join MOVIMIENTOS_CRIAS M on C.Cria_id=M.Cria_id
+where C.Cria_id=@Cria and C.Fecha_Inicio=M.Fecha
 
-CREATE PROCEDURE SPInformeCriaMovimientos @Cria int AS
-Begin try
-	begin tran
-		select CorralOrg_id as [Corral origen],CorralDes_id as [Corral destino],Fecha from MOVIMIENTOS_CRIAS where Cria_id=@Cria
-	commit tran
-end try
-begin catch
-	rollback tran
-end catch
-declare @errornum int=100000,@errormen varchar(max)='Ocurrió un error al generar el informe',@errorest int=Error_State();
-throw @errornum,@errormen,@errorest;
+ALTER PROCEDURE SPInformeCriaMovimientos @Cria int AS
+select CorralOrg_id as [Corral origen],CorralDes_id as [Corral destino],Fecha from MOVIMIENTOS_CRIAS where Cria_id=@Cria
 
 CREATE PROCEDURE SPRegistrarSensor AS
 INSERT INTO SENSORES DEFAULT VALUES
@@ -190,4 +161,10 @@ insert into SENSOR_CRIA (Cria_id,Sensor_id,Estatus) values(@Cria,@Sensor,1)
 CREATE PROCEDURE SPInsertarDieta @Descripcion varchar(30),@Tipo bit as
 Insert into DIETAS (Descripcion,Tipo) values (@Descripcion,@Tipo)
 
-select * from DATOS_SENSOR
+CREATE PROCEDURE SPDatosSensores @Cria int as
+select top(10) C.Crias_id,D.Clave,D.Temperatura,D.Presion,D.Ritmo from CriasEnProcesoView C
+inner join Sensor_cria S on C.Crias_id = S.Cria_id
+inner join Datos_sensor D on S.Sensor_id=D.Sensor_id
+where S.estatus=1 and Cria_id=@Cria
+order by D.clave desc
+

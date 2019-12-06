@@ -30,6 +30,17 @@ public class ComandosSQL {
         }
     }
 
+    public static ResultSet consultaSP(String comando){
+        try {
+            ResultSet rs;
+            Statement st=con.createStatement();
+            rs=st.executeQuery(comando);
+            return rs;
+        } catch (SQLException e) {
+            return null;
+        }
+    }
+
     public static ResultSet consulta(String comando,String[] parametros){
         try {
             ResultSet rs;

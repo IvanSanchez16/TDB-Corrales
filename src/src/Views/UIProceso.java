@@ -52,8 +52,10 @@ public class UIProceso extends JDialog {
     }
 
     public void mostrarModal(String msg){
-        if(msg.equals(""))
+        if(!msg.equals("Error"))
             msg="La cría fue enviada al siguiente proceso";
+        else
+            msg="Ocurrió un error al procesar la cría";
         JOptionPane.showMessageDialog(this,msg,"Proceso de crías",msg.equals("La cría fue enviada al siguiente proceso")?JOptionPane.INFORMATION_MESSAGE:JOptionPane.ERROR_MESSAGE);
     }
 

@@ -15,15 +15,6 @@ CREATE VIEW CriasClasificacionesView AS
 select CR.Crias_id AS Id,Peso,Color_Musculo as [Color de músculo],Cant_Grasa as [Porcentaje de grasa],C.Nombre as Clasificación from CriasEnProcesoView CR left join
 CLASIFICACIONES C on CR.Clasificacion_id=C.Clasificacion_id
 
---Checar que jale
-ALTER VIEW DatosSensoresCriasView AS
-select top(10) C.Crias_id,D.Clave,D.Temperatura,D.Presion,D.Ritmo from CriasEnProcesoView C
-inner join Sensor_cria S on C.Crias_id = S.Cria_id
-inner join Datos_sensor D on S.Sensor_id=D.Sensor_id
-where S.estatus=1
-order by D.clave desc
-	
-
 CREATE VIEW CriasG2SanasView as
 select C.Crias_id from CriasEnProcesoView C 
 where C.Corral_id in (Select Corral_id from CORRALES where Tipo='N') and C.Clasificacion_id=3

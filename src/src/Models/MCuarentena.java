@@ -1,7 +1,6 @@
 package Models;
 
 import Database.ComandosSQL;
-import Resource.Rutinas;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -11,8 +10,7 @@ public class MCuarentena {
     public ArrayList<String[]> obtenerDatosCria(String cria){
         ArrayList<String[]> matriz;
         try {
-            String[] p={cria};
-            ResultSet rs= ComandosSQL.consulta("Select Clave,Temperatura,Presion,Ritmo from DatosSensoresCriasView where Crias_id=?",p);
+            ResultSet rs= ComandosSQL.consultaSP("exec dbo.SPDatosSensores @Cria="+cria);
             String[] tuplas;
             matriz=new ArrayList<>();
             while(rs.next()){
