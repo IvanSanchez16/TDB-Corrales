@@ -19,7 +19,6 @@ public class UIRegistroCria extends JDialog {
     private PanelFondo PPrincipal;
     private Font FontCajas;
     private Font FontTitulos;
-    private JNumberField TxtId;
     private JLabel TxtFecha;
     private JButton BtnFecha,BtnCFecha,BtnRegistrar;
     private JComboBox ComboEstado;
@@ -44,11 +43,6 @@ public class UIRegistroCria extends JDialog {
     public void asignarControladores(CCria c){
         BtnFecha.addActionListener(c);
         BtnRegistrar.addActionListener(c);
-        TxtId.addKeyListener(c);
-    }
-
-    public void setTextId(String id){
-        TxtId.setText(id);
     }
 
     public void mostrarDatePicker(){
@@ -78,14 +72,6 @@ public class UIRegistroCria extends JDialog {
 
     public JButton getBtnRegistrar() {
         return BtnRegistrar;
-    }
-
-    public int getId(){
-        return (int) TxtId.ObtenerCantidad();
-    }
-
-    public JNumberField getTxtId() {
-        return TxtId;
     }
 
     public String getFecha(){
@@ -130,13 +116,25 @@ public class UIRegistroCria extends JDialog {
 
     public void mostrarModal(String msg){
         boolean band=true;
-        if(msg.equals("")){
-            msg="La cría fue registrada correctamente";
+        if(!isNumber(msg)){
+            if(msg.equals("Error"))
+                msg="Error al registrar la cría";
+            JOptionPane.showMessageDialog(this,msg,"Registro de cría",JOptionPane.ERROR_MESSAGE);
             band=false;
+        }else {
+            JOptionPane.showMessageDialog(this,"Cría registrada con éxito, ID= "+msg, "Registro de cría", JOptionPane.INFORMATION_MESSAGE);
         }
-        JOptionPane.showMessageDialog(this,msg,"Registro de cría",msg.equals("La cría fue registrada correctamente")?JOptionPane.INFORMATION_MESSAGE:JOptionPane.ERROR_MESSAGE);
-        if(!band)
+        if(band)
             dispose();
+    }
+
+    private boolean isNumber(String msg){
+        try {
+            Integer.parseInt(msg);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 
     private void definirInterfaz(){
@@ -145,17 +143,6 @@ public class UIRegistroCria extends JDialog {
 
         FontCajas=new Font("Cambria",0,14);
         FontTitulos=new Font("Candara",1,14);
-
-        TxtId = new JNumberField();
-        TxtId.setBorder(BorderFactory.createTitledBorder(
-                BorderFactory.createCompoundBorder(
-                        BorderFactory.createRaisedBevelBorder(),BorderFactory.createLoweredBevelBorder()
-                ),"ID", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos,Color.white));
-        TxtId.setBounds(5,5,135,40);
-        TxtId.setFont(new Font("Cambria",1,14));
-        TxtId.setForeground(Color.white);
-        TxtId.setOpaque(false);
-        PPrincipal.add(TxtId);
 
         Calendar c=Calendar.getInstance();
         dia=c.get(Calendar.DATE);
@@ -168,13 +155,13 @@ public class UIRegistroCria extends JDialog {
                 BorderFactory.createCompoundBorder(
                         BorderFactory.createRaisedBevelBorder(),BorderFactory.createLoweredBevelBorder()
                 ),"Fecha de ingreso", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos,Color.white));
-        TxtFecha.setBounds(5,50,135,50);
+        TxtFecha.setBounds(5,5,135,50);
         TxtFecha.setForeground(Color.white);
         PPrincipal.add(TxtFecha);
 
         BtnFecha=new JButton("Escoger fecha");
         BtnFecha.setFont(new Font("Candara",1,12));
-        BtnFecha.setBounds(142,62,110,30);
+        BtnFecha.setBounds(142,17,110,30);
         PPrincipal.add(BtnFecha);
 
         String[]nombreEstados= {
@@ -191,7 +178,7 @@ public class UIRegistroCria extends JDialog {
                 BorderFactory.createCompoundBorder(
                         BorderFactory.createRaisedBevelBorder(),BorderFactory.createLoweredBevelBorder()
                 ),"Estado de procedencia", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos,Color.white));
-        ComboEstado.setBounds(5,105,180,50);
+        ComboEstado.setBounds(5,70,180,50);
         ComboEstado.setFont(FontCajas);
         ComboEstado.setOpaque(false);
         PPrincipal.add(ComboEstado);
@@ -201,7 +188,7 @@ public class UIRegistroCria extends JDialog {
                 BorderFactory.createCompoundBorder(
                         BorderFactory.createRaisedBevelBorder(),BorderFactory.createLoweredBevelBorder()
                 ),"Peso en kg", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos,Color.white));
-        TxtPeso.setBounds(5,165,135,45);
+        TxtPeso.setBounds(5,145,135,45);
         TxtPeso.setFont(FontCajas);
         TxtPeso.setForeground(Color.white);
         TxtPeso.setOpaque(false);
@@ -214,7 +201,7 @@ public class UIRegistroCria extends JDialog {
                 BorderFactory.createCompoundBorder(
                         BorderFactory.createRaisedBevelBorder(),BorderFactory.createLoweredBevelBorder()
                 ),"Color del músculo", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos,Color.white));
-        TxtColor.setBounds(5,220,135,45);
+        TxtColor.setBounds(5,205,135,45);
         TxtColor.setFont(FontCajas);
         TxtColor.setOpaque(false);
         PPrincipal.add(TxtColor);
@@ -224,7 +211,7 @@ public class UIRegistroCria extends JDialog {
                 BorderFactory.createCompoundBorder(
                         BorderFactory.createRaisedBevelBorder(),BorderFactory.createLoweredBevelBorder()
                 ),"% de grasa", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos,Color.white));
-        TxtGrasa.setBounds(5,270,135,45);
+        TxtGrasa.setBounds(5,265,135,45);
         TxtGrasa.setFont(FontCajas);
         TxtGrasa.setOpaque(false);
         TxtGrasa.setForeground(Color.white);

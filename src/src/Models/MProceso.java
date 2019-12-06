@@ -9,7 +9,7 @@ public class MProceso {
 
     public ArrayList<String[]> obtenerDatos(){
         ArrayList<String[]> al=new ArrayList<>();
-        ResultSet rs= ComandosSQL.consulta("Select * from EstadoCriasView");
+        ResultSet rs= ComandosSQL.consulta("Select * from EstadoCriasView",null);
         String[] tupla;
         try {
             while(rs.next()){
@@ -54,6 +54,7 @@ public class MProceso {
     }
 
     public String darSalidaCria(String cria,String fecha){
-        return ComandosSQL.ejecutar("exec dbo.SPSiguienteProceso @Cria="+cria+",@Fecha='"+fecha+"'");
+        String[] p={cria+fecha};
+        return ComandosSQL.ejecutar("exec dbo.SPSiguienteProceso @Cria=?,@Fecha='?'",p);
     }
 }

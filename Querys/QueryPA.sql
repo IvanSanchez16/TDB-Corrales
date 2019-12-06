@@ -1,18 +1,20 @@
-CREATE PROCEDURE SPInsertarCria @Id int,@Fecha date,@FechaActual date,@Estado varchar(30),@Peso int,@CMusculo varchar(20),@CGrasa tinyint,
+CREATE PROCEDURE SPInsertarCria @Fecha date,@FechaActual date,@Estado varchar(30),@Peso int,@CMusculo varchar(20),@CGrasa tinyint,
 @Corral int 
 AS 
 begin try
 	BEGIN tran;
 	Insert into CRIAS (Fecha_Entrada,Estado_Origen,Peso,Color_Musculo,Cant_Grasa,Corral_id)
 	values(@Fecha,@Estado,@Peso,@CMusculo,@CGrasa,@Corral)
-	Insert into LOGDIETAS values(1,@@IDENTITY,@FechaActual)
+	declare @Cria int=@@IDENTITY
+	Insert into LOGDIETAS values(1,@Cria,@FechaActual)
 	commit tran;
+	return @Cria
 end try
 begin catch
 	rollback tran;
-	declare @errornum int=100000,@errormen varchar(max)='Ocurrio un error durante la inserción',@errorest int=Error_State();
-	throw @errornum,@errormen,@errorest;
 end catch
+declare @errornum int=100000,@errormen varchar(max)='Ocurrio un error durante la inserción',@errorest int=Error_State();
+throw @errornum,@errormen,@errorest;
 
 CREATE PROCEDURE SPComprobarCorral @Corral_id int
 as
@@ -22,35 +24,25 @@ begin
 	return
 end
 else
-	select 1 as band
+	select 1 as Band
 
 CREATE PROCEDURE SPInsertarCorral @Tipo char
 AS
 INSERT INTO CORRALES VALUES(@Tipo)
-
-CREATE PROCEDURE SPActualizarCria @Id int,@Peso int,@Grasa int AS 
-UPDATE CRIAS SET Peso=@Peso,Cant_Grasa=@Grasa,Clasificacion_id=null where Crias_id=@Id
+return @@Identity
 
 CREATE PROCEDURE SPActualizarClasificacion @Id int,@Fecha date,@Clasificacion_id int AS
-Begin try
-	begin tran
-		UPDATE CRIAS SET Clasificacion_id=@Clasificacion_id where Crias_id=@Id
-		INSERT INTO LOGCLASIFICACIONES Values(@Id,@Clasificacion_id,@Fecha)
-		if(@Clasificacion_id=3 and @Id not in (select Cria_id from SENSORES where Cria_id=@Id))
-			Insert into SENSORES values (@Id,38.5)
-	commit tran 
-end try
-begin catch
-	rollback tran
-	declare @errornum int=100000,@errormen varchar(max)='Ocurrió un error durante la clasificacion',@errorest int=Error_State();
-	throw @errornum,@errormen,@errorest;
-end catch
+UPDATE CRIAS SET Clasificacion_id=@Clasificacion_id where Crias_id=@Id
+if(@Clasificacion_id=3)
+begin
+	return 1
+end
 
-CREATE PROCEDURE SPActualizarTemperatura @Cria_id int,@Temperatura float AS
-UPDATE SENSORES set Temperatura=@Temperatura where cria_id=@Cria_id
+CREATE PROCEDURE SPActualizarDatos @Cria_id int,@Temperatura float,@Presion int,@Ritmo int AS
+declare int @sensor=(select sensor_id from SENSOR_CRIA S inner join CRIAS C on S.Cria_id=C.Crias_id where C.Crias_id=@Cria_id and S.Clave=MAX(S.Clave)) 
+UPDATE DATOS_SENSOR SET Temperatura=@Temperatura,Ritmo=@Ritmo,Presion=@Presion where Sensor_id=@sensor
 
-
-CREATE PROCEDURE SPAgregarACuarentena @Cria int,@Corral int,@Fecha date AS
+CREATE PROCEDURE SPAgregarACuarentena @Cria int,@Corral int,@Fecha date,@Dieta int AS
 Begin try
 	begin tran
 		INSERT INTO CUARENTENAS(Cria_id,Fecha_Inicio) values(@Cria,@Fecha)
@@ -58,14 +50,14 @@ Begin try
 		Set @CorralOrg=(SELECT Corral_id from CRIAS where Crias_id=@Cria)
 		INSERT INTO MOVIMIENTOS_CRIAS values (@CorralOrg,@Corral,@Cria,@Fecha)
 		UPDATE CRIAS SET Corral_id=@Corral where Crias_id=@Cria
-		INSERT INTO LOGDIETAS VALUES (4,@Cria,@Fecha)
+		INSERT INTO LOGDIETAS VALUES (@Dieta,@Cria,@Fecha)
 	commit tran
 end try
 begin catch
 	rollback tran
-	declare @errornum int=100000,@errormen varchar(max)='Ocurrió un error en el proceso de cuarentena',@errorest int=Error_State();
-	throw @errornum,@errormen,@errorest;
 end catch
+declare @errornum int=100000,@errormen varchar(max)='Ocurrió un error en el proceso de cuarentena',@errorest int=Error_State();
+throw @errornum,@errormen,@errorest;
 
 CREATE PROCEDURE SPSacrificar @Cria int,@Fecha date AS
 Begin try
@@ -76,9 +68,9 @@ Begin try
 end try
 begin catch
 	rollback tran
-	declare @errornum int=100000,@errormen varchar(max)='Ocurrió un error durante el sacrificio',@errorest int=Error_State();
-	throw @errornum,@errormen,@errorest;
 end catch
+declare @errornum int=100000,@errormen varchar(max)='Ocurrió un error durante el sacrificio',@errorest int=Error_State();
+throw @errornum,@errormen,@errorest;
 
 CREATE PROCEDURE SPDarDeAltaCria @Cria int,@Fecha date AS
 Begin try
@@ -94,9 +86,9 @@ Begin try
 end try
 begin catch
 	rollback tran
-	declare @errornum int=100000,@errormen varchar(max)='Ocurrió un error durante el proceso',@errorest int=Error_State();
-	throw @errornum,@errormen,@errorest;
 end catch
+declare @errornum int=100000,@errormen varchar(max)='Ocurrió un error durante el proceso',@errorest int=Error_State();
+throw @errornum,@errormen,@errorest;
 
 CREATE PROCEDURE SPCambiarDieta @Cria int,@Dieta varchar(30),@Fecha date as
 Begin try
@@ -108,9 +100,9 @@ Begin try
 end try
 begin catch
 	rollback tran
-	declare @errornum int=100000,@errormen varchar(max)='Ocurrió un error durante el cambio de dieta',@errorest int=Error_State();
-	throw @errornum,@errormen,@errorest;
 end catch
+declare @errornum int=100000,@errormen varchar(max)='Ocurrió un error durante el cambio de dieta',@errorest int=Error_State();
+throw @errornum,@errormen,@errorest;
 
 CREATE PROCEDURE SPSiguienteProceso @Cria int,@Fecha date AS
 INSERT INTO SALIDAS VALUES (@Cria,@Fecha,1)
@@ -131,9 +123,9 @@ Begin try
 end try
 begin catch
 	rollback tran
-	declare @errornum int=100000,@errormen varchar(max)='Ocurrió un error al generar el informe',@errorest int=Error_State();
-	throw @errornum,@errormen,@errorest;
 end catch
+declare @errornum int=100000,@errormen varchar(max)='Ocurrió un error al generar el informe',@errorest int=Error_State();
+throw @errornum,@errormen,@errorest;
 
 CREATE PROCEDURE SPInformeCriaDietas @Cria int AS
 Begin try
@@ -145,9 +137,9 @@ Begin try
 end try
 begin catch
 	rollback tran
-	declare @errornum int=100000,@errormen varchar(max)='Ocurrió un error al generar el informe',@errorest int=Error_State();
-	throw @errornum,@errormen,@errorest;
 end catch
+declare @errornum int=100000,@errormen varchar(max)='Ocurrió un error al generar el informe',@errorest int=Error_State();
+throw @errornum,@errormen,@errorest;
 
 CREATE PROCEDURE SPInformeCriaCuarentenas @Cria int AS
 Begin try
@@ -159,9 +151,9 @@ Begin try
 end try
 begin catch
 	rollback tran
-	declare @errornum int=100000,@errormen varchar(max)='Ocurrió un error al generar el informe',@errorest int=Error_State();
-	throw @errornum,@errormen,@errorest;
 end catch
+declare @errornum int=100000,@errormen varchar(max)='Ocurrió un error al generar el informe',@errorest int=Error_State();
+throw @errornum,@errormen,@errorest;
 
 CREATE PROCEDURE SPInformeCriaMovimientos @Cria int AS
 Begin try
@@ -171,12 +163,13 @@ Begin try
 end try
 begin catch
 	rollback tran
-	declare @errornum int=100000,@errormen varchar(max)='Ocurrió un error al generar el informe',@errorest int=Error_State();
-	throw @errornum,@errormen,@errorest;
 end catch
+declare @errornum int=100000,@errormen varchar(max)='Ocurrió un error al generar el informe',@errorest int=Error_State();
+throw @errornum,@errormen,@errorest;
 
-UPDATE CUARENTENAS SET Fecha_Fin='20191107' where Cria_id=8 and Cuarentena_id=1
+CREATE PROCEDURE SPRegistrarSensor AS
+INSERT INTO SENSORES DEFAULT VALUES
+return @@IDENTITY
 
-select * from CUARENTENAS
-
-select * FROM LOGDIETAS
+CREATE PROCEDURE SPAsignarSensor @Cria int,@Sensor int as
+insert into SENSOR_CRIA (Cria_id,Sensor_id,Estatus) values(@Cria,@Sensor,1)

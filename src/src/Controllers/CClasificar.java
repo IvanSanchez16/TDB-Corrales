@@ -8,7 +8,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-public class CClasificar implements ActionListener, MouseListener {
+public class CClasificar implements ActionListener,MouseListener {
 
     UIClasificar view;
     MClasificar model;
@@ -25,16 +25,7 @@ public class CClasificar implements ActionListener, MouseListener {
     public void actionPerformed(ActionEvent e) {
         if(e.getSource()==view.getBtnClasificar()){
             view.mostrarModal(model.actualizarClasificaciones( UIMenu.getFechaActual()));
-            view.asignarArreglo( model.obtenerCrias() );
-            return;
-        }
-        if(e.getSource()==view.getBtnEditar()){
-            view.mostrarModal( model.actualizarCria( view.getId(),view.getPeso(),view.getGrasa() ));
-            view.getTxtId().setText("");
-            view.getTxtPeso().setText("");
-            view.getTxtPeso().setEnabled(false);
-            view.getTxtGrasa().setText("");
-            view.getTxtGrasa().setEnabled(false);
+            view.asignarSensores( model.obtenerSensores(),model.getGc2(),this );
             view.asignarArreglo( model.obtenerCrias() );
             return;
         }
@@ -46,12 +37,17 @@ public class CClasificar implements ActionListener, MouseListener {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-       view.editarCria(view.getTbCrias().rowAtPoint(e.getPoint()));
-       return;
+        int row = view.getTbSensores().rowAtPoint(e.getPoint());
+        String sensor= (String) view.getTbSensores().getValueAt(row,0);
+        model.asignarSensor( view.getC()+"",sensor );
+        view.quitarSensor(sensor);
+        view.getJd().setVisible(false);
+        view.getJd().dispose();
     }
+
     public void mousePressed(MouseEvent e) {}
     public void mouseReleased(MouseEvent e) {}
-    public void mouseEntered(MouseEvent e) {}
-    public void mouseExited(MouseEvent e) {}
+    public void mouseEntered(MouseEvent e) { }
+    public void mouseExited(MouseEvent e) { }
 }
 

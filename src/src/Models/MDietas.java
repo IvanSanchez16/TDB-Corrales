@@ -11,7 +11,7 @@ public class MDietas {
         ArrayList<String[]> al=new ArrayList<>();
         String[] tuplas;
         try {
-            ResultSet rs= ComandosSQL.consulta("Select * from InfDietasxCriaView");
+            ResultSet rs= ComandosSQL.consulta("Select * from InfDietasxCriaView",null);
             while(rs.next()){
                 tuplas=new String[5];
                 tuplas[0]=rs.getInt("Crias_id")+"";
@@ -30,7 +30,7 @@ public class MDietas {
     public ArrayList<String> obtenerDietas(){
         ArrayList<String> al=new ArrayList<>();
         try {
-            ResultSet rs= ComandosSQL.consulta("Select * from DietasView");
+            ResultSet rs= ComandosSQL.consulta("Select * from DietasView",null);
             while(rs.next())
                 al.add(rs.getString("Descripcion"));
         } catch (SQLException e) {
@@ -89,6 +89,7 @@ public class MDietas {
     }
 
     public String actualizarDieta(String cria,String dieta,String fecha){
-        return ComandosSQL.ejecutar("exec dbo.SPCambiarDieta @Cria="+cria+",@Dieta='"+dieta+"',@Fecha='"+fecha+"'");
+        String[] p={cria+dieta+fecha};
+        return ComandosSQL.ejecutar("exec dbo.SPCambiarDieta @Cria=?,@Dieta='?',@Fecha='?'",p);
     }
 }

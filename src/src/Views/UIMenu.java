@@ -10,16 +10,16 @@ import java.util.Calendar;
 public class UIMenu extends JFrame {
 
     private Font FontTitulos;
-    private JPanel PCrias,PCorrales;
-    private JButton BtnRegistrarCria,BtnRegistrarCorral,BtnClasificar,BtnIdentificar,BtnDieta,BtnProcesar,BtnGenerarInforme,BtnVerCorrales;
+    private JPanel PCrias,PCorrales,PSensores;
+    private JButton BtnRegistrarCria,BtnRegistrarCorral,BtnClasificar,BtnIdentificar,BtnDieta,BtnProcesar,BtnGenerarInforme,BtnVerCorrales,BtnRegistrarSensor,BtnVerSensores,BtnAsignarSensor;
     private Font FontBotones;
     private PanelFondo PPrincipal;
 
     public UIMenu (){
         super("Corrales Ternero");
-        setSize(550,250);
+        setSize(550,300);
         setResizable(false);
-        PPrincipal=new PanelFondo("fondoPrincipal.jpg",550,250);
+        PPrincipal=new PanelFondo("fondoPrincipal.jpg",550,300);
         PPrincipal.setLayout(new GridBagLayout());
         definePPrincipal();
         setContentPane(PPrincipal);
@@ -37,6 +37,9 @@ public class UIMenu extends JFrame {
         BtnProcesar.addActionListener(c);
         BtnVerCorrales.addActionListener(c);
         BtnGenerarInforme.addActionListener(c);
+        BtnRegistrarSensor.addActionListener(c);
+        BtnVerSensores.addActionListener(c);
+        BtnAsignarSensor.addActionListener(c);
     }
 
     public JButton getBtnRegistrarCria() {
@@ -69,6 +72,22 @@ public class UIMenu extends JFrame {
 
     public JButton getBtnGenerarInforme() {
         return BtnGenerarInforme;
+    }
+
+    public JButton getBtnRegistrarSensor() {
+        return BtnRegistrarSensor;
+    }
+
+    public JButton getBtnVerSensores() {
+        return BtnVerSensores;
+    }
+
+    public void mostrarModal(String msg){
+        if (msg.equals("Error")){
+            JOptionPane.showMessageDialog(this,"Ocurrio un error al dar de alta un sensor","Sensores",JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        JOptionPane.showMessageDialog(this,"El sensor ingresado fue: "+msg,"Sensores",JOptionPane.INFORMATION_MESSAGE);
     }
 
     public static String getFechaActual(){
@@ -150,9 +169,39 @@ public class UIMenu extends JFrame {
         cco.gridheight=1;
         cco.gridx=1;
         cco.gridy=0;
-        cco.anchor=GridBagConstraints.PAGE_START;
         cco.insets=new Insets(0,5,0,5);
         PPrincipal.add(PCorrales,cco);
+
+        PSensores=new JPanel(new GridLayout(0,1,0,3));
+
+        BtnRegistrarSensor=new JButton("Registrar");
+        BtnRegistrarSensor.setFont(FontBotones);
+        BtnRegistrarSensor.setIcon(Rutinas.AjustarImagen("src/src/images/Agg.png",20,20));
+        PSensores.add(BtnRegistrarSensor);
+
+        BtnVerSensores=new JButton("Ver existentes");
+        BtnVerSensores.setFont(FontBotones);
+        BtnVerSensores.setIcon(Rutinas.AjustarImagen("src/src/images/consulta.png",20,20));
+        PSensores.add(BtnVerSensores);
+
+        BtnAsignarSensor=new JButton("Asignar sensor");
+        BtnAsignarSensor.setFont(FontBotones);
+        BtnAsignarSensor.setIcon(Rutinas.AjustarImagen("src/src/images/sensor.png",20,20));
+        PSensores.add(BtnAsignarSensor);
+
+        PSensores.setBorder(BorderFactory.createTitledBorder(
+                BorderFactory.createCompoundBorder(
+                        BorderFactory.createRaisedBevelBorder(),BorderFactory.createLoweredBevelBorder()
+                ),"Sensores", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos,Color.WHITE));
+        PSensores.setOpaque(false);
+
+        GridBagConstraints cs=new GridBagConstraints();
+        cs.gridwidth=1;
+        cs.gridheight=1;
+        cs.gridx=1;
+        cs.gridy=1;
+        cs.insets=new Insets(0,5,0,5);
+        PPrincipal.add(PSensores,cs);
 
         BtnIdentificar=new JButton("<html><h2>Veterinaria</h2>Monitorear crías<br/>Mover a cuarentenas<br/>Acabar cuarentenas</html>");
         BtnIdentificar.setFont(FontBotones);

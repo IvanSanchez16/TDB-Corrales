@@ -10,7 +10,7 @@ public class MVCorrales {
 
     public ArrayList<String[]> obtenerDatos(){
         ArrayList<String[]> al=new ArrayList<>();
-        ResultSet rs= ComandosSQL.consulta("Select * from NumeroCriasPorCorralView");
+        ResultSet rs= ComandosSQL.consulta("Select * from NumeroCriasPorCorralView",null);
         String[] tupla;
         try {
             while(rs.next()){

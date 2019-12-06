@@ -11,17 +11,20 @@ import java.util.ArrayList;
 
 public class UIClasificar extends JDialog {
     private PanelFondo PPrincipal;
-    private JButton BtnClasificar,BtnEditar,BtnBuscar;
-    private JPanel PCajas,PBusqueda;
+    private JButton BtnClasificar,BtnBuscar;
+    private JPanel PBusqueda;
     private JScrollPane SPTabla;
     private JTable TbCrias;
     private DefaultTableModel Dm;
     private Font FontCajas;
     private Font FontTitulos;
-    private JNumberField TxtId,TxtPeso,TxtGrasa;
     private JTextField TxtBusqueda;
     private JComboBox<String> ComboBusqueda;
     private ArrayList<String[]> datos;
+    private ArrayList<String> sensores;
+    private JTable tbSensores;
+    private JDialog jd;
+    private int c;
 
     public UIClasificar(){
         setTitle("Clasificar");
@@ -44,23 +47,8 @@ public class UIClasificar extends JDialog {
         return BtnClasificar;
     }
 
-    public JTable getTbCrias() {
-        return TbCrias;
-    }
-
-    public void editarCria(int row) {
-        TxtId.setText((String) TbCrias.getValueAt(row, 0));
-        TxtPeso.setText((String) TbCrias.getValueAt(row, 1));
-        TxtPeso.setEnabled(true);
-        TxtGrasa.setText((String) TbCrias.getValueAt(row, 3));
-        TxtGrasa.setEnabled(true);
-        BtnEditar.setEnabled(true);
-    }
-
     public void asignarControladores(CClasificar C){
         BtnClasificar.addActionListener(C);
-        TbCrias.addMouseListener(C);
-        BtnEditar.addActionListener(C);
         BtnBuscar.addActionListener(C);
     }
 
@@ -84,6 +72,7 @@ public class UIClasificar extends JDialog {
         TbCrias.setModel(Dm);
         TbCrias.getColumn("Id").setPreferredWidth(10);
         TbCrias.getColumn("Clasificación").setPreferredWidth(125);
+        TbCrias.getColumn("Color de músculo").setPreferredWidth(125);
         for(int i=0 ; i<datos.size() ; i++)
             Dm.addRow(datos.get(i));
         SPTabla.updateUI();
@@ -94,51 +83,71 @@ public class UIClasificar extends JDialog {
     }
 
     public void mostrarModal(ArrayList<String> al){
-        boolean band=true;
         String msg="";
         if(al.size()==0){
             msg="Se actualizaron correctamente las clasificaciones";
-            band=false;
+            JOptionPane.showMessageDialog(this,msg,"Clasificar",JOptionPane.INFORMATION_MESSAGE);
         }else {
-            for (String msg2:al)
-                JOptionPane.showMessageDialog(this,msg2,"Clasificar",JOptionPane.ERROR_MESSAGE);
-            return;
+            JOptionPane.showMessageDialog(this,"Error al clasificar las crías","Clasificar",JOptionPane.ERROR_MESSAGE);
         }
-        JOptionPane.showMessageDialog(this,msg,"Clasificar",JOptionPane.INFORMATION_MESSAGE);
     }
 
-    public void mostrarModal(String msg){
-        if(msg==null)
-            msg="La cría fue actualizada correctamente";
-        JOptionPane.showMessageDialog(this,msg,"Clasificar",msg.equals("La cría fue actualizada correctamente")?JOptionPane.INFORMATION_MESSAGE:JOptionPane.ERROR_MESSAGE);
+    public void asignarSensores(ArrayList<String> sensores,ArrayList<Integer> crias,CClasificar c){
+        this.sensores=sensores;
+        for (Integer cria : crias) {
+            this.c=cria;
+            if(sensores.size()==0){
+                JOptionPane.showMessageDialog(this,"No existen sensores disponibles para la cría: "+cria+", asignarle sensor en cuanto se tengan","Sensores agotados",JOptionPane.INFORMATION_MESSAGE);
+                continue;
+            }
+            jd=crearDialog(cria,c);
+            jd.setVisible(true);
+            while(jd.isVisible());
+        }
     }
 
-    public JButton getBtnEditar() {
-        return BtnEditar;
+    public JDialog getJd() {
+        return jd;
     }
 
-    public JNumberField getTxtPeso() {
-        return TxtPeso;
+    public JTable getTbSensores() {
+        return tbSensores;
     }
 
-    public JNumberField getTxtGrasa() {
-        return TxtGrasa;
+    public int getC() {
+        return c;
     }
 
-    public JNumberField getTxtId() {
-        return TxtId;
+    public void quitarSensor(String sensor){
+        sensores.remove(sensor);
     }
 
-    public String getId() {
-        return TxtId.getText();
-    }
+    private JDialog crearDialog(int cria,CClasificar c){
+        JDialog jd=new JDialog();
+        jd.setTitle("Asignar sensores");
+        jd.setSize(250,200);
+        jd.setModal(true);
+        jd.setResizable(false);
+        jd.setLocationRelativeTo(null);
 
-    public String getGrasa() {
-        return TxtGrasa.ObtenerCantidad()+"";
-    }
+        String[] col={"Id"};
+        DefaultTableModel dm=new DefaultTableModel(null,col );
+        tbSensores=new JTable(dm);
+        tbSensores.addMouseListener(c);
+        tbSensores.setFont(new Font("Cambria",1,12));
+        JScrollPane sp=new JScrollPane(tbSensores);
+        sp.setBorder(BorderFactory.createTitledBorder(
+                BorderFactory.createCompoundBorder(
+                        BorderFactory.createRaisedBevelBorder(),BorderFactory.createLoweredBevelBorder()
+                ),"Seleccione un sensor para la cría: "+cria,
+                TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos));
+        jd.add(sp);
 
-    public String getPeso() {
-        return TxtPeso.ObtenerCantidad()+"";
+        for (String sensor : sensores) {
+            String[] row={sensor};
+            dm.addRow(row);
+        }
+        return jd;
     }
 
     private void defineInterfaz(){
@@ -184,53 +193,10 @@ public class UIClasificar extends JDialog {
                 BorderFactory.createCompoundBorder(
                         BorderFactory.createRaisedBevelBorder(),BorderFactory.createLoweredBevelBorder()
                 ),"Crías", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos,Color.WHITE));
-        SPTabla.setBounds(5,65,500,200);
+        SPTabla.setBounds(5,65,500,275);
         SPTabla.setBackground(new Color(242,242,242));
         SPTabla.setOpaque(false);
         PPrincipal.add(SPTabla);
-
-        PCajas=new JPanel();
-        PCajas.setLayout(new GridLayout(0,4,10,0));
-
-        TxtId=new JNumberField();
-        TxtId.setBorder(BorderFactory.createTitledBorder(
-                BorderFactory.createCompoundBorder(
-                        BorderFactory.createRaisedBevelBorder(),BorderFactory.createLoweredBevelBorder()
-                ),"Id", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos));
-        TxtId.setFont(FontCajas);
-        TxtId.setEnabled(false);
-        PCajas.add(TxtId);
-
-        TxtPeso=new JNumberField();
-        TxtPeso.setBorder(BorderFactory.createTitledBorder(
-                BorderFactory.createCompoundBorder(
-                        BorderFactory.createRaisedBevelBorder(),BorderFactory.createLoweredBevelBorder()
-                ),"Peso (kg)", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos));
-        TxtPeso.setFont(FontCajas);
-        TxtPeso.setEnabled(false);
-        PCajas.add(TxtPeso);
-
-        TxtGrasa=new JNumberField();
-        TxtGrasa.setBorder(BorderFactory.createTitledBorder(
-                BorderFactory.createCompoundBorder(
-                        BorderFactory.createRaisedBevelBorder(),BorderFactory.createLoweredBevelBorder()
-                ),"Grasa", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos));
-        TxtGrasa.setFont(FontCajas);
-        TxtGrasa.setEnabled(false);
-        PCajas.add(TxtGrasa);
-
-        BtnEditar=new JButton("Editar");
-        BtnEditar.setFont(new Font("Candara",1,15));
-        BtnEditar.setEnabled(false);
-        PCajas.add(BtnEditar);
-
-        PCajas.setBounds(5,270,500,68);
-        PCajas.setBorder(BorderFactory.createTitledBorder(
-                BorderFactory.createCompoundBorder(
-                        BorderFactory.createRaisedBevelBorder(),BorderFactory.createLoweredBevelBorder()
-                ),"Editar datos", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos,Color.WHITE));
-        PCajas.setOpaque(false);
-        PPrincipal.add(PCajas);
 
         BtnClasificar=new JButton("Actualizar clasificaciones");
         BtnClasificar.setFont(new Font("Candara",1,15));

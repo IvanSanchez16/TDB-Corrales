@@ -10,12 +10,15 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class MClasificar {
+    private ArrayList<String> errores;
+    private ArrayList<Integer> gc2=new ArrayList<>();
+
     public ArrayList<String[]> obtenerCrias(){
         ArrayList<String[]> matriz;
         try {
-            ResultSet rs= ComandosSQL.consulta("Select * from CriasClasificacionesView order by Id");
+            ResultSet rs= ComandosSQL.consulta("Select * from CriasClasificacionesView order by Id",null);
             String[] tuplas;
-            matriz=new ArrayList<String[]>();
+            matriz=new ArrayList<>();
             //"Id","Peso","Color de músculo","Porcentaje de grasa","Clasificación"
             while(rs.next()){
                 tuplas=new String[5];
@@ -29,14 +32,13 @@ public class MClasificar {
             }
             return matriz;
         } catch (SQLException e) {
-            e.printStackTrace();
         }
         return null;
     }
 
     public ArrayList<String> actualizarClasificaciones(String fechaA){
         ArrayList<String> errores=new ArrayList<>();
-        ResultSet rs=ComandosSQL.consulta("Select * from CLASIFICACIONES");
+        ResultSet rs=ComandosSQL.consulta("Select * from CLASIFICACIONES",null);
         ArrayList<Clasificacion> al= new ArrayList<>();
         ArrayList<int[]> ac= new ArrayList<>();
         String n;
@@ -54,7 +56,7 @@ public class MClasificar {
         }
         if(errores.size()!=0)
             return errores;
-        rs=ComandosSQL.consulta("Select Crias_id,Peso,Cant_Grasa from CRIAS where Clasificacion_id is null");
+        rs=ComandosSQL.consulta("Select Crias_id,Peso,Cant_Grasa from CRIAS where Clasificacion_id is null",null);
         String msg;
         int[] aux;
         try {
@@ -86,23 +88,30 @@ public class MClasificar {
                     break;
             }
             if(a==b){
-                msg=ComandosSQL.actualizar("exec dbo.SPActualizarClasificacion "+cria[0]+",'"+fechaA+"',"+(a+1));
-                if(msg!=null)
-                    errores.add(msg);
+                if (clasificar(cria[0]+"",fechaA,(a+1)+""))
+                    gc2.add(cria[0]);
                 continue;
             }
             if(b-a==1 || a-b==1){
-                msg=ComandosSQL.actualizar("exec dbo.SPActualizarClasificacion "+cria[0]+",'"+fechaA+"',"+(b+1));
-                if(msg!=null)
-                    errores.add(msg);
+                if (clasificar(cria[0]+"",fechaA,(b+1)+""))
+                    gc2.add(cria[0]);
                 continue;
             }
             int prom=(a+b)/2;
-            msg=ComandosSQL.actualizar("exec dbo.SPActualizarClasificacion "+cria[0]+",'"+fechaA+"',"+(prom+1));
-            if(msg!=null)
-                errores.add(msg);
+            if (clasificar(cria[0]+"",fechaA,(prom+1)+""))
+                gc2.add(cria[0]);
         }
         return errores;
+    }
+
+    private boolean clasificar(String cria,String fecha,String clas){
+        String[] p2={cria,fecha,clas};
+        String msg=ComandosSQL.ejecutar("call dbo.SPActualizarClasificacion(?,?,?)",p2);
+        if(msg.equals("Error"))
+            errores.add(msg);
+        if(msg.equals("1"))
+            return true;
+        return false;
     }
 
     public ArrayList<String[]> obtenerCrias(ArrayList<String[]> a, int criterio, String filtro){
@@ -117,8 +126,26 @@ public class MClasificar {
         return al;
     }
 
-    public String actualizarCria(String id,String peso,String grasa) {
-        return ComandosSQL.actualizar("exec dbo.SPActualizarCria "+id+","+peso+","+grasa);
+    public ArrayList<String> obtenerSensores(){
+        ArrayList<String> matriz;
+        try {
+            ResultSet rs= ComandosSQL.consulta("Select Sensor_id from EstatusSensoresView where Estatus='Sin usarse'",null);
+            String[] tuplas;
+            matriz=new ArrayList<>();
+            while(rs.next())
+                matriz.add(rs.getString("Sensor_id"));
+            return matriz;
+        } catch (SQLException e) {
+        }
+        return null;
     }
 
+    public ArrayList<Integer> getGc2() {
+        return gc2;
+    }
+
+    public void asignarSensor(String cria,String sensor){
+        String[] p={cria,sensor};
+        ComandosSQL.ejecutar("call SPAsignarSensor(?,?)",p);
+    }
 }

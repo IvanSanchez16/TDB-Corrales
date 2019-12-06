@@ -11,7 +11,7 @@ public class MCuarentena {
     public ArrayList<String[]> obtenerCriasEn(){
         ArrayList<String[]> matriz;
         try {
-            ResultSet rs= ComandosSQL.consulta("Select Id,Corral_id from CriasEnRiesgoGrasaCobertura2View");
+            ResultSet rs= ComandosSQL.consulta("Select Id,Corral_id from CriasEnRiesgoGrasaCobertura2View",null);
             String[] tuplas;
             matriz=new ArrayList<>();
             while(rs.next()){
@@ -30,7 +30,7 @@ public class MCuarentena {
     public ArrayList<String[]> obtenerCorralesEn(){
         ArrayList<String[]> matriz;
         try {
-            ResultSet rs= ComandosSQL.consulta("Select Corral_id,[Numero de crias] from NumeroCriasPorCorralView where Tipo='Cuarentena'");
+            ResultSet rs= ComandosSQL.consulta("Select Corral_id,[Numero de crias] from NumeroCriasPorCorralView where Tipo='Cuarentena'",null);
             String[] tuplas;
             matriz=new ArrayList<>();
             while(rs.next()){
@@ -50,7 +50,7 @@ public class MCuarentena {
     public ArrayList<String[]> obtenerCriasG2(){
         ArrayList<String[]> matriz;
         try {
-            ResultSet rs= ComandosSQL.consulta("Select * from EstadoCriasG2View");
+            ResultSet rs= ComandosSQL.consulta("Select * from EstadoCriasG2View",null);
             String[] tuplas;
             matriz=new ArrayList<>();
             while(rs.next()){
@@ -70,7 +70,7 @@ public class MCuarentena {
     public ArrayList<String[]> obtenerCriasCuarentena(){
         ArrayList<String[]> matriz;
         try {
-            ResultSet rs= ComandosSQL.consulta("Select * from CriasEnCuarentenaView");
+            ResultSet rs= ComandosSQL.consulta("Select * from CriasEnCuarentenaView",null);
             String[] tuplas;
             matriz=new ArrayList<>();
             while(rs.next()){
@@ -124,14 +124,14 @@ public class MCuarentena {
     public void recuperarTemperaturas(){
         //caso ejemplo
         try {
-            ResultSet rs=ComandosSQL.consulta("select * from CriasG2SanasView");
+            ResultSet rs=ComandosSQL.consulta("select * from CriasG2SanasView",null);
             ArrayList<Integer> crias=new ArrayList<>();
             double tempran;
             while (rs.next())
                 crias.add(rs.getInt("crias_id"));
             for (Integer cria : crias) {
                 tempran=generarTempAleatoria();
-                ComandosSQL.ejecutar("exec dbo.SPActualizarTemperatura @Cria_id=" + cria + ",@Temperatura="+tempran);
+                ComandosSQL.ejecutar("",null);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -141,14 +141,14 @@ public class MCuarentena {
     public void recuperarTemperaturasEn(){
         //caso ejemplo
         try {
-            ResultSet rs=ComandosSQL.consulta("select Cria from CriasEnCuarentenaView");
+            ResultSet rs=ComandosSQL.consulta("select Cria from CriasEnCuarentenaView",null);
             ArrayList<Integer> crias=new ArrayList<>();
             double tempran;
             while (rs.next())
                 crias.add(rs.getInt("Cria"));
             for (Integer cria : crias) {
                 tempran=generarTempAleatoriaEn();
-                ComandosSQL.ejecutar("exec dbo.SPActualizarTemperatura @Cria_id=" + cria + ",@Temperatura="+tempran);
+                ComandosSQL.ejecutar("",null);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -156,7 +156,8 @@ public class MCuarentena {
     }
 
     public String moverACuarentena(String cria,String corral,String fechaact){
-        return ComandosSQL.ejecutar("exec dbo.SPAgregarACuarentena @Cria="+cria+",@Corral="+corral+",@Fecha='"+fechaact+"'");
+        String[] p={cria,corral,fechaact};
+        return ComandosSQL.ejecutar("exec dbo.SPAgregarACuarentena @Cria=?,@Corral=?,@Fecha=?",p);
     }
 
     public int comprobarDias(String cria,ArrayList<String[]> datos){
@@ -172,11 +173,13 @@ public class MCuarentena {
     }
 
     public String sacrificarCria(String cria,String fecha){
-        return ComandosSQL.ejecutar("exec dbo.SPSacrificar @Cria="+cria+",@Fecha='"+fecha+"'");
+        String[] p={cria+fecha};
+        return ComandosSQL.ejecutar("exec dbo.SPSacrificar @Cria=?,@Fecha='?'",p);
     }
 
     public String darDeAlta(String cria,String fecha){
-        return ComandosSQL.ejecutar("exec dbo.SPDarDeAltaCria @Cria="+cria+",@Fecha='"+fecha+"'");
+        String[] p={cria+fecha};
+        return ComandosSQL.ejecutar("exec dbo.SPDarDeAltaCria @Cria=?,@Fecha='?'",p);
     }
 
     private double generarTempAleatoria(){

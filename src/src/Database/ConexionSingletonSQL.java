@@ -12,17 +12,16 @@ public class ConexionSingletonSQL {
 	
 	private ConexionSingletonSQL()  {}
 	
-	static synchronized public Statement getConexion(int puerto,String database){
-		if(statement==null){
+	static synchronized public Connection getConexion(int puerto,String database){
+		if(conn==null){
 			url= "jdbc:sqlserver://localhost:"+puerto+";databaseName="+database+";integratedSecurity=true";
 			try {
-				conn = DriverManager.getConnection(url);
-				statement = conn.createStatement();
+				return conn=DriverManager.getConnection(url);
 			} catch (SQLException e) {
 				return null;
 			}
 		}
-		return statement;
+		return conn;
 	}
 	
 	static synchronized public void cierraConexion(){

@@ -10,7 +10,7 @@ public class MReporte {
 
     public ArrayList<String[]>  obtenerCriasFuera(){
         ArrayList<String[]> al=new ArrayList<>();
-        ResultSet rs= ComandosSQL.consulta("Select * from CriasFueraView");
+        ResultSet rs= ComandosSQL.consulta("Select * from CriasFueraView",null);
         String[] tupla;
         try {
             while(rs.next()){
@@ -28,7 +28,8 @@ public class MReporte {
 
     public ArrayList<ArrayList<String[]>> obtenerDatos(int cria){
         ArrayList<ArrayList<String[]>> al=new ArrayList<>();
-        ResultSet rs=ComandosSQL.consulta("exec SPInformeCriaDatos @Cria="+cria);
+        String [] p={cria+""};
+        ResultSet rs=ComandosSQL.consulta("exec SPInformeCriaDatos @Cria=?",p);
         ArrayList<String[]> dato=new ArrayList<>();
         String [] tupla;
         try {
@@ -49,7 +50,7 @@ public class MReporte {
         }
         al.add(dato);
 
-        rs=ComandosSQL.consulta("exec SPInformeCriaDietas @Cria="+cria);
+        rs=ComandosSQL.consulta("exec SPInformeCriaDietas @Cria=?",p);
         try {
             dato=new ArrayList<>();
             while (rs.next()){
@@ -63,7 +64,7 @@ public class MReporte {
         }
         al.add(dato);
 
-        rs=ComandosSQL.consulta("exec SPInformeCriaCuarentenas @Cria="+cria);
+        rs=ComandosSQL.consulta("exec SPInformeCriaCuarentenas @Cria=?",p);
         try {
             dato=new ArrayList<>();
             while (rs.next()){
@@ -78,7 +79,7 @@ public class MReporte {
         }
         al.add(dato);
 
-        rs=ComandosSQL.consulta("exec SPInformeCriaMovimientos @Cria="+cria);
+        rs=ComandosSQL.consulta("exec SPInformeCriaMovimientos @Cria=?",p);
         try {
             dato=new ArrayList<>();
             while (rs.next()){

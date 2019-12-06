@@ -15,8 +15,16 @@ foreign key(Clasificacion_id) references CLASIFICACIONES(Clasificacion_id))
 CREATE TABLE SALIDAS(Cria_id int primary key,Fecha_Salida date not null,Razon_Salida bit not null,
 foreign key(Cria_id) references CRIAS(Crias_id))
 
-CREATE TABLE SENSORES (Sensor_id int identity primary key,Cria_id int not null,Temperatura float not null,
+CREATE TABLE SENSORES (Sensor_id int identity primary key)
+
+CREATE TABLE SENSOR_CRIA (Sensor_id int, Cria_id int,clave int identity,estatus bit,
+primary key (Sensor_id,Cria_id),
+foreign key (Sensor_id) references SENSORES(Sensor_id),
 foreign key (Cria_id) references CRIAS(Crias_id))
+
+CREATE TABLE DATOS_SENSOR(Sensor_id int,clave int identity,Temperatura float,Presion int,Ritmo int,
+primary key(Sensor_id,clave),
+foreign key(Sensor_id) references SENSORES(Sensor_id))
 
 CREATE TABLE CUARENTENAS (Cuarentena_id int identity(1,1) primary key not null,Cria_id int,Fecha_Inicio date not null,Fecha_Fin date,
 foreign key (Cria_id) references CRIAS(Crias_id))
@@ -34,11 +42,6 @@ primary key (Cria_id,Dieta_id,Clave,Fecha),
 foreign key (Cria_id) references CRIAS(Crias_id),
 foreign key (Dieta_id) references DIETAS(Dieta_id))
 
-CREATE TABLE LOGCLASIFICACIONES (Cria_id int,Clasificacion_id int,Clave int identity,Fecha date,
-PRIMARY KEY (Cria_id,Clasificacion_id,Fecha,Clave),
-foreign key (Cria_id) references CRIAS(Crias_id),
-foreign key (Clasificacion_id) references CLASIFICACIONES(Clasificacion_id))
-
-INSERT INTO DIETAS VALUES ('Balanceada'),('Subir grasa'),('Bajar grasa'),('Bajo tratamiento')
+INSERT INTO DIETAS VALUES ('Balanceada'),('Subir grasa'),('Bajar grasa'),('Bajo tratamiento 1'),('Bajo tratamiento 2'),('Bajo tratamiento 3')
 
 INSERT INTO CLASIFICACIONES VALUES (1,'Grasa de cobertura 0',90,10),(2,'Grasa de cobertura 1',130,19),(3,'Grasa de cobertura 2',170,26),(4,'Grasa de cobertura 3',250,40)

@@ -8,7 +8,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-public class CCorral implements ActionListener, KeyListener {
+public class CCorral implements ActionListener{
 
     private UIRegistroCorral view;
     private MCorral model;
@@ -17,7 +17,6 @@ public class CCorral implements ActionListener, KeyListener {
         view=new UIRegistroCorral();
         model=new MCorral();
         view.asignarControlador(this);
-        view.setTextId( model.sigCodigo() );
         view.setVisible(true);
     }
 
@@ -29,11 +28,4 @@ public class CCorral implements ActionListener, KeyListener {
         }
     }
 
-    public void keyTyped(KeyEvent e) {
-        e.consume();
-    }
-    public void keyPressed(KeyEvent e) {
-        e.consume();
-    }
-    public void keyReleased(KeyEvent e) {}
 }

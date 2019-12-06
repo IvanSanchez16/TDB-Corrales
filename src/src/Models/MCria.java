@@ -8,28 +8,10 @@ import java.util.ArrayList;
 
 public class MCria {
 
-    public String sigCodigo(){
-        try {
-            ResultSet rs=ComandosSQL.consulta("SELECT IDENT_CURRENT('CRIAS') as Id");
-            rs.next();
-            int n = Integer.parseInt(rs.getString("Id"));
-            if(n==1){
-                rs=ComandosSQL.consulta("SELECT count(*) Num from CRIAS");
-                rs.next();
-                n=Integer.parseInt(rs.getString("Num"));
-                return n==0?"1":"2";
-            }
-            return (n+1)+"";
-        } catch (Exception e) {
-            e.printStackTrace();
-            return "-1";
-        }
-    }
-
     public ArrayList<String[]> obtenerCorrales(){
         ArrayList<String[]> matriz;
         try {
-            ResultSet rs= ComandosSQL.consulta("Select * from NumeroCriasPorCorralView where Tipo='Normal'");
+            ResultSet rs= ComandosSQL.consulta("Select * from NumeroCriasPorCorralView where Tipo='Normal'",null);
             String[] tuplas;
             matriz=new ArrayList<String[]>();
             while(rs.next()){
@@ -47,20 +29,21 @@ public class MCria {
         return null;
     }
 
-    public String insertar(int id,String fecha,String fechaActual,String estado,int peso,String color,int grasa,int corral){
+    public String insertar(String fecha,String fechaActual,String estado,int peso,String color,int grasa,int corral){
         if(peso<50 || peso>250)
             return "El peso debe estar en el rango de 50 a 250";
         if(grasa<1 || grasa>40)
             return "El porcentaje de grasa no puede estar fuera de 1-40";
         try {
-            ResultSet rs=ComandosSQL.consulta("exec dbo.SPComprobarCorral @Corral_id="+corral);
+            String[] p={corral+""};
+            ResultSet rs=ComandosSQL.consulta("exec dbo.SPComprobarCorral @Corral_id=?",p);
             rs.next();
             if(rs.getInt("Band")==0)
                 return "El corral necesita ser tipo normal";
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return ComandosSQL.ejecutar("exec dbo.SPInsertarCria @Id="+id+",@Fecha='"+fecha+"',@FechaActual='"+fechaActual
-                +"',@Estado='"+estado+"',@Peso="+peso+",@CMusculo='"+color+"',@CGrasa="+grasa+",@Corral="+corral);
+        String[] p={fecha,fechaActual,estado,peso+"",color,grasa+"",corral+""};
+        return ComandosSQL.ejecutar("call dbo.SPInsertarCria(?,?,?,?,?,?,?)",p);
     }
 }
