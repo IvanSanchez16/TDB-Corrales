@@ -30,7 +30,7 @@ public class MDietas {
     public ArrayList<String> obtenerDietas(){
         ArrayList<String> al=new ArrayList<>();
         try {
-            ResultSet rs= ComandosSQL.consulta("Select * from DietasView",null);
+            ResultSet rs= ComandosSQL.consulta("Select * from DietasSanasView",null);
             while(rs.next())
                 al.add(rs.getString("Descripcion"));
         } catch (SQLException e) {
@@ -89,7 +89,12 @@ public class MDietas {
     }
 
     public String actualizarDieta(String cria,String dieta,String fecha){
-        String[] p={cria+dieta+fecha};
-        return ComandosSQL.ejecutar("exec dbo.SPCambiarDieta @Cria=?,@Dieta='?',@Fecha='?'",p);
+        String[] p={cria,dieta,fecha};
+        return ComandosSQL.ejecutar("call dbo.SPCambiarDieta(?,?,?)",p);
+    }
+
+    public void agregarDieta(String descripcion,String tipo){
+        String[] p={descripcion,tipo};
+        ComandosSQL.ejecutar("call SPInsertarDieta (?,?)",p);
     }
 }

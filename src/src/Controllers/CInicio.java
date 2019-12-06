@@ -50,12 +50,19 @@ public class CInicio implements ActionListener {
             return;
         }
         if(e.getSource()==view.getBtnRegistrarSensor()){
-            model.añadirSensor();
             view.mostrarModal( model.añadirSensor() );
             return;
         }
         if(e.getSource()==view.getBtnVerSensores()){
             CVSensores cv=new CVSensores();
+            return;
+        }
+        if(e.getSource()==view.getBtnAsignarSensor()){
+            CASensor ca=new CASensor();
+            return;
+        }
+        if(e.getSource()==view.getT()){
+            model.actualizarDatosSensores();
             return;
         }
     }

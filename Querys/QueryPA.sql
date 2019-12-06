@@ -38,20 +38,26 @@ begin
 	return 1
 end
 
-CREATE PROCEDURE SPActualizarDatos @Cria_id int,@Temperatura float,@Presion int,@Ritmo int AS
-declare int @sensor=(select sensor_id from SENSOR_CRIA S inner join CRIAS C on S.Cria_id=C.Crias_id where C.Crias_id=@Cria_id and S.Clave=MAX(S.Clave)) 
-UPDATE DATOS_SENSOR SET Temperatura=@Temperatura,Ritmo=@Ritmo,Presion=@Presion where Sensor_id=@sensor
+ALTER PROCEDURE SPActualizarDatos @Cria_id int,@Sensor int,@Temperatura float,@Presion int,@Ritmo int AS
+Insert into DATOS_SENSOR values(@Sensor,@Temperatura,@Presion,@Ritmo)
 
-CREATE PROCEDURE SPAgregarACuarentena @Cria int,@Corral int,@Fecha date,@Dieta int AS
+ALTER PROCEDURE SPAgregarACuarentena @Cria int,@Corral int,@Fecha date,@Dieta varchar(30) AS
 Begin try
 	begin tran
+		if(@Cria in (select Cria from CriasEnCuarentenaView with(updlock) where Cria=@Cria))
+		begin
+			rollback tran
+			return 1
+		end
 		INSERT INTO CUARENTENAS(Cria_id,Fecha_Inicio) values(@Cria,@Fecha)
 		DECLARE @CorralOrg int
 		Set @CorralOrg=(SELECT Corral_id from CRIAS where Crias_id=@Cria)
 		INSERT INTO MOVIMIENTOS_CRIAS values (@CorralOrg,@Corral,@Cria,@Fecha)
 		UPDATE CRIAS SET Corral_id=@Corral where Crias_id=@Cria
-		INSERT INTO LOGDIETAS VALUES (@Dieta,@Cria,@Fecha)
+		declare @Dietaid int =(Select Dieta_id from DIETAS where Descripcion=@Dieta)
+		INSERT INTO LOGDIETAS VALUES (@Dietaid,@Cria,@Fecha)
 	commit tran
+	return;
 end try
 begin catch
 	rollback tran
@@ -59,12 +65,15 @@ end catch
 declare @errornum int=100000,@errormen varchar(max)='Ocurrió un error en el proceso de cuarentena',@errorest int=Error_State();
 throw @errornum,@errormen,@errorest;
 
+exec SPAgregarACuarentena 2,2,'20191206','Bajo tratamiento 1'
+
 CREATE PROCEDURE SPSacrificar @Cria int,@Fecha date AS
 Begin try
 	begin tran
 		INSERT INTO SALIDAS VALUES(@Cria,@Fecha,0)
 		UPDATE CUARENTENAS set Fecha_Fin=@Fecha where Cria_id=@Cria
 	commit tran
+	return;
 end try
 begin catch
 	rollback tran
@@ -83,6 +92,7 @@ Begin try
 		INSERT INTO MOVIMIENTOS_CRIAS values (@CorralIni,@CorralDest,@Cria,@Fecha)
 		UPDATE CRIAS set Corral_id=@CorralDest where Crias_id=@Cria
 	commit tran
+	return;
 end try
 begin catch
 	rollback tran
@@ -97,12 +107,15 @@ Begin try
 		select @DietaId=Dieta_id from DIETAS where Descripcion=@Dieta
 		INSERT INTO LOGDIETAS (Cria_id,Dieta_id,Fecha) VALUES (@Cria,@DietaId,@Fecha)
 	commit tran
+	return;
 end try
 begin catch
 	rollback tran
 end catch
 declare @errornum int=100000,@errormen varchar(max)='Ocurrió un error durante el cambio de dieta',@errorest int=Error_State();
 throw @errornum,@errormen,@errorest;
+
+
 
 CREATE PROCEDURE SPSiguienteProceso @Cria int,@Fecha date AS
 INSERT INTO SALIDAS VALUES (@Cria,@Fecha,1)
@@ -173,3 +186,8 @@ return @@IDENTITY
 
 CREATE PROCEDURE SPAsignarSensor @Cria int,@Sensor int as
 insert into SENSOR_CRIA (Cria_id,Sensor_id,Estatus) values(@Cria,@Sensor,1)
+
+CREATE PROCEDURE SPInsertarDieta @Descripcion varchar(30),@Tipo bit as
+Insert into DIETAS (Descripcion,Tipo) values (@Descripcion,@Tipo)
+
+select * from DATOS_SENSOR

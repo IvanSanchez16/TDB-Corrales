@@ -16,29 +16,21 @@ select CR.Crias_id AS Id,Peso,Color_Musculo as [Color de músculo],Cant_Grasa as 
 CLASIFICACIONES C on CR.Clasificacion_id=C.Clasificacion_id
 
 --Checar que jale
-CREATE VIEW DatosSensoresCriasView AS
-with cteDatosSensores(Crias_id,Clave,Temperatura,Presion,Ritmo)
-AS(
-	select top(5) 1,D.Clave,D.Temperatura,D.Presion,D.Ritmo from CriasEnProcesoView C
-	inner join Sensor_cria S on C.Crias_id = S.Cria_id
-	inner join Datos_sensor D on S.Sensor_id=D.Sensor_id
-	where C.Crias_id=1 and S.estatus=1
-	UNION ALL
-	select Crias_id+1,Clave,Temperatura,Presion,Ritmo 
-	from cteDatosSensores	
-	where Crias_id<IDENT_CURRENT('CRIAS')
-)
-select * from cteDatosSensores
+ALTER VIEW DatosSensoresCriasView AS
+select top(10) C.Crias_id,D.Clave,D.Temperatura,D.Presion,D.Ritmo from CriasEnProcesoView C
+inner join Sensor_cria S on C.Crias_id = S.Cria_id
+inner join Datos_sensor D on S.Sensor_id=D.Sensor_id
+where S.estatus=1
+order by D.clave desc
+	
 
 CREATE VIEW CriasG2SanasView as
 select C.Crias_id from CriasEnProcesoView C 
 where C.Corral_id in (Select Corral_id from CORRALES where Tipo='N') and C.Clasificacion_id=3
 
---
 CREATE VIEW CriasEnCuarentenaView as
-select c.Crias_id as Cria,S.Temperatura,c.Corral_id as Corral,DATEDIFF(DAY,Fecha_Inicio,GETDATE()) as Días from CriasEnProcesoView c inner join
-SENSORES S on S.Cria_id=c.Crias_id  inner join
-CUARENTENAS Cu on c.Crias_id=Cu.Cria_id 
+select c.Crias_id as Cria,c.Corral_id as Corral,DATEDIFF(DAY,Fecha_Inicio,GETDATE()) as Días from CriasEnProcesoView c 
+inner join CUARENTENAS Cu on c.Crias_id=Cu.Cria_id 
 where Cu.Fecha_Fin is null
 
 CREATE VIEW CriasEnProcesoView AS
@@ -56,8 +48,11 @@ inner join LOGDIETAS Ld on Ld.Cria_id=C.Crias_id
 inner join DIETAS D on D.Dieta_id=Ld.Dieta_id
 where Ld.Clave=Cl.Clave
 
-CREATE VIEW DietasView as
-Select Descripcion from DIETAS where Descripcion not like 'Bajo tratamiento'
+CREATE VIEW DietasSanasView as
+Select Descripcion from DIETAS where Tipo=0
+
+CREATE VIEW DietasEnfermasView AS
+select Descripcion from DIETAS where tipo=1
 
 CREATE VIEW EstadoCriasView AS
 select C.Crias_id,CL.Nombre as Clasificacion,C.Corral_id as Corral,
@@ -81,8 +76,15 @@ end as Estatus
 from SENSORES S 
 left join SENSOR_CRIA C on S.Sensor_id=C.Sensor_id
 
+CREATE VIEW CriasConSensorView AS
+Select S.Sensor_id,C.Crias_id from CriasEnProcesoView C
+inner join SENSOR_CRIA S on C.Crias_id=S.Cria_id 
+where S.Estatus=1
 
-
+CREATE VIEW CriasSinSensorView as
+select C.Crias_id,C.Corral_id from CriasEnProcesoView C
+left join SENSOR_CRIA S on C.Crias_id=S.Cria_id
+where S.Cria_id is null and C.Clasificacion_id=3
 
 
 

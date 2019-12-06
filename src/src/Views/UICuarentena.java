@@ -14,15 +14,15 @@ public class UICuarentena extends JDialog {
 
     private JTabbedPane TPane;
     private PanelFondo PAgregar,PSacar,PEvaluar;
-    private JScrollPane SPCrSa,SPCrEn,SPCoEn,SPCrG2;
-    private JTable TbCrSa,TbCrEn,TbCoEn,TbCrG2;
-    private DefaultTableModel DmCrSa,DmCrEn,DmCoEn,DmCrG2;
-    private JNumberField TxtCorral1,TxtCria1,TxtCria2;
+    private JScrollPane SPCrSa,SPCoEn,SPCrG2;
+    private JTable TbCrSa,TbCoEn,TbCrG2;
+    private DefaultTableModel DmCrSa,DmCoEn,DmCrG2;
+    private JNumberField TxtCorral1,TxtCria1,TxtCria2,TxtCriaEv;
+    private JComboBox<String> CbDietas;
     private Font FontCajas;
     private Font FontTitulos;
-    private JButton BtnMoverCriaA,BtnMarcarSanas,BtnMoverCriaR,BtnSacrificar,BtnMarcarEnRiesgo,BtnMarcarC40;
-    private ArrayList<String []>datosEG2,datosSA;
-    private Timer t,te;
+    private JButton BtnMoverCriaA,BtnMoverCriaR,BtnSacrificar,BtnMarcarC40,BtnBuscar;
+    private ArrayList<String[]>datosEG2,datosSA;
     private JDialog jd;
 
     public UICuarentena(){
@@ -36,25 +36,14 @@ public class UICuarentena extends JDialog {
 
     public void asignarControlador(CCuarentena c){
         BtnMoverCriaA.addActionListener(c);
-        TbCrEn.addMouseListener(c);
         TbCoEn.addMouseListener(c);
         TbCrSa.addMouseListener(c);
-        BtnMarcarEnRiesgo.addActionListener(c);
         BtnMarcarC40.addActionListener(c);
         BtnSacrificar.addActionListener(c);
-        BtnMarcarSanas.addActionListener(c);
         BtnMoverCriaR.addActionListener(c);
-        TxtCria1.addKeyListener(c);
+        BtnBuscar.addActionListener(c);
         TxtCria2.addKeyListener(c);
         TxtCorral1.addKeyListener(c);
-        t=new Timer(30000,c);
-        te=new Timer(30000,c);
-        t.start();
-        te.start();
-    }
-
-    public void seleccionarCria(int row){
-        TxtCria1.setText((String) TbCrEn.getValueAt(row,0));
     }
 
     public void seleccionarCriaSa(int row){
@@ -73,10 +62,6 @@ public class UICuarentena extends JDialog {
         return BtnMoverCriaR;
     }
 
-    public JButton getBtnMarcarSanas() {
-        return BtnMarcarSanas;
-    }
-
     public JButton getBtnSacrificar() {
         return BtnSacrificar;
     }
@@ -85,23 +70,35 @@ public class UICuarentena extends JDialog {
         return BtnMarcarC40;
     }
 
-    public JButton getBtnMarcarEnRiesgo() { return BtnMarcarEnRiesgo; }
+    public void mostrarModal2(String msg){
+        JOptionPane.showMessageDialog(this,msg,"Cuidado de crías",JOptionPane.ERROR_MESSAGE);
+    }
 
     public void mostrarModal(String msg){
-        if(msg.equals(""))
+        if(!msg.equals("Error"))
             msg="La cuarentena fue agregada correctamente";
+        else
+            msg="Ocurrió un error al mover la cría";
         JOptionPane.showMessageDialog(this,msg,"Cuidado de crías",msg.equals("La cuarentena fue agregada correctamente")?JOptionPane.INFORMATION_MESSAGE:JOptionPane.ERROR_MESSAGE);
     }
 
     public void mostrarModalSac(String msg){
-        if(msg.equals(""))
+        if(!msg.equals("Error"))
             msg="La cría fue sacrificada correctamente";
+        else
+            msg="Ocurrió un error durante el sacrificio";
         JOptionPane.showMessageDialog(this,msg,"Cuidado de crías",msg.equals("La cría fue sacrificada correctamente")?JOptionPane.INFORMATION_MESSAGE:JOptionPane.ERROR_MESSAGE);
     }
 
     public void mostrarModalAlt(String msg){
-        if(msg.equals(""))
+        if(msg.equals("1")){
+            JOptionPane.showMessageDialog(this,"Ésta cría ya está en cuarentena","Cuidado de crías",JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if(!msg.equals("Error"))
             msg="La cría fue dada de alta correctamente";
+        else
+            msg="Ocurrió un error al dar de alta la cría";
         JOptionPane.showMessageDialog(this,msg,"Cuidado de crías",msg.equals("La cría fue dada de alta correctamente")?JOptionPane.INFORMATION_MESSAGE:JOptionPane.ERROR_MESSAGE);
     }
 
@@ -115,7 +112,7 @@ public class UICuarentena extends JDialog {
         colorRenderer.band=false;
         TbCrG2.setDefaultRenderer(Object.class, colorRenderer);
         datosEG2=datos;
-        String [] col1={"Id","Temperatura Actual","Corral"};
+        String [] col1={"Clave","Temperatura","Presion","Ritmo"};
         DmCrG2=new DefaultTableModel(null,col1);
         TbCrG2.setModel(DmCrG2);
         for(String[] tupla:datosEG2)
@@ -123,20 +120,10 @@ public class UICuarentena extends JDialog {
         SPCrG2.updateUI();
     }
 
-    public void marcarCriasRiesgo(ArrayList<Integer> num){
-        ColorJTable colorRenderer = new ColorJTable(num);
-        colorRenderer.band=true;
-        TbCrG2.setDefaultRenderer(Object.class, colorRenderer);
-        SPCrG2.updateUI();
-    }
-
-    public void llenarCriasEn(ArrayList<String[]> datos){
-        String[] col={"Id","Corral"};
-        DmCrEn=new DefaultTableModel(null,col);
-        TbCrEn.setModel(DmCrEn);
-        for(String[] tupla:datos)
-            DmCrEn.addRow(tupla);
-        SPCrEn.updateUI();
+    public void llenarCBDietas(ArrayList<String> dietas){
+        for (String dieta : dietas) {
+            CbDietas.addItem(dieta);
+        }
     }
 
     public void llenarCriasSa(ArrayList<String[]> datos){
@@ -144,7 +131,7 @@ public class UICuarentena extends JDialog {
         colorRenderer.band=false;
         TbCrSa.setDefaultRenderer(Object.class, colorRenderer);
         datosSA=datos;
-        String [] col1={"Id","Temperatura","Corral","Días"};
+        String [] col1={"Id","Corral","Días"};
         DmCrSa=new DefaultTableModel(null,col1);
         TbCrSa.setModel(DmCrSa);
         for(String[] tupla:datosSA)
@@ -172,6 +159,10 @@ public class UICuarentena extends JDialog {
         return TxtCria1.getText();
     }
 
+    public String getTxtCriaEv() {
+        return TxtCriaEv.ObtenerCantidad()+"";
+    }
+
     public String getCorral1(){
         return TxtCorral1.getText();
     }
@@ -186,6 +177,14 @@ public class UICuarentena extends JDialog {
         return datosSA;
     }
 
+    public JButton getBtnBuscar() {
+        return BtnBuscar;
+    }
+
+    public String getDieta(){
+        return (String) CbDietas.getSelectedItem();
+    }
+
     public void modalCarga(){
         jd=new JDialog();
         jd.setLayout(new BorderLayout());
@@ -195,16 +194,6 @@ public class UICuarentena extends JDialog {
     public void cerrarDialog(){
         jd.dispose();
     }
-
-    public Timer getT() { return t; }
-
-    public Timer getTe() {
-        return te;
-    }
-
-    public JTable getTbCoEn() { return TbCoEn;}
-
-    public JTable getTbCrEn() {return TbCrEn;}
 
     public JTable getTbCrSa() {
         return TbCrSa;
@@ -228,8 +217,29 @@ public class UICuarentena extends JDialog {
         PEvaluar=new PanelFondo("fondoEvaluar.jpg",500,405);
         PEvaluar.setLayout(null);
 
+        JPanel PBuscar=new JPanel();
+        PBuscar.setLayout(new GridLayout(0,2,5,0));
+
+        TxtCriaEv=new JNumberField();
+        TxtCriaEv.setForeground(Color.WHITE);
+        TxtCriaEv.setFont(FontCajas);
+        TxtCriaEv.setOpaque(false);
+        PBuscar.add(TxtCriaEv);
+
+        BtnBuscar=new JButton("Leer últimos 10 datos");
+        BtnBuscar.setFont(new Font("Candara",1,15));
+        PBuscar.add(BtnBuscar);
+
+        PBuscar.setBorder(BorderFactory.createTitledBorder(
+                BorderFactory.createCompoundBorder(
+                        BorderFactory.createRaisedBevelBorder(),BorderFactory.createLoweredBevelBorder()
+                ),"Buscar datos de una cría", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos,Color.WHITE));
+        PBuscar.setBounds(5,5,475,50);
+        PBuscar.setOpaque(false);
+        PEvaluar.add(PBuscar);
+
         String [][] m1={};
-        String [] col1={"Id","Temperatura Actual","Corral"};
+        String [] col1={"Clave","Temperatura","Presion","Ritmo"};
 
         DmCrG2=new DefaultTableModel(m1,col1);
         TbCrG2=new JTable(DmCrG2);
@@ -238,15 +248,10 @@ public class UICuarentena extends JDialog {
         SPCrG2.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createCompoundBorder(
                         BorderFactory.createRaisedBevelBorder(),BorderFactory.createLoweredBevelBorder()
-                ),"Crías con sensor sanas", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos,Color.WHITE));
-        SPCrG2.setBounds(5,5,475,280);
+                ),"Datos recientes de la cría", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos,Color.WHITE));
+        SPCrG2.setBounds(5,60,475,265);
         SPCrG2.setOpaque(false);
         PEvaluar.add(SPCrG2);
-
-        BtnMarcarEnRiesgo=new JButton("Marcar crías en riesgo de enfermarse");
-        BtnMarcarEnRiesgo.setFont(new Font("Candara",1,15));
-        BtnMarcarEnRiesgo.setBounds(5,290,475,35);
-        PEvaluar.add(BtnMarcarEnRiesgo);
 
         TPane.add(PEvaluar,"Evaluar crías");
     }
@@ -255,22 +260,8 @@ public class UICuarentena extends JDialog {
         PAgregar=new PanelFondo("fondoEvaluar.jpg",500,405);
         PAgregar.setLayout(null);
 
-        String [][] m={};
-        String [] columnas={"Id","Corral"};
-        DmCrEn=new DefaultTableModel(m,columnas);
-        TbCrEn=new JTable(DmCrEn);
-        TbCrEn.setFont(new Font("Cambria",1,13));
-        SPCrEn=new JScrollPane(TbCrEn);
-        SPCrEn.setBorder(BorderFactory.createTitledBorder(
-                BorderFactory.createCompoundBorder(
-                        BorderFactory.createRaisedBevelBorder(),BorderFactory.createLoweredBevelBorder()
-                ),"Seleccione cría a mover", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos,Color.WHITE));
-        SPCrEn.setBounds(40,5,200,275);
-        SPCrEn.setOpaque(false);
-        PAgregar.add(SPCrEn);
-
         String[] columnas2={"Id","# de crías"};
-        DmCoEn=new DefaultTableModel(m,columnas2);
+        DmCoEn=new DefaultTableModel(null,columnas2);
         TbCoEn=new JTable(DmCoEn);
         TbCoEn.setFont(new Font("Cambria",1,13));
         SPCoEn=new JScrollPane(TbCoEn);
@@ -278,12 +269,9 @@ public class UICuarentena extends JDialog {
                 BorderFactory.createCompoundBorder(
                         BorderFactory.createRaisedBevelBorder(),BorderFactory.createLoweredBevelBorder()
                 ),"Seleccione el corral de destino", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos,Color.WHITE));
-        SPCoEn.setBounds(250,5,200,275);
+        SPCoEn.setBounds(225,5,250,265);
         SPCoEn.setOpaque(false);
         PAgregar.add(SPCoEn);
-
-        JPanel P1=new JPanel();
-        P1.setLayout(new GridLayout(0,5,10,0));
 
         TxtCria1=new JNumberField();
         TxtCria1.setBorder(BorderFactory.createTitledBorder(
@@ -291,10 +279,21 @@ public class UICuarentena extends JDialog {
                         BorderFactory.createRaisedBevelBorder(),BorderFactory.createLoweredBevelBorder()
                 ),"Cria_id", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos,Color.white));
         TxtCria1.setFont(FontCajas);
-        TxtCria1.setBackground(new Color(242,242,242));
         TxtCria1.setForeground(Color.WHITE);
         TxtCria1.setOpaque(false);
-        P1.add(TxtCria1);
+        TxtCria1.setBounds(25,40,105,40);
+        PAgregar.add(TxtCria1);
+
+        CbDietas=new JComboBox<>();
+        CbDietas.setBorder(BorderFactory.createTitledBorder(
+                BorderFactory.createCompoundBorder(
+                        BorderFactory.createRaisedBevelBorder(),BorderFactory.createLoweredBevelBorder()
+                ),"Dieta", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos,Color.white));
+        CbDietas.setFont(FontCajas);
+        CbDietas.setOpaque(false);
+        CbDietas.setBounds(25,115,160,50);
+        PAgregar.add(CbDietas);
+
 
         TxtCorral1=new JNumberField();
         TxtCorral1.setBorder(BorderFactory.createTitledBorder(
@@ -302,18 +301,15 @@ public class UICuarentena extends JDialog {
                         BorderFactory.createRaisedBevelBorder(),BorderFactory.createLoweredBevelBorder()
                 ),"Corral_id", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos,Color.white));
         TxtCorral1.setFont(FontCajas);
-        TxtCorral1.setBackground(new Color(242,242,242));
         TxtCorral1.setForeground(Color.WHITE);
+        TxtCorral1.setBounds(25,200,105,40);
         TxtCorral1.setOpaque(false);
-        P1.add(TxtCorral1);
+        PAgregar.add(TxtCorral1);
 
         BtnMoverCriaA=new JButton("Mover");
         BtnMoverCriaA.setFont(new Font("Candara",1,15));
-        P1.add(BtnMoverCriaA);
-        P1.setOpaque(false);
-
-        P1.setBounds(5,285,770,42);
-        PAgregar.add(P1);
+        BtnMoverCriaA.setBounds(5,275,475,40);
+        PAgregar.add(BtnMoverCriaA);
 
         TPane.add(PAgregar,"Mover a cuarentena");
     }
@@ -322,7 +318,7 @@ public class UICuarentena extends JDialog {
         PSacar=new PanelFondo("fondoEvaluar.jpg",500,405);
         PSacar.setLayout(null);
 
-        String[] col={"Id","Temperatura","Corral","Días"};
+        String[] col={"Id","Estado","Corral","Días"};
         DmCrSa=new DefaultTableModel(null,col);
         TbCrSa=new JTable(DmCrSa);
         TbCrSa.setFont(new Font("Cambria",1,13));
@@ -335,13 +331,8 @@ public class UICuarentena extends JDialog {
         SPCrSa.setOpaque(false);
         PSacar.add(SPCrSa);
 
-        BtnMarcarSanas=new JButton("Marcar crías recuperadas");
-        BtnMarcarSanas.setBounds(5,240,235,40);
-        BtnMarcarSanas.setFont(new Font("Candara",1,15));
-        PSacar.add(BtnMarcarSanas);
-
         BtnMarcarC40=new JButton("Marcar crías con 40+ días");
-        BtnMarcarC40.setBounds(245,240,235,40);
+        BtnMarcarC40.setBounds(5,240,470,40);
         BtnMarcarC40.setFont(new Font("Candara",1,15));
         PSacar.add(BtnMarcarC40);
 
@@ -367,5 +358,9 @@ public class UICuarentena extends JDialog {
         PSacar.add(BtnSacrificar);
 
         TPane.add(PSacar,"En cuarentena");
+    }
+
+    public JTable getTbCoEn() {
+        return TbCoEn;
     }
 }

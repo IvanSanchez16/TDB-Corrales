@@ -10,5 +10,6 @@
     <orderEntry type="library" name="jcalendar-1.4" level="project" />
     <orderEntry type="library" name="JTattoo-1.6.11" level="project" />
     <orderEntry type="library" name="mssql-jdbc-7.4.1.jre12" level="project" />
+    <orderEntry type="library" name="mail-1.4.7" level="project" />
   </component>
 </module>

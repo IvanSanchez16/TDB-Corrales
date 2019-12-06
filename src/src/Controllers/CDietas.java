@@ -41,6 +41,15 @@ public class CDietas implements ActionListener, MouseListener {
             }
             return;
         }
+        if(e.getSource()==view.getBtnAgregar()){
+            view.crearDieta(this);
+            return;
+        }
+        if (view.getTxtDesc().length()>30)
+            view.mostrarModal2("La descripción debe tener menos de 30 caracteres");
+        model.agregarDieta( view.getTxtDesc(),view.getTipo() );
+        view.getJd().dispose();
+        view.llenarCBDietas( model.obtenerDietas() );
     }
 
     public void mouseClicked(MouseEvent e) {

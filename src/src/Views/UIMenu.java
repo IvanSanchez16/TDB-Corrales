@@ -14,6 +14,7 @@ public class UIMenu extends JFrame {
     private JButton BtnRegistrarCria,BtnRegistrarCorral,BtnClasificar,BtnIdentificar,BtnDieta,BtnProcesar,BtnGenerarInforme,BtnVerCorrales,BtnRegistrarSensor,BtnVerSensores,BtnAsignarSensor;
     private Font FontBotones;
     private PanelFondo PPrincipal;
+    private Timer t;
 
     public UIMenu (){
         super("Corrales Ternero");
@@ -40,6 +41,8 @@ public class UIMenu extends JFrame {
         BtnRegistrarSensor.addActionListener(c);
         BtnVerSensores.addActionListener(c);
         BtnAsignarSensor.addActionListener(c);
+        t=new Timer(30000,c);
+        t.start();
     }
 
     public JButton getBtnRegistrarCria() {
@@ -80,6 +83,14 @@ public class UIMenu extends JFrame {
 
     public JButton getBtnVerSensores() {
         return BtnVerSensores;
+    }
+
+    public JButton getBtnAsignarSensor() {
+        return BtnAsignarSensor;
+    }
+
+    public Timer getT() {
+        return t;
     }
 
     public void mostrarModal(String msg){

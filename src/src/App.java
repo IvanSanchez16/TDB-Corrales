@@ -4,7 +4,7 @@ import Database.ComandosSQL;
 import javax.swing.*;
 
 public class App {
-    public static void main(String [] a){
+    public static void main(String [] a) throws Exception {
         try {
             UIManager.setLookAndFeel("com.jtattoo.plaf.graphite.GraphiteLookAndFeel");
         } catch (ClassNotFoundException e) {

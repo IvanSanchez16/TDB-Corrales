@@ -35,13 +35,13 @@ FOREIGN KEY (Cria_id) references CRIAS(Crias_id),
 FOREIGN KEY (CorralOrg_id) references CORRALES(Corral_id),
 FOREIGN KEY (CorralDes_id) references CORRALES(Corral_id))
 
-CREATE TABLE DIETAS (Dieta_id int identity(1,1) primary key,Descripcion varchar(30))
+CREATE TABLE DIETAS (Dieta_id int identity(1,1) primary key,Descripcion varchar(30) unique,Tipo bit)
 
 CREATE TABLE LOGDIETAS (Dieta_id int, Cria_id int,Clave int identity, Fecha date,
 primary key (Cria_id,Dieta_id,Clave,Fecha),
 foreign key (Cria_id) references CRIAS(Crias_id),
 foreign key (Dieta_id) references DIETAS(Dieta_id))
 
-INSERT INTO DIETAS VALUES ('Balanceada'),('Subir grasa'),('Bajar grasa'),('Bajo tratamiento 1'),('Bajo tratamiento 2'),('Bajo tratamiento 3')
+INSERT INTO DIETAS VALUES ('Balanceada',0),('Subir grasa',0),('Bajar grasa',0),('Bajo tratamiento 1',1),('Bajo tratamiento 2',1),('Bajo tratamiento 3',1)
 
 INSERT INTO CLASIFICACIONES VALUES (1,'Grasa de cobertura 0',90,10),(2,'Grasa de cobertura 1',130,19),(3,'Grasa de cobertura 2',170,26),(4,'Grasa de cobertura 3',250,40)

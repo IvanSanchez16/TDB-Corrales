@@ -19,12 +19,13 @@ public class UIDietas extends JDialog {
     private JTable Tb;
     private JScrollPane Sp;
     private JNumberField TxtCria;
-    private JTextField TxtBusqueda;
-    private JComboBox<String> CbDietas,CbBusqueda;
-    private JButton BtnAceptar,BtnBuscar;
+    private JTextField TxtBusqueda,txtDesc;
+    private JComboBox<String> CbDietas,CbBusqueda,comboBox;
+    private JButton BtnAceptar,BtnBuscar,BtnAgregar;
     private Font FontCajas;
     private Font FontTitulos;
     private ArrayList<String[]> datos;
+    private JDialog jd;
 
     public UIDietas(){
         setTitle("Dietas");
@@ -39,6 +40,7 @@ public class UIDietas extends JDialog {
         BtnAceptar.addActionListener(c);
         Tb.addMouseListener(c);
         BtnBuscar.addActionListener(c);
+        BtnAgregar.addActionListener(c);
     }
 
     public void setDatos(ArrayList<String[]> d){
@@ -73,12 +75,19 @@ public class UIDietas extends JDialog {
     }
 
     public void mostrarModal(String msg){
-        if(msg=="")
+        if(msg.equals("Error"))
+            msg="Error al actualizar la dieta";
+        else
             msg="La dieta fue actualizada correctamente";
         JOptionPane.showMessageDialog(this,msg,"Dietas",msg.equals("La dieta fue actualizada correctamente")?JOptionPane.INFORMATION_MESSAGE:JOptionPane.ERROR_MESSAGE);
     }
 
+    public void mostrarModal2(String msg){
+        JOptionPane.showMessageDialog(this,msg,"Agregar dieta",JOptionPane.ERROR_MESSAGE);
+    }
+
     public void llenarCBDietas(ArrayList<String> a){
+        CbDietas.removeAllItems();
         for(String dato:a)
             CbDietas.addItem(dato);
     }
@@ -111,12 +120,68 @@ public class UIDietas extends JDialog {
         return (int) TxtCria.ObtenerCantidad();
     }
 
+    public JButton getBtnAgregar() {
+        return BtnAgregar;
+    }
+
     public String getTxtBusqueda() {
         return TxtBusqueda.getText();
     }
 
     public String getCBDietas(){
         return (String) CbDietas.getSelectedItem();
+    }
+
+    public JDialog getJd() {
+        return jd;
+    }
+
+    public void crearDieta(CDietas c){
+        jd=new JDialog();
+        jd.setTitle("Crear una dieta");
+        jd.setSize(200,165);
+        jd.setModal(true);
+        jd.setResizable(false);
+        jd.setLocationRelativeTo(null);
+
+        PanelFondo pf=new PanelFondo("fondoDietas.jpg",200,165);
+        pf.setLayout(new BorderLayout());
+
+        txtDesc=new JTextField();
+        txtDesc.setFont(FontCajas);
+        txtDesc.setBorder(BorderFactory.createTitledBorder(
+                BorderFactory.createCompoundBorder(
+                        BorderFactory.createRaisedBevelBorder(),BorderFactory.createLoweredBevelBorder()
+                ),"Descripción", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos,Color.WHITE));
+        txtDesc.setForeground(Color.white);
+        txtDesc.setOpaque(false);
+        pf.add(txtDesc,BorderLayout.NORTH);
+
+        String[] d={"Para sanas","Para enfermas"};
+        comboBox=new JComboBox<>(d);
+        comboBox.setFont(FontCajas);
+        comboBox.setBorder(BorderFactory.createTitledBorder(
+                BorderFactory.createCompoundBorder(
+                        BorderFactory.createRaisedBevelBorder(),BorderFactory.createLoweredBevelBorder()
+                ),"Tipo", TitledBorder.DEFAULT_POSITION,TitledBorder.DEFAULT_JUSTIFICATION,FontTitulos,Color.WHITE));
+        pf.add(comboBox,BorderLayout.CENTER);
+        comboBox.setOpaque(false);
+
+        JButton btnAgg=new JButton("Añadir dieta");
+        btnAgg.setFont(new Font("Candara",1,15));
+        btnAgg.addActionListener(c);
+        pf.add(btnAgg,BorderLayout.SOUTH);
+
+        jd.add(pf);
+        jd.setVisible(true);
+    }
+
+    public String getTxtDesc() {
+        return txtDesc.getText();
+    }
+
+    public String getTipo(){
+        return comboBox.getSelectedIndex()+"";
     }
 
     private void defineInterfaz(){
@@ -192,8 +257,13 @@ public class UIDietas extends JDialog {
 
         BtnAceptar=new JButton("Cambiar dieta");
         BtnAceptar.setFont(new Font("Candara",1,15));
-        BtnAceptar.setBounds(280,340,255,45);
+        BtnAceptar.setBounds(280,340,125,45);
         PPrincipal.add(BtnAceptar);
+
+        BtnAgregar=new JButton("Agregar Dieta");
+        BtnAgregar.setFont(new Font("Candara",1,15));
+        BtnAgregar.setBounds(410,340,125,45);
+        PPrincipal.add(BtnAgregar);
 
         add(PPrincipal);
     }

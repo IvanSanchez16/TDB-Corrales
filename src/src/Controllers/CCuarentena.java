@@ -14,53 +14,30 @@ public class CCuarentena implements ActionListener, MouseListener, KeyListener {
         view=new UICuarentena();
         model=new MCuarentena();
         view.asignarControlador(this);
-        view.llenarCriasEn( model.obtenerCriasEn() );
         view.llenarCorralesEn( model.obtenerCorralesEn() );
-        view.llenarCriasG2( model.obtenerCriasG2() );
+        view.llenarCBDietas( model.obtenerDietas() );
         view.llenarCriasSa( model.obtenerCriasCuarentena() );
         view.setVisible(true);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        if(e.getSource()==view.getBtnBuscar()){
+            view.llenarCriasG2( model.obtenerDatosCria( view.getTxtCriaEv() ) );
+            return;
+        }
         if(e.getSource()==view.getBtnMoverCriaA()){
             if(view.getCria1().equals("") || view.getCorral1().equals("")){
                 view.mostrarModal("Faltan campos por llenar");
                 return;
             }
-            view.mostrarModal( model.moverACuarentena(view.getCria1(),view.getCorral1(), UIMenu.getFechaActual()) );
-            view.llenarCriasEn( model.obtenerCriasEn() );
+            view.mostrarModal( model.moverACuarentena(view.getCria1(),view.getDieta(),view.getCorral1(), UIMenu.getFechaActual()) );
             view.llenarCorralesEn( model.obtenerCorralesEn() );
-            view.llenarCriasG2( model.obtenerCriasG2() );
             view.llenarCriasSa( model.obtenerCriasCuarentena() );
-            return;
-        }
-        if(e.getSource()==view.getBtnMarcarEnRiesgo()){
-            view.marcarCriasRiesgo( model.marcarCriasEnRiesgo( view.getDatosEG2() ) );
-            return;
-        }
-        if (e.getSource()==view.getBtnMarcarSanas()){
-            view.marcarCriasAliviadas( model.marcarCriasAliviadas( view.getDatosSA() ) );
             return;
         }
         if(e.getSource()==view.getBtnMarcarC40()){
             view.marcarCriasAliviadas( model.marcarCrias40D( view.getDatosSA() ) );
-            return;
-        }
-
-        if(e.getSource()==view.getT()){
-            view.modalCarga();
-            model.recuperarTemperaturas();
-            view.llenarCriasG2( model.obtenerCriasG2() );
-            view.llenarCriasEn( model.obtenerCriasEn() );
-            view.cerrarDialog();
-            return;
-        }
-        if(e.getSource()==view.getTe()){
-            view.modalCarga();
-            model.recuperarTemperaturasEn();
-            view.llenarCriasSa( model.obtenerCriasCuarentena() );
-            view.cerrarDialog();
             return;
         }
 
@@ -71,7 +48,7 @@ public class CCuarentena implements ActionListener, MouseListener, KeyListener {
         }
         if (e.getSource()==view.getBtnSacrificar()){
             if( model.comprobarDias( cria,view.getDatosSA() )<40 ){
-                view.mostrarModal("La cría necesita estar 40+ días en cuarentena");
+                view.mostrarModal2("La cría necesita estar 40+ días en cuarentena");
                 return;
             }
             if (view.mostrarAdvertencia("¿Está seguro que quiere sacrificar la cría?","Sacrificar una cría")==0){
@@ -83,12 +60,9 @@ public class CCuarentena implements ActionListener, MouseListener, KeyListener {
             return;
         }
         if(e.getSource()==view.getBtnMoverCriaR()){
-            if( model.comprobarTemperatura( cria,view.getDatosSA() )>=40 )
-                if( view.mostrarAdvertencia("¿Está seguro que quiere dar de alta la cría? Aún no muestra señales de alivio","Dar de alta")==1)
-                    return;
+            if( view.mostrarAdvertencia("¿Está seguro que quiere dar de alta la cría?","Dar de alta")==1)
+                return;
             view.mostrarModalAlt( model.darDeAlta(cria,UIMenu.getFechaActual()) );
-            view.llenarCriasG2( model.obtenerCriasG2() );
-            view.llenarCriasEn( model.obtenerCriasEn() );
             view.llenarCriasSa( model.obtenerCriasCuarentena() );
             view.llenarCorralesEn( model.obtenerCorralesEn() );
             return;
@@ -98,10 +72,6 @@ public class CCuarentena implements ActionListener, MouseListener, KeyListener {
     public void mouseClicked(MouseEvent e) {
         if(e.getSource()==view.getTbCoEn()){
             view.seleccionarCorral(view.getTbCoEn().rowAtPoint(e.getPoint()));
-            return;
-        }
-        if(e.getSource()==view.getTbCrEn()){
-            view.seleccionarCria(view.getTbCrEn().rowAtPoint(e.getPoint()));
             return;
         }
         if(e.getSource()==view.getTbCrSa()){
