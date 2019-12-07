@@ -5,6 +5,7 @@ import Resource.Rutinas;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 public class UIMenu extends JFrame {
@@ -41,7 +42,7 @@ public class UIMenu extends JFrame {
         BtnRegistrarSensor.addActionListener(c);
         BtnVerSensores.addActionListener(c);
         BtnAsignarSensor.addActionListener(c);
-        t=new Timer(30000,c);
+        t=new Timer(60000,c);
         t.start();
     }
 
@@ -91,6 +92,16 @@ public class UIMenu extends JFrame {
 
     public Timer getT() {
         return t;
+    }
+
+    public void avisarRiesgo(ArrayList<Integer> crias){
+        if(crias.size()==0)
+            return;
+        String msg="Las crías: ";
+        for (Integer cria : crias)
+            msg=msg+cria+"-";
+        msg=msg.substring(0,msg.length()-1)+" necesitan atención";
+        JOptionPane.showMessageDialog(this,msg,"Alerta",JOptionPane.WARNING_MESSAGE);
     }
 
     public void mostrarModal(String msg){

@@ -63,6 +63,7 @@ public class CInicio implements ActionListener {
         }
         if(e.getSource()==view.getT()){
             model.actualizarDatosSensores();
+            view.avisarRiesgo( model.evaluarCrias() );
             return;
         }
     }

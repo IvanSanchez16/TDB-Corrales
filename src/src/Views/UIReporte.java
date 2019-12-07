@@ -122,6 +122,7 @@ public class UIReporte extends JDialog {
         String[] cold={"Dieta","Fecha de cambio"};
         DmDietas=new DefaultTableModel(null,cold);
         TbDietas=new JTable(DmDietas);
+        TbDietas.getColumn("Fecha de cambio").setPreferredWidth(100);
         TbDietas.setFont(FontTablas);
         SpDietas=new JScrollPane(TbDietas);
         SpDietas.setBorder(BorderFactory.createTitledBorder(

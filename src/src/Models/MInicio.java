@@ -43,6 +43,55 @@ public class MInicio {
         }
         return null;
     }
+
+    public ArrayList<Integer> evaluarCrias(){
+        ArrayList<String[]> crias=obtenerCrias(),datos;
+        ArrayList<Integer> criasEnRiesgo=new ArrayList<>();
+        Float varianzat,varianzap,varianzar,sumt,sump,sumr;
+        for (String[] cria : crias) {
+            datos=obtenerDatosCria(cria[1]);
+            varianzat=sumt=varianzap=sump=varianzar=sumr=0f;
+            for (String[] dato : datos) {
+                sumt=sumt+(float)(Math.pow( (Float.parseFloat(dato[1])-38.5f) ,2));
+                sump=sump+(float)(Math.pow( (Float.parseFloat(dato[2])-50f) ,2));
+                sumr=sumr+(float)(Math.pow( (Float.parseFloat(dato[3])-100f) ,2));
+            }
+            int cont=0;
+            varianzat=sumt/10;
+            varianzap=sump/10;
+            varianzar=sumr/10;
+            if(varianzat>=1.5)
+                cont++;
+            if(varianzap>=2500)
+                cont++;
+            if(varianzar>=1500)
+                cont++;
+            if(cont>=2)
+                criasEnRiesgo.add(Integer.parseInt(cria[0]));
+        }
+        return criasEnRiesgo;
+    }
+
+    public ArrayList<String[]> obtenerDatosCria(String cria){
+        ArrayList<String[]> matriz;
+        try {
+            ResultSet rs= ComandosSQL.consultaSP("exec dbo.SPDatosSensores @Cria="+cria);
+            String[] tuplas;
+            matriz=new ArrayList<>();
+            while(rs.next()){
+                tuplas=new String[4];
+                tuplas[0]=rs.getInt("Clave")+"";
+                tuplas[1]=rs.getFloat("Temperatura")+"";
+                tuplas[2]=rs.getInt("Presion")+"";
+                tuplas[3]=rs.getInt("Ritmo")+"";
+                matriz.add(tuplas);
+            }
+            return matriz;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
     //Ritmo 40-70(48-62) Presion 80-140(90-120)
     private double generarTempAleatoria(){
         double r= Rutinas.nextDouble();

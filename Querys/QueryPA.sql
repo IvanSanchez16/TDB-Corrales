@@ -89,7 +89,7 @@ Begin try
 	begin tran
 		if(@Cria not in (select Cria from CriasEnCuarentenaView with(updlock) where Cria=@Cria))
 		begin
-			rollback
+			rollback tran
 			return 1;
 		end
 		UPDATE CUARENTENAS set Fecha_Fin=@Fecha where Cria_id=@Cria
@@ -168,3 +168,4 @@ inner join Datos_sensor D on S.Sensor_id=D.Sensor_id
 where S.estatus=1 and Cria_id=@Cria
 order by D.clave desc
 
+select * from SENSOR_CRIA
